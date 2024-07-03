@@ -1,0 +1,102 @@
+[
+    {
+        "code": "0000",
+        "nameEn": "-",
+        "nameTh": "-"
+    },
+    {
+        "code": "2100",
+        "nameEn": "Biomedical Engineering",
+        "nameTh": "วิศวกรรมชีวเวช"
+    },
+    {
+        "code": "2101",
+        "nameEn": "Civil Engineering",
+        "nameTh": "วิศวกรรมโยธา"
+    },
+    {
+        "code": "2102",
+        "nameEn": "Electrical Engineering",
+        "nameTh": "วิศวกรรมไฟฟ้า"
+    },
+    {
+        "code": "2103",
+        "nameEn": "Mechanical Engineering",
+        "nameTh": "วิศวกรรมเครื่องกล"
+    },
+    {
+        "code": "2104",
+        "nameEn": "Industrial Engineering",
+        "nameTh": "วิศวกรรมอุตสาหการ"
+    },
+    {
+        "code": "2105",
+        "nameEn": "Chemical Engineering",
+        "nameTh": "วิศวกรรมเคมี"
+    },
+    {
+        "code": "2106",
+        "nameEn": "Mining and Petroleum Engineering",
+        "nameTh": "วิศวกรรมเหมืองแร่และปิโตรเลียม"
+    },
+    {
+        "code": "2107",
+        "nameEn": "Environmental Engineering",
+        "nameTh": "วิศวกรรมสิ่งแวดล้อม"
+    },
+    {
+        "code": "2108",
+        "nameEn": "Survey Engineering",
+        "nameTh": "วิศวกรรมสำรวจ"
+    },
+    {
+        "code": "2109",
+        "nameEn": "Metallurgical Engineering",
+        "nameTh": "วิศวกรรมโลหการ"
+    },
+    {
+        "code": "2110",
+        "nameEn": "Computer Engineering",
+        "nameTh": "วิศวกรรมคอมพิวเตอร์"
+    },
+    {
+        "code": "2111",
+        "nameEn": "Nuclear Engineering",
+        "nameTh": "วิศวกรรมนิวเคลียร์"
+    },
+    {
+        "code": "2112",
+        "nameEn": "Water Resources Engineering",
+        "nameTh": "วิศวกรรมแหล่งน้ำ"
+    },
+    {
+        "code": "2120",
+        "nameEn": "Defense Engineering and Technology",
+        "nameTh": "วิศวกรรมเทคโนโลยีการป้องกันประเทศ"
+    },
+    {
+        "code": "2141",
+        "nameEn": "Nano Engineering ",
+        "nameTh": "วิศวกรรมนาโน (ISE)"
+    },
+    {
+        "code": "2142",
+        "nameEn": "Automotive Design and Manufactureing Engineering",
+        "nameTh": "วิศกรรมออกแบบและผลิตยานยนต์ (ISE)"
+    },
+    {
+        "code": "2143",
+        "nameEn": "Information and Communication Engineering",
+        "nameTh": "วิศวกรรมสารสนเทศและการสื่อสาร (ISE)"
+    },
+    {
+        "code": "2145",
+        "nameEn": "Aerospace Engineering",
+        "nameTh": "วิศกรรมอากาศยาน (ISE)"
+    },
+    {
+        "code": "2146",
+        "nameEn": "Robot & AI Engineering",
+        "nameTh": "วิศวกรรมหุ่นยนต์และปัญญาประดิษฐ์ (ISE)"
+    }
+]
