@@ -14,6 +14,7 @@ import {
   integer,
   date,
   smallint,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -155,11 +156,15 @@ export const students = createTable(
     currentAddressProvinceId: integer("current_address_province_id").references(() => thaiProvinces.id),
     currentAddressDistrictId: integer("current_address_district_id").references(() => thaiDistricts.id),
     currentAddressOther: varchar("current_address_other", { length: 400 }),
+    currentAddressLatitude: numeric("current_address_latitude", { precision: 9, scale: 6 }),
+    currentAddressLongitude: numeric("current_address_longitude", { precision: 9, scale: 6 }),
 
     hometownAddressNumber: varchar("hometown_address_number", { length: 60 }),
     hometownAddressProvinceId: integer("hometown_address_province_id").references(() => thaiProvinces.id),
     hometownAddressDistrictId: integer("hometown_address_district_id").references(() => thaiDistricts.id),
     hometownAddressOther: varchar("hometown_address_other", { length: 400 }),
+    hometownAddressLatitude: numeric("hometown_address_latitude", { precision: 9, scale: 6 }),
+    hometownAddressLongitude: numeric("hometown_address_longitude", { precision: 9, scale: 6 }),
 
     fatherName: varchar("father_name", { length: 150 }),
     fatherBirthYear: smallint("father_birth_year"),

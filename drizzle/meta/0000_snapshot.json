@@ -1,5 +1,5 @@
 {
-  "id": "0034cb7f-db2f-4d37-9ee3-68135e7a7f8e",
+  "id": "a5b3eeb2-ee48-4265-ac0f-4d4db7730b2b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -366,6 +366,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "current_address_latitude": {
+          "name": "current_address_latitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_longitude": {
+          "name": "current_address_longitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
         "hometown_address_number": {
           "name": "hometown_address_number",
           "type": "varchar(60)",
@@ -387,6 +399,18 @@
         "hometown_address_other": {
           "name": "hometown_address_other",
           "type": "varchar(400)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_latitude": {
+          "name": "hometown_address_latitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_longitude": {
+          "name": "hometown_address_longitude",
+          "type": "numeric(9, 6)",
           "primaryKey": false,
           "notNull": false
         },
