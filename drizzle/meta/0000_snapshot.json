@@ -1,5 +1,5 @@
 {
-  "id": "a5b3eeb2-ee48-4265-ac0f-4d4db7730b2b",
+  "id": "7d63df55-79fd-419f-b806-98e0fa7f0bae",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -282,6 +282,60 @@
         "middle_name_en": {
           "name": "middle_name_en",
           "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nickname_th": {
+          "name": "nickname_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nickname_en": {
+          "name": "nickname_en",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "preferred_pronoun": {
+          "name": "preferred_pronoun",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "line_id": {
+          "name": "line_id",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "facebook": {
+          "name": "facebook",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "food_limitations": {
+          "name": "food_limitations",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "drug_allergies": {
+          "name": "drug_allergies",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "medical_conditions": {
+          "name": "medical_conditions",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "medications": {
+          "name": "medications",
+          "type": "varchar(100)",
           "primaryKey": false,
           "notNull": false
         },

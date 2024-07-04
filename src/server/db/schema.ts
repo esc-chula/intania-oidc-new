@@ -140,6 +140,16 @@ export const students = createTable(
     familyNameEn: varchar("family_name_en", { length: 60 }),
     middleNameTh: varchar("middle_name_th", { length: 60 }),
     middleNameEn: varchar("middle_name_en", { length: 60 }),
+    nicknameTh: varchar("nickname_th", { length: 30 }),
+    nicknameEn: varchar("nickname_en", { length: 30 }),
+    preferredPronoun: varchar("preferred_pronoun", { length: 30 }),
+    lineId: varchar("line_id", { length: 30 }),
+    facebook: varchar("facebook", { length: 60 }),
+
+    foodLimitations: varchar("food_limitations", { length: 100 }), // comma-sepearated string
+    drugAllergies: varchar("drug_allergies", { length: 100 }), // comma-sepearated string
+    medicalConditions: varchar("medical_conditions", { length: 100 }), // comma-sepearated string
+    medications: varchar("medications", { length: 100 }), // comma-sepearated string
 
     email: varchar("email", { length: 60 }),
     emailVerified: boolean("email_verified").default(false),
@@ -166,10 +176,10 @@ export const students = createTable(
     hometownAddressLatitude: numeric("hometown_address_latitude", { precision: 9, scale: 6 }),
     hometownAddressLongitude: numeric("hometown_address_longitude", { precision: 9, scale: 6 }),
 
-    fatherName: varchar("father_name", { length: 150 }),
+    fatherName: varchar("father_name", { length: 150 }), // full name in english
     fatherBirthYear: smallint("father_birth_year"),
     fatherStatusId: integer("father_status_id").references(() => familyMemberStatuses.id),
-    motherName: varchar("mother_name", { length: 150 }),
+    motherName: varchar("mother_name", { length: 150 }), // full name in english
     motherBirthYear: smallint("mother_birth_year"),
     motherStatusId: integer("mother_status_id").references(() => familyMemberStatuses.id),
     familyStatusId: integer("family_status_id").references(() => familyStatuses.id),
