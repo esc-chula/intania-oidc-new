@@ -5,19 +5,27 @@ import familyStatusesData from "./family_statuses.json" with { type: "json" };
 import familyMemberStatusesData from "./family_member_statuses.json" with { type: "json" };
 import engineeringDepartmentsData from "./engineering_departments.json" with { type: "json" };
 import countriesData from "./countries.json" with { type: "json" };
-import { db } from "@/server/db"
-import { countries, engineeringDepartments, familyMemberStatuses, familyStatuses, religions, thaiDistricts, thaiProvinces } from "@/server/db/schema";
+import { db } from "@/server/db";
+import {
+    countries,
+    engineeringDepartments,
+    familyMemberStatuses,
+    familyStatuses,
+    religions,
+    thaiDistricts,
+    thaiProvinces,
+} from "@/server/db/schema";
 
 const GREEN = "\x1b[32m";
 const RED = "\x1b[31m";
 const RESET = "\x1b[0m";
 
 function info(...args: any[]) {
-    console.info(`${GREEN}[INFO]:${RESET}`, ...args)
+    console.info(`${GREEN}[INFO]:${RESET}`, ...args);
 }
 
 function error(...args: any[]) {
-    console.info(`${RED}[ERROR]:${RESET}`, ...args)
+    console.info(`${RED}[ERROR]:${RESET}`, ...args);
 }
 
 const promises: Promise<void>[] = [];
@@ -33,27 +41,41 @@ function seedOne(context: string, table: any, data: any[]) {
     promises.push(promise);
 }
 
-const insertProvinceData = thaiProvincesData.map(({ provinceCode, provinceNameEn, provinceNameTh }) => ({
-    nameEn: provinceNameEn,
-    nameTh: provinceNameTh,
-    provinceCode,
-}));
+const insertProvinceData = thaiProvincesData.map(
+    ({ provinceCode, provinceNameEn, provinceNameTh }) => ({
+        nameEn: provinceNameEn,
+        nameTh: provinceNameTh,
+        provinceCode,
+    }),
+);
 
 seedOne("province", thaiProvinces, insertProvinceData);
 
-const insertDistrictData = thaiDistrictsData.map(({ provinceCode, postalCode, districtCode, districtNameEn, districtNameTh }) => ({
-    districtCode,
-    postalCode,
-    provinceCode,
-    nameTh: districtNameTh,
-    nameEn: districtNameEn,
-}));
+const insertDistrictData = thaiDistrictsData.map(
+    ({
+        provinceCode,
+        postalCode,
+        districtCode,
+        districtNameEn,
+        districtNameTh,
+    }) => ({
+        districtCode,
+        postalCode,
+        provinceCode,
+        nameTh: districtNameTh,
+        nameEn: districtNameEn,
+    }),
+);
 
 seedOne("district", thaiDistricts, insertDistrictData);
 seedOne("religion", religions, religionsData);
 seedOne("family status", familyStatuses, familyStatusesData);
 seedOne("family member status", familyMemberStatuses, familyMemberStatusesData);
-seedOne("engineering department", engineeringDepartments, engineeringDepartmentsData);
+seedOne(
+    "engineering department",
+    engineeringDepartments,
+    engineeringDepartmentsData,
+);
 seedOne("country", countries, countriesData);
 
 await Promise.allSettled(promises);
