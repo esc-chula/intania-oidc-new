@@ -1,0 +1,107 @@
+[
+    {
+        "code": "0000",
+        "nameEn": "-",
+        "nameTh": "-"
+    },
+    {
+        "code": "2101",
+        "nameEn": "Civil Engineering",
+        "nameTh": "วิศวกรรมโยธา"
+    },
+    {
+        "code": "2102",
+        "nameEn": "Electrical Engineering",
+        "nameTh": "วิศวกรรมไฟฟ้า"
+    },
+    {
+        "code": "2103",
+        "nameEn": "Mechanical Engineering",
+        "nameTh": "วิศวกรรมเครื่องกล"
+    },
+    {
+        "code": "2104",
+        "nameEn": "Industrial Engineering",
+        "nameTh": "วิศวกรรมอุตสาหการ"
+    },
+    {
+        "code": "2105",
+        "nameEn": "Chemical Engineering",
+        "nameTh": "วิศวกรรมเคมี"
+    },
+    {
+        "code": "2106",
+        "nameEn": "Mining and Petroleum Engineering",
+        "nameTh": "วิศวกรรมเหมืองแร่และปิโตรเลียม"
+    },
+    {
+        "code": "2107",
+        "nameEn": "Environmental Engineering",
+        "nameTh": "วิศวกรรมสิ่งแวดล้อม"
+    },
+    {
+        "code": "2108",
+        "nameEn": "Survey Engineering",
+        "nameTh": "วิศวกรรมสำรวจ"
+    },
+    {
+        "code": "2109",
+        "nameEn": "Metallurgical and Materials Engineering",
+        "nameTh": "วิศวกรรมโลหการ"
+    },
+    {
+        "code": "2110",
+        "nameEn": "Computer Engineering",
+        "nameTh": "วิศวกรรมคอมพิวเตอร์"
+    },
+    {
+        "code": "2111",
+        "nameEn": "Nuclear and Radiological  Engineering",
+        "nameTh": "วิศวกรรมนิวเคลียร์ และรังสี"
+    },
+    {
+        "code": "2112",
+        "nameEn": "วิศวกรรมยานยนต์",
+        "nameTh": "Automotive Engineering"
+    },
+    {
+        "code": "2113",
+        "nameEn": "วิศวกรรมทรัพยากรธรณี",
+        "nameTh": "Georesources Engineering"
+    },
+    {
+        "code": "2125",
+        "nameEn": "วิศวกรรมคอมพิวเตอร์ และเทคโนโลยีดิจิทัล",
+        "nameTh": "Computer Engineer and Digital Technology"
+    },
+    {
+        "code": "2141",
+        "nameEn": "Nano Engineering",
+        "nameTh": "วิศวกรรมนาโน (NANO)"
+    },
+    {
+        "code": "2142",
+        "nameEn": "Automotive Design and Manufacturing Engineering (ADME)",
+        "nameTh": "วิศวกรรมการออกแบบและการผลิตยานยนต์ (ADME)"
+    },
+    {
+        "code": "2143",
+        "nameEn": "Information and Communication Engineering (ICE)",
+        "nameTh": "วิศวกรรมสารสนเทศและการสื่อสาร (ICE)"
+    },
+    {
+        "code": "2144",
+        "nameEn": "Aerospace Engineering",
+        "nameTh": "วิศวกรรมอากาศยาน (หลักสูตรนานาชาติ)"
+    },
+    {
+        "code": "2145",
+        "nameEn": "Robotics & AI Engineering",
+        "nameTh": "วิศวกรรมหุ่นยนต์และปัญญาประดิษฐ์ (Robotics AI)"
+    },
+    {
+        "code": "2150",
+        "nameEn": "Chemical and Process Engineering (ChPE)",
+        "nameTh": "วิศวกรรมเคมี และกระบวนการ (ChPE)"
+    }
+]

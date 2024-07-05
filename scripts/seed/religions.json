@@ -1,0 +1,30 @@
+[
+    {
+        "nameTh": "พุทธ",
+        "nameEn": "Buddhism"
+    },
+    {
+        "nameTh": "คริสต์",
+        "nameEn": "Christ"
+    },
+    {
+        "nameTh": "อิสลาม",
+        "nameEn": "Isalam"
+    },
+    {
+        "nameTh": "ฮินดู",
+        "nameEn": "Hindu"
+    },
+    {
+        "nameTh": "พราหมณ์",
+        "nameEn": "Bramanism"
+    },
+    {
+        "nameTh": "ไม่ระบุ",
+        "nameEn": "Not Assign"
+    },
+    {
+        "nameTh": "อื่น ๆ",
+        "nameEn": "Other"
+    }
+]
