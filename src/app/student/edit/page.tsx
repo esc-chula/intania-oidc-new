@@ -35,10 +35,10 @@ export default async function Students() {
             <form>
                 <div className="flex flex-col gap-2">
                     <select className="text-black" name="bloodType">
-                        {bloodTypes.map(x => <option className="text-black" value={x}>{x}</option>)}
+                        {bloodTypes.map(x => <option key={x} className="text-black" value={x}>{x}</option>)}
                     </select>
                     <select className="text-black" name="departmentId">
-                        {data.engineeringDepartments.map(x => <option className="text-black" value={x.id}>{x.nameEn}</option>)}
+                        {data.engineeringDepartments.map(x => <option key={x.id} className="text-black" value={x.id}>{x.nameEn}</option>)}
                     </select>
                     <button className="p-2 hover:scale-110 bg-orange-400 rounded-xl" formAction={submit}>Submit</button>
                 </div>
