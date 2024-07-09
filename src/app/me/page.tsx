@@ -1,4 +1,5 @@
 import { api } from "@/trpc/server";
+import { TRPCError } from "@trpc/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -10,7 +11,7 @@ export default async function Me() {
     }
 
     const me = await api.student.me().catch((e) => {
-        if (e.code == "UNAUTHORIZED") {
+        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
             redirect("/logout");
         }
     });

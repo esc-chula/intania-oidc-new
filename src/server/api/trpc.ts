@@ -9,8 +9,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { PublicContext } from "./context";
-import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import type { PublicContext } from "./context";
+import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 /**
  * 2. INITIALIZATION
@@ -88,7 +88,7 @@ export const protectedProcedure = t.procedure.use(
                         ...ctx,
                         session: session.data,
                         // Safety note: already check undefined in `getSessionFromCookie`
-                        sessionId: (sid as RequestCookie).value,
+                        sessionId: sid!.value,
                     },
                 });
         }

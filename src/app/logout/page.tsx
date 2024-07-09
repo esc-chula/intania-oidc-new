@@ -1,10 +1,9 @@
 "use client";
 
-import { redirect } from "next/navigation";
 import { useEffect } from "react";
 import { logout } from "./actions";
 
-export default async function Login() {
+export default function Login() {
     useEffect(() => {
         logout();
     });

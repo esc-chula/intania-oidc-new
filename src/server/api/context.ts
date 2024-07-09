@@ -1,7 +1,7 @@
 import { db } from "../db";
 
-import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
-import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
+import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
+import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { studentProvider } from "./provider";
 
 export type Context = {
@@ -43,7 +43,7 @@ export async function createPublicContext({
 }) {
     const ic = innerContext();
 
-    var ctx: Context = {
+    const ctx: Context = {
         headers,
         cookies,
         ...ic,

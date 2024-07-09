@@ -49,7 +49,7 @@ export const studentRouter = createTRPCRouter({
                 });
             }
 
-            var expiredAt = new Date();
+            const expiredAt = new Date();
             expiredAt.setDate(expiredAt.getDate() + 1);
 
             const sid = generateSessionId();
