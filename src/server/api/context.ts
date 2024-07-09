@@ -4,6 +4,8 @@ import { db } from "../db";
 import * as schema from "@/server/db/schema";
 import { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { TRPCError } from "@trpc/server";
 
 export type Context = {
     headers: ReadonlyHeaders;
@@ -44,31 +46,20 @@ export async function createTRPCContext({ headers, cookies }: { headers: Readonl
         cookies,
         ...ic,
     };
-    async function getUserFromCookie() {
-        const sid = cookies.get("sid");
 
-        if (!sid) {
-            return null;
-        }
+    const sid = cookies.get("sid");
 
-        const session = await db.query.sessions.findFirst({
-            where: (session, { eq }) => eq(session.id, sid.value),
-            with: {
-                student: true,
-            },
-        });
-
-        console.log({ session })
-
-        return session?.student;
-    }
-
-    const student = await getUserFromCookie();
-
-    console.log({ student });
-
-    if (student) {
-        ctx.student = student;
+    const sessionResult = await getUserFromCookie(sid);
+    
+    switch (sessionResult.code) {
+        case "EMPTY":
+            break;
+        case "INVALID_COOKIE":
+            // TODO: Find way to remove cookie from client
+            break;
+        case "SUCCESS":
+            ctx.student = sessionResult.data.data;
+            break;
     }
 
     return ctx;
@@ -105,3 +96,53 @@ const studentProvider = {
         }
     },
 };
+
+type CheckSessionResult = {
+    code: "INVALID_COOKIE";
+} | {
+    code: "SUCCESS";
+    data: {
+        type: "STUDENT",
+        data: typeof schema.students.$inferSelect
+    }
+} | {
+    code: "EMPTY",
+};
+
+async function getUserFromCookie(sid: RequestCookie | undefined): Promise<CheckSessionResult> {
+    if (!sid) {
+        return {
+            code: "EMPTY",
+        };
+    }
+
+    const session = await db.query.sessions.findFirst({
+        where: (session, { eq }) => eq(session.id, sid.value),
+        with: {
+            student: true,
+        },
+    });
+    
+    if (!session) {
+        return {
+            code: "INVALID_COOKIE",
+        };
+    }
+
+    switch (session.sessionType) {
+        case "student":
+            if (!session.student) {
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "session type does not match",
+                });
+            }
+            return {
+                code: "SUCCESS",
+                data: {
+                    type: "STUDENT",
+                    data: session.student,
+                }
+            }
+    }
+}

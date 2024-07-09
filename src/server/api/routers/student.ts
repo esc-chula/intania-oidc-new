@@ -8,6 +8,7 @@ import {
 import { sessions, students } from "@/server/db/schema";
 
 import { randomBytes } from "crypto";
+import { TRPCError } from "@trpc/server";
 
 export const studentRouter = createTRPCRouter({
     getAll: publicProcedure.query(async ({ ctx, input }) => {
@@ -44,6 +45,13 @@ export const studentRouter = createTRPCRouter({
                 where: (students, { eq }) => eq(students.studentId, studentId),
             });
 
+            if (!student?.id) {
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "student from credential provider does not exist in the database",
+                });
+            }
+
             var expiredAt = new Date();
             expiredAt.setDate(expiredAt.getDate() + 1);
 
@@ -51,7 +59,8 @@ export const studentRouter = createTRPCRouter({
 
             await ctx.db.insert(sessions).values({
                 id: sid,
-                studentId: student?.id,
+                sessionType: "student",
+                studentId: student.id,
                 expiredAt,
             });
 

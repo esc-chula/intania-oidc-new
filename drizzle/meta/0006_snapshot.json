@@ -1,0 +1,942 @@
+{
+  "id": "0d6d7bf9-9114-4c79-b7a3-25d3754672fa",
+  "prevId": "3dc98d53-03e5-40cb-aeeb-b77c9d27e529",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.intania-oidc_countries": {
+      "name": "intania-oidc_countries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "char(2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_engineering_departments": {
+      "name": "intania-oidc_engineering_departments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name_th": {
+          "name": "name_th",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(10)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_family_member_statuses": {
+      "name": "intania-oidc_family_member_statuses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "value_th": {
+          "name": "value_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "value_en": {
+          "name": "value_en",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_family_statuses": {
+      "name": "intania-oidc_family_statuses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "value_th": {
+          "name": "value_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "value_en": {
+          "name": "value_en",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_religions": {
+      "name": "intania-oidc_religions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name_th": {
+          "name": "name_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_sessions": {
+      "name": "intania-oidc_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "varchar(64)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "session_type": {
+          "name": "session_type",
+          "type": "session_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked": {
+          "name": "revoked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "expired_at": {
+          "name": "expired_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "intania-oidc_sessions_student_id_intania-oidc_students_id_fk": {
+          "name": "intania-oidc_sessions_student_id_intania-oidc_students_id_fk",
+          "tableFrom": "intania-oidc_sessions",
+          "tableTo": "intania-oidc_students",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_students": {
+      "name": "intania-oidc_students",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "department_id": {
+          "name": "department_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "national_id": {
+          "name": "national_id",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_name_th": {
+          "name": "first_name_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_name_en": {
+          "name": "first_name_en",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "family_name_th": {
+          "name": "family_name_th",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "family_name_en": {
+          "name": "family_name_en",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "middle_name_th": {
+          "name": "middle_name_th",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "middle_name_en": {
+          "name": "middle_name_en",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nickname_th": {
+          "name": "nickname_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nickname_en": {
+          "name": "nickname_en",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "preferred_pronoun": {
+          "name": "preferred_pronoun",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "line_id": {
+          "name": "line_id",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "facebook": {
+          "name": "facebook",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "food_limitations": {
+          "name": "food_limitations",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "drug_allergies": {
+          "name": "drug_allergies",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "medical_conditions": {
+          "name": "medical_conditions",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "medications": {
+          "name": "medications",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_verified": {
+          "name": "email_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number_verified": {
+          "name": "phone_number_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "birth_date": {
+          "name": "birth_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "blood_type": {
+          "name": "blood_type",
+          "type": "blood_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nationality_id": {
+          "name": "nationality_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "religion_id": {
+          "name": "religion_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shirt_size": {
+          "name": "shirt_size",
+          "type": "varchar(15)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_number": {
+          "name": "current_address_number",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_province_id": {
+          "name": "current_address_province_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_district_id": {
+          "name": "current_address_district_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_other": {
+          "name": "current_address_other",
+          "type": "varchar(400)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_latitude": {
+          "name": "current_address_latitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_longitude": {
+          "name": "current_address_longitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_number": {
+          "name": "hometown_address_number",
+          "type": "varchar(60)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_province_id": {
+          "name": "hometown_address_province_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_district_id": {
+          "name": "hometown_address_district_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_other": {
+          "name": "hometown_address_other",
+          "type": "varchar(400)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_latitude": {
+          "name": "hometown_address_latitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hometown_address_longitude": {
+          "name": "hometown_address_longitude",
+          "type": "numeric(9, 6)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "father_name": {
+          "name": "father_name",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "father_birth_year": {
+          "name": "father_birth_year",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "father_status_id": {
+          "name": "father_status_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mother_name": {
+          "name": "mother_name",
+          "type": "varchar(150)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mother_birth_year": {
+          "name": "mother_birth_year",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mother_status_id": {
+          "name": "mother_status_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "family_status_id": {
+          "name": "family_status_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent": {
+          "name": "parent",
+          "type": "parents",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_phone_number": {
+          "name": "parent_phone_number",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_address": {
+          "name": "parent_address",
+          "type": "varchar(400)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sibling_total": {
+          "name": "sibling_total",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sibling_order": {
+          "name": "sibling_order",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "profile_picture_key": {
+          "name": "profile_picture_key",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "student_id_idx": {
+          "name": "student_id_idx",
+          "columns": [
+            "student_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "intania-oidc_students_department_id_intania-oidc_engineering_departments_id_fk": {
+          "name": "intania-oidc_students_department_id_intania-oidc_engineering_departments_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_engineering_departments",
+          "columnsFrom": [
+            "department_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_nationality_id_intania-oidc_countries_id_fk": {
+          "name": "intania-oidc_students_nationality_id_intania-oidc_countries_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_countries",
+          "columnsFrom": [
+            "nationality_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_religion_id_intania-oidc_religions_id_fk": {
+          "name": "intania-oidc_students_religion_id_intania-oidc_religions_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_religions",
+          "columnsFrom": [
+            "religion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_current_address_province_id_intania-oidc_thai_provinces_id_fk": {
+          "name": "intania-oidc_students_current_address_province_id_intania-oidc_thai_provinces_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_thai_provinces",
+          "columnsFrom": [
+            "current_address_province_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_current_address_district_id_intania-oidc_thai_districts_id_fk": {
+          "name": "intania-oidc_students_current_address_district_id_intania-oidc_thai_districts_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_thai_districts",
+          "columnsFrom": [
+            "current_address_district_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_hometown_address_province_id_intania-oidc_thai_provinces_id_fk": {
+          "name": "intania-oidc_students_hometown_address_province_id_intania-oidc_thai_provinces_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_thai_provinces",
+          "columnsFrom": [
+            "hometown_address_province_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_hometown_address_district_id_intania-oidc_thai_districts_id_fk": {
+          "name": "intania-oidc_students_hometown_address_district_id_intania-oidc_thai_districts_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_thai_districts",
+          "columnsFrom": [
+            "hometown_address_district_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_father_status_id_intania-oidc_family_member_statuses_id_fk": {
+          "name": "intania-oidc_students_father_status_id_intania-oidc_family_member_statuses_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_family_member_statuses",
+          "columnsFrom": [
+            "father_status_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_mother_status_id_intania-oidc_family_member_statuses_id_fk": {
+          "name": "intania-oidc_students_mother_status_id_intania-oidc_family_member_statuses_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_family_member_statuses",
+          "columnsFrom": [
+            "mother_status_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "intania-oidc_students_family_status_id_intania-oidc_family_statuses_id_fk": {
+          "name": "intania-oidc_students_family_status_id_intania-oidc_family_statuses_id_fk",
+          "tableFrom": "intania-oidc_students",
+          "tableTo": "intania-oidc_family_statuses",
+          "columnsFrom": [
+            "family_status_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.intania-oidc_thai_districts": {
+      "name": "intania-oidc_thai_districts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "province_code": {
+          "name": "province_code",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "disctrict_code": {
+          "name": "disctrict_code",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "postal_code": {
+          "name": "postal_code",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_th": {
+          "name": "name_th",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "intania-oidc_thai_districts_province_code_intania-oidc_thai_provinces_province_code_fk": {
+          "name": "intania-oidc_thai_districts_province_code_intania-oidc_thai_provinces_province_code_fk",
+          "tableFrom": "intania-oidc_thai_districts",
+          "tableTo": "intania-oidc_thai_provinces",
+          "columnsFrom": [
+            "province_code"
+          ],
+          "columnsTo": [
+            "province_code"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "intania-oidc_thai_districts_disctrict_code_unique": {
+          "name": "intania-oidc_thai_districts_disctrict_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "disctrict_code"
+          ]
+        }
+      }
+    },
+    "public.intania-oidc_thai_provinces": {
+      "name": "intania-oidc_thai_provinces",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "province_code": {
+          "name": "province_code",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_th": {
+          "name": "name_th",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "intania-oidc_thai_provinces_province_code_unique": {
+          "name": "intania-oidc_thai_provinces_province_code_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "province_code"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {
+    "public.blood_type": {
+      "name": "blood_type",
+      "schema": "public",
+      "values": [
+        "A",
+        "B",
+        "AB",
+        "o"
+      ]
+    },
+    "public.parents": {
+      "name": "parents",
+      "schema": "public",
+      "values": [
+        "Father",
+        "Mother",
+        "Other"
+      ]
+    },
+    "public.session_type": {
+      "name": "session_type",
+      "schema": "public",
+      "values": [
+        "student"
+      ]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

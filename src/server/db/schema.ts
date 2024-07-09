@@ -29,6 +29,8 @@ export const bloodTypes = pgEnum("blood_type", ["A", "B", "AB", "o"]);
 
 export const parent = pgEnum("parents", ["Father", "Mother", "Other"]);
 
+export const sessionTypes = pgEnum("session_type", ["student"]);
+
 export const familyMemberStatuses = createTable("family_member_statuses", {
     id: serial("id").primaryKey(),
     valueTh: varchar("value_th", { length: 30 }),
@@ -197,8 +199,8 @@ export const students = createTable(
             () => familyStatuses.id,
         ),
         parent: parent("parent"),
-        parentPhoneNumber: varchar("phone_number", { length: 16 }),
-        parentAddress: varchar("hometown_address_other", { length: 400 }),
+        parentPhoneNumber: varchar("parent_phone_number", { length: 16 }),
+        parentAddress: varchar("parent_address", { length: 400 }),
 
         siblingTotal: smallint("sibling_total"),
         siblingOrder: smallint("sibling_order"),
@@ -217,6 +219,7 @@ export const students = createTable(
 
 export const sessions = createTable("sessions", {
     id: varchar("id", { length: 64 }).primaryKey(),
+    sessionType: sessionTypes("session_type").notNull(),
     studentId: integer("student_id").references(() => students.id),
     revoked: boolean("revoked").default(false).notNull(),
 

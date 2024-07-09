@@ -36,6 +36,20 @@
       "when": 1720487087987,
       "tag": "0004_fix_typo_expired_at",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1720504912940,
+      "tag": "0005_session_type",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1720506178447,
+      "tag": "0006_lyrical_raza",
+      "breakpoints": true
     }
   ]
 }
