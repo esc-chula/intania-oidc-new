@@ -4,7 +4,7 @@ import { cookies, headers } from "next/headers";
 import { cache } from "react";
 
 import { createCaller } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/context";
+import { createPublicContext } from "@/server/api/context";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -15,7 +15,7 @@ const createContext = cache(() => {
     const cookieStore = cookies();
     heads.set("x-trpc-source", "rsc");
 
-    return createTRPCContext({
+    return createPublicContext({
         headers: heads,
         cookies: cookieStore,
     });

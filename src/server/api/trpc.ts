@@ -9,7 +9,8 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { CreateTRPCContext } from "./context";
+import { PublicContext } from "./context";
+import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 /**
  * 2. INITIALIZATION
@@ -18,7 +19,7 @@ import { CreateTRPCContext } from "./context";
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<CreateTRPCContext>().create({
+const t = initTRPC.context<PublicContext>().create({
     transformer: superjson,
     errorFormatter({ shape, error }) {
         return {
@@ -73,14 +74,70 @@ export const protectedProcedure = t.procedure.use(
     async function isAuthed(opts) {
         const { ctx } = opts;
 
-        if (!ctx.student) {
-            throw new TRPCError({ code: "UNAUTHORIZED" });
-        }
+        const sid = ctx.cookies.get("sid");
 
-        return opts.next({
-            ctx: {
-                ...ctx,
-            },
-        });
+        const session = await getSessionFromCookie(ctx, sid);
+
+        switch (session.code) {
+            case "INVALID_COOKIE":
+            case "EMPTY":
+                throw new TRPCError({ code: "UNAUTHORIZED" });
+            case "SUCCESS":
+                return opts.next({
+                    ctx: {
+                        ...ctx,
+                        session: session.data,
+                        // Safety note: already check undefined in `getSessionFromCookie`
+                        sessionId: (sid as RequestCookie).value,
+                    },
+                });
+        }
     },
 );
+
+type CheckSessionResult = {
+    code: "INVALID_COOKIE";
+} | {
+    code: "SUCCESS";
+    data: {
+        sessionType: "student";
+        studentId: number;
+    }
+} | {
+    code: "EMPTY";
+};
+
+async function getSessionFromCookie(ctx: PublicContext, sid: RequestCookie | undefined): Promise<CheckSessionResult> {
+    if (!sid) {
+        return {
+            code: "EMPTY",
+        };
+    }
+
+    const session = await ctx.db.query.sessions.findFirst({
+        where: (session, { eq, and, gt, not }) => and(eq(session.id, sid.value), not(session.revoked), gt(session.expiredAt, new Date())),
+    });
+    
+    if (!session) {
+        return {
+            code: "INVALID_COOKIE",
+        };
+    }
+
+    switch (session.sessionType) {
+        case "student":
+            if (!session.studentId) {
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "session type does not match",
+                });
+            }
+            return {
+                code: "SUCCESS",
+                data: {
+                    sessionType: session.sessionType,
+                    studentId: session.studentId,
+                }
+            }
+    }
+}

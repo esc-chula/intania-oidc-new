@@ -12,11 +12,6 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 
 export const studentRouter = createTRPCRouter({
-    getAll: publicProcedure.query(async ({ ctx, input }) => {
-        const _students = await ctx.db.select().from(students);
-        return _students;
-    }),
-
     login: publicProcedure
         .input(
             z.object({
@@ -76,7 +71,18 @@ export const studentRouter = createTRPCRouter({
         }),
 
     me: protectedProcedure.query(async ({ ctx }) => {
-        return ctx.student;
+        const student = await ctx.db.query.students.findFirst({
+            where: ((student, { eq }) => eq(student.id, ctx.session.studentId)),
+        });
+
+        if (!student) {
+            throw new TRPCError({
+                code: "INTERNAL_SERVER_ERROR",
+                message: "session is valid but student is not",
+            });
+        }
+
+        return student;
     }),
 
     update: protectedProcedure.input(z.object({
