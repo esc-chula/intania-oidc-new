@@ -1,0 +1,2 @@
+ALTER TABLE "intania-oidc_sessions" ALTER COLUMN "created_at" SET DEFAULT CURRENT_TIMESTAMP;--> statement-breakpoint
+ALTER TABLE "intania-oidc_sessions" ADD COLUMN "expired_at" timestamp with time zone NOT NULL;

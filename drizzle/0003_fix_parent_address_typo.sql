@@ -1,0 +1,1 @@
+ALTER TABLE "intania-oidc_students" ADD COLUMN "parent_address" varchar(400);

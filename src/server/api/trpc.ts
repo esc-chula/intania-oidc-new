@@ -6,30 +6,10 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
-import { db } from "@/server/db";
-
-/**
- * 1. CONTEXT
- *
- * This section defines the "contexts" that are available in the backend API.
- *
- * These allow you to access things when processing a request, like the database, the session, etc.
- *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
- *
- * @see https://trpc.io/docs/server/context
- */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-    return {
-        db,
-        ...opts,
-    };
-};
+import { CreateTRPCContext } from "./context";
 
 /**
  * 2. INITIALIZATION
@@ -38,7 +18,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<CreateTRPCContext>().create({
     transformer: superjson,
     errorFormatter({ shape, error }) {
         return {
@@ -83,3 +63,25 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+/**
+ * Auth procedure
+ *
+ * This is procedure that already check for user authenticity.
+ */
+export const protectedProcedure = t.procedure.use(
+    async function isAuthed(opts) {
+        const { ctx } = opts;
+        console.log(ctx);
+
+        if (!ctx.student) {
+            throw new TRPCError({ code: "UNAUTHORIZED" });
+        }
+
+        return opts.next({
+            ctx: {
+                ...ctx,
+            },
+        });
+    },
+);

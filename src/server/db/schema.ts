@@ -215,7 +215,25 @@ export const students = createTable(
     }),
 );
 
-export const studentRelations = relations(students, ({ one }) => ({
+export const sessions = createTable("sessions", {
+    id: varchar("id", { length: 64 }).primaryKey(),
+    studentId: integer("student_id").references(() => students.id),
+    revoked: boolean("revoked").default(false).notNull(),
+
+    createdAt: timestamp("created_at", { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    expiredAt: timestamp("expired_at", { withTimezone: true }).notNull(),
+});
+
+export const sessionRelations = relations(sessions, ({ one }) => ({
+    student: one(students, {
+        fields: [sessions.studentId],
+        references: [students.id],
+    }),
+}));
+
+export const studentRelations = relations(students, ({ one, many }) => ({
     nationality: one(countries, {
         fields: [students.nationalityId],
         references: [countries.id],
@@ -252,6 +270,7 @@ export const studentRelations = relations(students, ({ one }) => ({
         fields: [students.hometownAddressDistrictId],
         references: [thaiDistricts.id],
     }),
+    sessions: many(sessions),
 }));
 
 export const thaiDistrictRelations = relations(thaiDistricts, ({ one }) => ({

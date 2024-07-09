@@ -1,13 +1,41 @@
 {
-    "version": "6",
-    "dialect": "postgresql",
-    "entries": [
-        {
-            "idx": 0,
-            "version": "6",
-            "when": 1720107295496,
-            "tag": "0000_init_schema",
-            "breakpoints": true
-        }
-    ]
+  "version": "6",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1720107295496,
+      "tag": "0000_init_schema",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1720470282900,
+      "tag": "0001_session",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1720470379177,
+      "tag": "0002_fix_phone_number_typo",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1720470438494,
+      "tag": "0003_fix_parent_address_typo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1720487087987,
+      "tag": "0004_fix_typo_expired_at",
+      "breakpoints": true
+    }
+  ]
 }
