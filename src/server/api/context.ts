@@ -55,8 +55,10 @@ export async function createTRPCContext({ headers, cookies }: { headers: Readonl
         case "EMPTY":
             break;
         case "INVALID_COOKIE":
-            // TODO: Find way to remove cookie from client
-            break;
+            throw new TRPCError({
+                code: "FORBIDDEN",
+                message: "invalid cookie",
+            });
         case "SUCCESS":
             ctx.student = sessionResult.data.data;
             break;
