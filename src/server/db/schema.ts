@@ -25,7 +25,7 @@ import {
  */
 export const createTable = pgTableCreator((name) => `intania-oidc_${name}`);
 
-export const bloodTypes = pgEnum("blood_type", ["A", "B", "AB", "o"]);
+export const bloodTypes = pgEnum("blood_type", ["A", "B", "AB", "O"]);
 
 export const parent = pgEnum("parents", ["Father", "Mother", "Other"]);
 
@@ -142,7 +142,7 @@ export const students = createTable(
         phoneNumberVerified: boolean("phone_number_verified").default(false),
 
         birthDate: date("birth_date"),
-        bloodTypeId: bloodTypes("blood_type"),
+        bloodType: bloodTypes("blood_type"),
         nationalityId: integer("nationality_id").references(() => countries.id),
         religionId: integer("religion_id").references(() => religions.id),
         shirtSize: varchar("shirt_size", { length: 15 }),

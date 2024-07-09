@@ -1,0 +1,1 @@
+ALTER TYPE "blood_type" ADD VALUE 'O';

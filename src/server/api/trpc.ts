@@ -72,7 +72,6 @@ export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(
     async function isAuthed(opts) {
         const { ctx } = opts;
-        console.log(ctx);
 
         if (!ctx.student) {
             throw new TRPCError({ code: "UNAUTHORIZED" });
