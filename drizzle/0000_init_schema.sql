@@ -1,11 +1,17 @@
 DO $$ BEGIN
- CREATE TYPE "public"."blood_type" AS ENUM('A', 'B', 'AB', 'o');
+ CREATE TYPE "public"."blood_type" AS ENUM('A', 'B', 'AB', 'O');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  CREATE TYPE "public"."parents" AS ENUM('Father', 'Mother', 'Other');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ CREATE TYPE "public"."session_type" AS ENUM('student');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -49,6 +55,15 @@ CREATE TABLE IF NOT EXISTS "intania-oidc_religions" (
 	"name_en" varchar(30),
 	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"updated_at" timestamp with time zone
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "intania-oidc_sessions" (
+	"id" varchar(64) PRIMARY KEY NOT NULL,
+	"session_type" "session_type" NOT NULL,
+	"student_id" integer,
+	"revoked" boolean DEFAULT false NOT NULL,
+	"created_at" timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"expired_at" timestamp with time zone NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "intania-oidc_students" (
@@ -101,6 +116,8 @@ CREATE TABLE IF NOT EXISTS "intania-oidc_students" (
 	"mother_status_id" integer,
 	"family_status_id" integer,
 	"parent" "parents",
+	"parent_phone_number" varchar(16),
+	"parent_address" varchar(400),
 	"sibling_total" smallint,
 	"sibling_order" smallint,
 	"profile_picture_key" varchar(30),
@@ -129,6 +146,12 @@ CREATE TABLE IF NOT EXISTS "intania-oidc_thai_provinces" (
 	"updated_at" timestamp with time zone,
 	CONSTRAINT "intania-oidc_thai_provinces_province_code_unique" UNIQUE("province_code")
 );
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "intania-oidc_sessions" ADD CONSTRAINT "intania-oidc_sessions_student_id_intania-oidc_students_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."intania-oidc_students"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "intania-oidc_students" ADD CONSTRAINT "intania-oidc_students_department_id_intania-oidc_engineering_departments_id_fk" FOREIGN KEY ("department_id") REFERENCES "public"."intania-oidc_engineering_departments"("id") ON DELETE no action ON UPDATE no action;
