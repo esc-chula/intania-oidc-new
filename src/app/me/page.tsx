@@ -9,16 +9,17 @@ export default async function Me() {
         redirect("/login");
     }
 
-    const me = await api.student.me().catch(e => {
+    const me = await api.student.me().catch((e) => {
         if (e.code == "UNAUTHORIZED") {
-            redirect("/logout")
+            redirect("/logout");
         }
     });
 
-    return (<>
-        <div>
-            id: {me?.studentId},
-            email: {me?.email},
-        </div>
-    </>)
+    return (
+        <>
+            <div>
+                id: {me?.studentId}, email: {me?.email},
+            </div>
+        </>
+    );
 }

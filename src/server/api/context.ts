@@ -31,10 +31,16 @@ export function innerContext() {
     return {
         db,
         studentProvider,
-    }
+    };
 }
 
-export async function createPublicContext({ headers, cookies }: { headers: ReadonlyHeaders, cookies: ReadonlyRequestCookies }) {
+export async function createPublicContext({
+    headers,
+    cookies,
+}: {
+    headers: ReadonlyHeaders;
+    cookies: ReadonlyRequestCookies;
+}) {
     const ic = innerContext();
 
     var ctx: Context = {

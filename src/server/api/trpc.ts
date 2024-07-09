@@ -95,19 +95,25 @@ export const protectedProcedure = t.procedure.use(
     },
 );
 
-type CheckSessionResult = {
-    code: "INVALID_COOKIE";
-} | {
-    code: "SUCCESS";
-    data: {
-        sessionType: "student";
-        studentId: number;
-    }
-} | {
-    code: "EMPTY";
-};
+type CheckSessionResult =
+    | {
+          code: "INVALID_COOKIE";
+      }
+    | {
+          code: "SUCCESS";
+          data: {
+              sessionType: "student";
+              studentId: number;
+          };
+      }
+    | {
+          code: "EMPTY";
+      };
 
-async function getSessionFromCookie(ctx: PublicContext, sid: RequestCookie | undefined): Promise<CheckSessionResult> {
+async function getSessionFromCookie(
+    ctx: PublicContext,
+    sid: RequestCookie | undefined,
+): Promise<CheckSessionResult> {
     if (!sid) {
         return {
             code: "EMPTY",
@@ -115,9 +121,14 @@ async function getSessionFromCookie(ctx: PublicContext, sid: RequestCookie | und
     }
 
     const session = await ctx.db.query.sessions.findFirst({
-        where: (session, { eq, and, gt, not }) => and(eq(session.id, sid.value), not(session.revoked), gt(session.expiredAt, new Date())),
+        where: (session, { eq, and, gt, not }) =>
+            and(
+                eq(session.id, sid.value),
+                not(session.revoked),
+                gt(session.expiredAt, new Date()),
+            ),
     });
-    
+
     if (!session) {
         return {
             code: "INVALID_COOKIE",
@@ -137,7 +148,7 @@ async function getSessionFromCookie(ctx: PublicContext, sid: RequestCookie | und
                 data: {
                     sessionType: session.sessionType,
                     studentId: session.studentId,
-                }
-            }
+                },
+            };
     }
 }
