@@ -6,30 +6,11 @@
  * TL;DR - This is where all the tRPC server stuff is created and plugged in. The pieces you will
  * need to use are documented accordingly near the end.
  */
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-
-import { db } from "@/server/db";
-
-/**
- * 1. CONTEXT
- *
- * This section defines the "contexts" that are available in the backend API.
- *
- * These allow you to access things when processing a request, like the database, the session, etc.
- *
- * This helper generates the "internals" for a tRPC context. The API handler and RSC clients each
- * wrap this and provides the required context.
- *
- * @see https://trpc.io/docs/server/context
- */
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-    return {
-        db,
-        ...opts,
-    };
-};
+import type { PublicContext } from "./context";
+import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
 
 /**
  * 2. INITIALIZATION
@@ -38,7 +19,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
  * ZodErrors so that you get typesafety on the frontend if your procedure fails due to validation
  * errors on the backend.
  */
-const t = initTRPC.context<typeof createTRPCContext>().create({
+const t = initTRPC.context<PublicContext>().create({
     transformer: superjson,
     errorFormatter({ shape, error }) {
         return {
@@ -83,3 +64,91 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+
+/**
+ * Auth procedure
+ *
+ * This is procedure that already check for user authenticity.
+ */
+export const protectedProcedure = t.procedure.use(
+    async function isAuthed(opts) {
+        const { ctx } = opts;
+
+        const sid = ctx.cookies.get("sid");
+
+        const session = await getSessionFromCookie(ctx, sid);
+
+        switch (session.code) {
+            case "INVALID_COOKIE":
+            case "EMPTY":
+                throw new TRPCError({ code: "UNAUTHORIZED" });
+            case "SUCCESS":
+                return opts.next({
+                    ctx: {
+                        ...ctx,
+                        session: session.data,
+                        // Safety note: already check undefined in `getSessionFromCookie`
+                        sessionId: sid!.value,
+                    },
+                });
+        }
+    },
+);
+
+type CheckSessionResult =
+    | {
+          code: "INVALID_COOKIE";
+      }
+    | {
+          code: "SUCCESS";
+          data: {
+              sessionType: "student";
+              studentId: number;
+          };
+      }
+    | {
+          code: "EMPTY";
+      };
+
+async function getSessionFromCookie(
+    ctx: PublicContext,
+    sid: RequestCookie | undefined,
+): Promise<CheckSessionResult> {
+    if (!sid) {
+        return {
+            code: "EMPTY",
+        };
+    }
+
+    const session = await ctx.db.query.sessions.findFirst({
+        where: (session, { eq, and, gt, not }) =>
+            and(
+                eq(session.id, sid.value),
+                not(session.revoked),
+                gt(session.expiredAt, new Date()),
+            ),
+    });
+
+    if (!session) {
+        return {
+            code: "INVALID_COOKIE",
+        };
+    }
+
+    switch (session.sessionType) {
+        case "student":
+            if (!session.studentId) {
+                throw new TRPCError({
+                    code: "INTERNAL_SERVER_ERROR",
+                    message: "session type does not match",
+                });
+            }
+            return {
+                code: "SUCCESS",
+                data: {
+                    sessionType: session.sessionType,
+                    studentId: session.studentId,
+                },
+            };
+    }
+}

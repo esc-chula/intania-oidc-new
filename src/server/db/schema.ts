@@ -25,9 +25,11 @@ import {
  */
 export const createTable = pgTableCreator((name) => `intania-oidc_${name}`);
 
-export const bloodTypes = pgEnum("blood_type", ["A", "B", "AB", "o"]);
+export const bloodTypes = pgEnum("blood_type", ["A", "B", "AB", "O"]);
 
 export const parent = pgEnum("parents", ["Father", "Mother", "Other"]);
+
+export const sessionTypes = pgEnum("session_type", ["student"]);
 
 export const familyMemberStatuses = createTable("family_member_statuses", {
     id: serial("id").primaryKey(),
@@ -140,7 +142,7 @@ export const students = createTable(
         phoneNumberVerified: boolean("phone_number_verified").default(false),
 
         birthDate: date("birth_date"),
-        bloodTypeId: bloodTypes("blood_type"),
+        bloodType: bloodTypes("blood_type"),
         nationalityId: integer("nationality_id").references(() => countries.id),
         religionId: integer("religion_id").references(() => religions.id),
         shirtSize: varchar("shirt_size", { length: 15 }),
@@ -197,8 +199,8 @@ export const students = createTable(
             () => familyStatuses.id,
         ),
         parent: parent("parent"),
-        parentPhoneNumber: varchar("phone_number", { length: 16 }),
-        parentAddress: varchar("hometown_address_other", { length: 400 }),
+        parentPhoneNumber: varchar("parent_phone_number", { length: 16 }),
+        parentAddress: varchar("parent_address", { length: 400 }),
 
         siblingTotal: smallint("sibling_total"),
         siblingOrder: smallint("sibling_order"),
@@ -215,7 +217,26 @@ export const students = createTable(
     }),
 );
 
-export const studentRelations = relations(students, ({ one }) => ({
+export const sessions = createTable("sessions", {
+    id: varchar("id", { length: 64 }).primaryKey(),
+    sessionType: sessionTypes("session_type").notNull(),
+    studentId: integer("student_id").references(() => students.id),
+    revoked: boolean("revoked").default(false).notNull(),
+
+    createdAt: timestamp("created_at", { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    expiredAt: timestamp("expired_at", { withTimezone: true }).notNull(),
+});
+
+export const sessionRelations = relations(sessions, ({ one }) => ({
+    student: one(students, {
+        fields: [sessions.studentId],
+        references: [students.id],
+    }),
+}));
+
+export const studentRelations = relations(students, ({ one, many }) => ({
     nationality: one(countries, {
         fields: [students.nationalityId],
         references: [countries.id],
@@ -252,6 +273,7 @@ export const studentRelations = relations(students, ({ one }) => ({
         fields: [students.hometownAddressDistrictId],
         references: [thaiDistricts.id],
     }),
+    sessions: many(sessions),
 }));
 
 export const thaiDistrictRelations = relations(thaiDistricts, ({ one }) => ({

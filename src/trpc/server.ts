@@ -1,10 +1,10 @@
 import "server-only";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { cache } from "react";
 
 import { createCaller } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
+import { createPublicContext } from "@/server/api/context";
 
 /**
  * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
@@ -12,10 +12,12 @@ import { createTRPCContext } from "@/server/api/trpc";
  */
 const createContext = cache(() => {
     const heads = new Headers(headers());
+    const cookieStore = cookies();
     heads.set("x-trpc-source", "rsc");
 
-    return createTRPCContext({
+    return createPublicContext({
         headers: heads,
+        cookies: cookieStore,
     });
 });
 
