@@ -1,4 +1,4 @@
-import ESCLogoWithoutText from "@/app/_components/esc/ESCLogoWithoutText";
+import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Button } from "./ui/button";
