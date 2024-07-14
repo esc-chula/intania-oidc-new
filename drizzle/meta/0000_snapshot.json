@@ -1,5 +1,5 @@
 {
-  "id": "c069a6fc-554b-4eef-8dca-134ce464796a",
+  "id": "ad2ba9f3-db07-4cb4-b50e-7933ba83fcd3",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -306,63 +306,69 @@
           "primaryKey": false,
           "notNull": false
         },
-        "title": {
-          "name": "title",
-          "type": "varchar(16)",
+        "title_th": {
+          "name": "title_th",
+          "type": "varchar(30)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title_en": {
+          "name": "title_en",
+          "type": "varchar(30)",
           "primaryKey": false,
           "notNull": false
         },
         "first_name_th": {
           "name": "first_name_th",
-          "type": "varchar(30)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
         "first_name_en": {
           "name": "first_name_en",
-          "type": "varchar(30)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
         "family_name_th": {
           "name": "family_name_th",
-          "type": "varchar(60)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
         "family_name_en": {
           "name": "family_name_en",
-          "type": "varchar(60)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
         "middle_name_th": {
           "name": "middle_name_th",
-          "type": "varchar(60)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
         "middle_name_en": {
           "name": "middle_name_en",
-          "type": "varchar(60)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
         "nickname_th": {
           "name": "nickname_th",
-          "type": "varchar(30)",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         },
         "nickname_en": {
           "name": "nickname_en",
-          "type": "varchar(30)",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         },
         "preferred_pronoun": {
           "name": "preferred_pronoun",
-          "type": "varchar(30)",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         },
@@ -380,31 +386,31 @@
         },
         "food_limitations": {
           "name": "food_limitations",
-          "type": "varchar(100)",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
         "drug_allergies": {
           "name": "drug_allergies",
-          "type": "varchar(100)",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
         "medical_conditions": {
           "name": "medical_conditions",
-          "type": "varchar(100)",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
         "medications": {
           "name": "medications",
-          "type": "varchar(100)",
+          "type": "varchar(200)",
           "primaryKey": false,
           "notNull": false
         },
         "email": {
           "name": "email",
-          "type": "varchar(60)",
+          "type": "varchar(90)",
           "primaryKey": false,
           "notNull": false
         },
@@ -455,7 +461,7 @@
         },
         "shirt_size": {
           "name": "shirt_size",
-          "type": "varchar(15)",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -533,7 +539,7 @@
         },
         "father_name": {
           "name": "father_name",
-          "type": "varchar(150)",
+          "type": "varchar(300)",
           "primaryKey": false,
           "notNull": false
         },
@@ -551,7 +557,7 @@
         },
         "mother_name": {
           "name": "mother_name",
-          "type": "varchar(150)",
+          "type": "varchar(300)",
           "primaryKey": false,
           "notNull": false
         },

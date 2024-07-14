@@ -118,25 +118,26 @@ export const students = createTable(
         ),
         nationalId: varchar("national_id", { length: 15 }),
 
-        title: varchar("title", { length: 16 }),
-        firstNameTh: varchar("first_name_th", { length: 30 }),
-        firstNameEn: varchar("first_name_en", { length: 30 }),
-        familyNameTh: varchar("family_name_th", { length: 60 }),
-        familyNameEn: varchar("family_name_en", { length: 60 }),
-        middleNameTh: varchar("middle_name_th", { length: 60 }),
-        middleNameEn: varchar("middle_name_en", { length: 60 }),
-        nicknameTh: varchar("nickname_th", { length: 30 }),
-        nicknameEn: varchar("nickname_en", { length: 30 }),
-        preferredPronoun: varchar("preferred_pronoun", { length: 30 }),
+        titleTh: varchar("title_th", { length: 30 }),
+        titleEn: varchar("title_en", { length: 30 }),
+        firstNameTh: varchar("first_name_th", { length: 90 }),
+        firstNameEn: varchar("first_name_en", { length: 90 }),
+        familyNameTh: varchar("family_name_th", { length: 90 }),
+        familyNameEn: varchar("family_name_en", { length: 90 }),
+        middleNameTh: varchar("middle_name_th", { length: 90 }),
+        middleNameEn: varchar("middle_name_en", { length: 90 }),
+        nicknameTh: varchar("nickname_th", { length: 50 }),
+        nicknameEn: varchar("nickname_en", { length: 50 }),
+        preferredPronoun: varchar("preferred_pronoun", { length: 50 }),
         lineId: varchar("line_id", { length: 30 }),
         facebook: varchar("facebook", { length: 60 }),
 
-        foodLimitations: varchar("food_limitations", { length: 100 }), // comma-sepearated string
-        drugAllergies: varchar("drug_allergies", { length: 100 }), // comma-sepearated string
-        medicalConditions: varchar("medical_conditions", { length: 100 }), // comma-sepearated string
-        medications: varchar("medications", { length: 100 }), // comma-sepearated string
+        foodLimitations: varchar("food_limitations", { length: 200 }), // comma-sepearated string
+        drugAllergies: varchar("drug_allergies", { length: 200 }), // comma-sepearated string
+        medicalConditions: varchar("medical_conditions", { length: 200 }), // comma-sepearated string
+        medications: varchar("medications", { length: 200 }), // comma-sepearated string
 
-        email: varchar("email", { length: 60 }),
+        email: varchar("email", { length: 90 }),
         emailVerified: boolean("email_verified").default(false),
         phoneNumber: varchar("phone_number", { length: 16 }),
         phoneNumberVerified: boolean("phone_number_verified").default(false),
@@ -145,7 +146,7 @@ export const students = createTable(
         bloodType: bloodTypes("blood_type"),
         nationalityId: integer("nationality_id").references(() => countries.id),
         religionId: integer("religion_id").references(() => religions.id),
-        shirtSize: varchar("shirt_size", { length: 15 }),
+        shirtSize: integer("shirt_size"), // shirt size in inches
 
         currentAddressNumber: varchar("current_address_number", { length: 60 }),
         currentAddressProvinceId: integer(
@@ -185,12 +186,12 @@ export const students = createTable(
             scale: 6,
         }),
 
-        fatherName: varchar("father_name", { length: 150 }), // full name in english
+        fatherName: varchar("father_name", { length: 300 }), // full name in english
         fatherBirthYear: smallint("father_birth_year"),
         fatherStatusId: integer("father_status_id").references(
             () => familyMemberStatuses.id,
         ),
-        motherName: varchar("mother_name", { length: 150 }), // full name in english
+        motherName: varchar("mother_name", { length: 300 }), // full name in english
         motherBirthYear: smallint("mother_birth_year"),
         motherStatusId: integer("mother_status_id").references(
             () => familyMemberStatuses.id,
