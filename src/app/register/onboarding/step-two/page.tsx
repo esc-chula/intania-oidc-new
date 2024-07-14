@@ -102,6 +102,7 @@ export default function Page() {
     const [districts, setDistricts] = useState<District[]>([]);
     const [selectedCountry, setSelectedCountry] = useState('');
     const [selectedProvince, setSelectedProvince] = useState(0);
+    const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
     console.log(countries);
 
     useEffect(() => {
@@ -417,7 +418,7 @@ export default function Page() {
                                     onValueChange={(value) => {
                                         const selectedProvinceString = provinces.find(province => province.nameTh === value);
                                         field.onChange(selectedProvinceString?.provinceCode);
-                                        setSelectedProvince(selectedProvinceString?.provinceCode);
+                                        setHomeSelectedProvince(selectedProvinceString?.provinceCode);
                                         // Additional logic to update districts based on selected province
                                     }}
                                 >
@@ -460,7 +461,7 @@ export default function Page() {
                                     </FormControl>
                                     <SelectContent>
                                         {districts.filter(district => {
-                                            console.log('Filtering Districts for Province Code:', selectedProvince); // Debugging
+                                            console.log('Filtering Districts for Province Code:', selectedHomeProvince); // Debugging
                                             return district.provinceCode === selectedProvince;
                                         }).map((district) => (
                                             <SelectItem key={district.districtCode} value={district.nameTh}>
