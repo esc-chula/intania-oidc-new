@@ -7,20 +7,16 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { useUserForm } from "@/contexts/form-context";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 
 export default function Page() {
     const formContext = useUserForm();
-    const router = useRouter();
 
     const formSchema = z.object({
         pdpa: z.boolean(),
