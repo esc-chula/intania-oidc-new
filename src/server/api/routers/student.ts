@@ -126,7 +126,7 @@ export const studentRouter = createTRPCRouter({
                 bloodType: z.enum(["A", "B", "AB", "O"]).optional(),
                 nationalityId: z.number().optional(),
                 religionId: z.number().optional(),
-                shirtSize: z.string().max(15).optional(),
+                shirtSize: z.number().optional(),
 
                 currentAddressNumber: z.string().max(60).optional(),
                 currentAddressProvinceId: z.number().optional(),
