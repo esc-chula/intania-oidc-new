@@ -117,7 +117,7 @@ export const studentRouter = createTRPCRouter({
                 medicalConditions: z.string().max(100).optional(), // comma-sepearated string
                 medications: z.string().max(100).optional(), // comma-sepearated string
 
-                email: z.string().max(60).optional(),
+                email: z.string().email(),
                 emailVerified: z.boolean().optional(),
                 phoneNumber: z.string().max(16).optional(),
                 phoneNumberVerified: z.boolean().optional(),
