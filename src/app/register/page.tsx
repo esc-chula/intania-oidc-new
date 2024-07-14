@@ -1,9 +1,13 @@
 import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { cookies } from "next/headers";
 import Link from "next/link";
 
 const page = () => {
+    const cookieStore = cookies();
+    const sid = cookieStore.get("sid");
+
     return (
         <div className="flex size-full flex-col items-center">
             <div className="relative flex size-full min-h-dvh flex-col justify-between gap-16 rounded-2xl p-12">
@@ -33,7 +37,9 @@ const page = () => {
                             size="lg"
                             asChild
                         >
-                            <Link href="/">เริ่มต้น</Link>
+                            <Link href={sid ? "/register/onboarding" : "/"}>
+                                เริ่มต้น
+                            </Link>
                         </Button>
                     </CardFooter>
                 </Card>

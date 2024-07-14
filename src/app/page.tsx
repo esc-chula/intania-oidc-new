@@ -4,8 +4,15 @@ import { type formSchema, UserBox } from "@/components/user-box";
 import { api } from "@/trpc/server";
 import { cookies } from "next/headers";
 import { type z } from "zod";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
+    const cookieStore = cookies();
+    const sid = cookieStore.get("sid");
+    if (sid) {
+        redirect("/register");
+    }
+
     async function login(values: z.infer<typeof formSchema>) {
         "use server";
         const { username, password } = values;
@@ -26,6 +33,8 @@ export default async function Home() {
         cookieJar.set("sid", sid, {
             expires: expiredAt,
         });
+
+        redirect("/register");
 
         return {
             sid,

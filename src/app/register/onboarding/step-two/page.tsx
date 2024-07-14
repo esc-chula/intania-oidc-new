@@ -21,16 +21,16 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useEffect , useState } from "react";
+import { useEffect, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
 import { fetchData } from "./action";
 
 interface Country {
-  code: string | null;
-  name: string | null;
-  id: number;
-  createdAt: Date;
-  updatedAt: Date | null;
+    code: string | null;
+    name: string | null;
+    id: number;
+    createdAt: Date;
+    updatedAt: Date | null;
 }
 
 interface Province {
@@ -40,7 +40,7 @@ interface Province {
     nameTh: string | null;
     nameEn: string | null;
     provinceCode: number | null; // Allow provinceCode to be number or null
-};
+}
 
 interface District {
     id: number;
@@ -84,8 +84,6 @@ export default function Page() {
         mode: "onChange",
     });
 
-
-
     function onSubmit(values: z.infer<typeof formSchema>) {
         formContext.updateUserData(values);
         router.push("/register/onboarding/step-three");
@@ -100,17 +98,17 @@ export default function Page() {
     const [countries, setCountries] = useState<Country[]>([]);
     const [provinces, setProvinces] = useState<Province[]>([]);
     const [districts, setDistricts] = useState<District[]>([]);
-    const [selectedCountry, setSelectedCountry] = useState('');
+    const [selectedCountry, setSelectedCountry] = useState("");
     const [selectedProvince, setSelectedProvince] = useState(0);
     const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
     console.log(countries);
 
     useEffect(() => {
-        (async () => {
+        const fetch = async () => {
             try {
                 const data = await fetchData();
                 console.log(data);
-                if(data != null){
+                if (data != null) {
                     setCountries(data.countries);
                     setProvinces(data.thaiProvinces);
                     setDistricts(data.thaiDistricts);
@@ -118,9 +116,10 @@ export default function Page() {
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
-        })();
-    }, []);
+        };
 
+        fetch();
+    }, []);
 
     useEffect(() => {
         formContext.setStep(2);
@@ -265,8 +264,13 @@ export default function Page() {
                             <Input type="hidden" {...field} />
                         )}
                     />
-                    <div className="rounded-lg border-[6px] border-white overflow-hidden h-60">
-                        <GoogleMap onLocationSelect={handleLocationSelect} width="100%" height="100%" placeholder="ระบุตำแหน่งที่อยู่ปัจจุบัน"/>
+                    <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
+                        <GoogleMap
+                            onLocationSelect={handleLocationSelect}
+                            width="100%"
+                            height="100%"
+                            placeholder="ระบุตำแหน่งที่อยู่ปัจจุบัน"
+                        />
                     </div>
 
                     <FormField
@@ -277,9 +281,17 @@ export default function Page() {
                                 <FormLabel>จังหวัดที่อยู่ปัจจุบัน</FormLabel>
                                 <Select
                                     onValueChange={(value) => {
-                                        const selectedProvinceString = provinces.find(province => province.nameTh === value);
-                                        field.onChange(selectedProvinceString?.provinceCode);
-                                        setSelectedProvince(selectedProvinceString?.provinceCode);
+                                        const selectedProvinceString =
+                                            provinces.find(
+                                                (province) =>
+                                                    province.nameTh === value,
+                                            );
+                                        field.onChange(
+                                            selectedProvinceString?.provinceCode,
+                                        );
+                                        setSelectedProvince(
+                                            selectedProvinceString?.provinceCode,
+                                        );
                                         // Additional logic to update districts based on selected province
                                     }}
                                 >
@@ -291,7 +303,10 @@ export default function Page() {
                                     <SelectContent>
                                         {/* Map through provinces data */}
                                         {provinces.map((province) => (
-                                            <SelectItem key={province.provinceCode} value={province.nameTh}>
+                                            <SelectItem
+                                                key={province.provinceCode}
+                                                value={province.nameTh}
+                                            >
                                                 {province.nameTh}
                                             </SelectItem>
                                         ))}
@@ -310,8 +325,13 @@ export default function Page() {
                                 <FormLabel>เขตที่อยู่ปัจจุบัน</FormLabel>
                                 <Select
                                     onValueChange={(value) => {
-                                        const selectedDistrict = districts.find(district => district.nameTh === value);
-                                        field.onChange(selectedDistrict?.districtCode);
+                                        const selectedDistrict = districts.find(
+                                            (district) =>
+                                                district.nameTh === value,
+                                        );
+                                        field.onChange(
+                                            selectedDistrict?.districtCode,
+                                        );
                                         // Additional logic to update districts based on selected province
                                     }}
                                 >
@@ -321,21 +341,30 @@ export default function Page() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {districts.filter(district => {
-                                            console.log('Filtering Districts for Province Code:', selectedProvince); // Debugging
-                                            return district.provinceCode === selectedProvince;
-                                        }).map((district) => (
-                                            <SelectItem key={district.districtCode} value={district.nameTh}>
-                                                {district.nameTh}
-                                            </SelectItem>
-                                        ))}
+                                        {districts
+                                            .filter((district) => {
+                                                console.log(
+                                                    "Filtering Districts for Province Code:",
+                                                    selectedProvince,
+                                                ); // Debugging
+                                                return (
+                                                    district.provinceCode ===
+                                                    selectedProvince
+                                                );
+                                            })
+                                            .map((district) => (
+                                                <SelectItem
+                                                    key={district.districtCode}
+                                                    value={district.nameTh}
+                                                >
+                                                    {district.nameTh}
+                                                </SelectItem>
+                                            ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
-
-
                     />
 
                     <FormField
@@ -354,7 +383,6 @@ export default function Page() {
                             </FormItem>
                         )}
                     />
-                   
                 </section>
 
                 <section className="flex flex-col gap-2">
@@ -372,8 +400,13 @@ export default function Page() {
                             <Input type="hidden" {...field} />
                         )}
                     />
-                    <div className="rounded-lg border-[6px] border-white overflow-hidden h-60">
-                        <GoogleMap onLocationSelect={handleLocationSelect} width="100%" height="100%" placeholder="ระบุตำแหน่งที่อยู่ภูมิลำเนา" />
+                    <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
+                        <GoogleMap
+                            onLocationSelect={handleLocationSelect}
+                            width="100%"
+                            height="100%"
+                            placeholder="ระบุตำแหน่งที่อยู่ภูมิลำเนา"
+                        />
                     </div>
 
                     <FormField
@@ -385,7 +418,9 @@ export default function Page() {
                                 <Select
                                     onValueChange={(value) => {
                                         console.log(value);
-                                        const selectedCountry = countries.find(country => country.id === value);
+                                        const selectedCountry = countries.find(
+                                            (country) => country.id === value,
+                                        );
                                         field.onChange(selectedCountry?.id);
                                     }}
                                 >
@@ -397,7 +432,10 @@ export default function Page() {
                                     <SelectContent>
                                         {/* Map through nationalities data */}
                                         {countries.map((nationality, index) => (
-                                            <SelectItem key={index} value={nationality.name}>
+                                            <SelectItem
+                                                key={index}
+                                                value={nationality.name}
+                                            >
                                                 {nationality.name}
                                             </SelectItem>
                                         ))}
@@ -416,9 +454,17 @@ export default function Page() {
                                 <FormLabel>จังหวัดที่อยู่ภูมิลำเนา</FormLabel>
                                 <Select
                                     onValueChange={(value) => {
-                                        const selectedProvinceString = provinces.find(province => province.nameTh === value);
-                                        field.onChange(selectedProvinceString?.provinceCode);
-                                        setSelectedHomeProvince(selectedProvinceString?.provinceCode);
+                                        const selectedProvinceString =
+                                            provinces.find(
+                                                (province) =>
+                                                    province.nameTh === value,
+                                            );
+                                        field.onChange(
+                                            selectedProvinceString?.provinceCode,
+                                        );
+                                        setSelectedHomeProvince(
+                                            selectedProvinceString?.provinceCode,
+                                        );
                                         // Additional logic to update districts based on selected province
                                     }}
                                 >
@@ -430,7 +476,10 @@ export default function Page() {
                                     <SelectContent>
                                         {/* Map through provinces data */}
                                         {provinces.map((province) => (
-                                            <SelectItem key={province.provinceCode} value={province.nameTh}>
+                                            <SelectItem
+                                                key={province.provinceCode}
+                                                value={province.nameTh}
+                                            >
                                                 {province.nameTh}
                                             </SelectItem>
                                         ))}
@@ -449,8 +498,13 @@ export default function Page() {
                                 <FormLabel>เขตที่อยู่ภูมิลำเนา</FormLabel>
                                 <Select
                                     onValueChange={(value) => {
-                                        const selectedDistrict = districts.find(district => district.nameTh === value);
-                                        field.onChange(selectedDistrict?.districtCode);
+                                        const selectedDistrict = districts.find(
+                                            (district) =>
+                                                district.nameTh === value,
+                                        );
+                                        field.onChange(
+                                            selectedDistrict?.districtCode,
+                                        );
                                         // Additional logic to update districts based on selected province
                                     }}
                                 >
@@ -460,21 +514,30 @@ export default function Page() {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {districts.filter(district => {
-                                            console.log('Filtering Districts for Province Code:', selectedHomeProvince); // Debugging
-                                            return district.provinceCode === selectedHomeProvince;
-                                        }).map((district) => (
-                                            <SelectItem key={district.districtCode} value={district.nameTh}>
-                                                {district.nameTh}
-                                            </SelectItem>
-                                        ))}
+                                        {districts
+                                            .filter((district) => {
+                                                console.log(
+                                                    "Filtering Districts for Province Code:",
+                                                    selectedHomeProvince,
+                                                ); // Debugging
+                                                return (
+                                                    district.provinceCode ===
+                                                    selectedHomeProvince
+                                                );
+                                            })
+                                            .map((district) => (
+                                                <SelectItem
+                                                    key={district.districtCode}
+                                                    value={district.nameTh}
+                                                >
+                                                    {district.nameTh}
+                                                </SelectItem>
+                                            ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
-
-
                     />
 
                     <FormField
@@ -493,7 +556,6 @@ export default function Page() {
                             </FormItem>
                         )}
                     />
-
                 </section>
                 <Button type="submit" className="self-end" size="lg">
                     ถัดไป
