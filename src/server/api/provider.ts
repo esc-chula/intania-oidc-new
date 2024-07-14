@@ -1,3 +1,5 @@
+import { boolean } from "drizzle-orm/mysql-core";
+
 export type StudentInfo = {
     studentId: string;
 };
@@ -8,21 +10,49 @@ export type ValidationResponse = {
     errors: string[];
 };
 
+type ProviderResponse = {
+    success: true;
+    valid: boolean;
+} | {
+    success: false;
+    message: string;
+}
+
 export const studentProvider = {
-    checkCredential(username: string, password: string): ValidationResponse {
-        // TODO: Check with chula
-        if (username == password) {
-            return {
-                success: true,
-                data: {
-                    studentId: username,
-                },
-                errors: [],
-            };
+    async checkCredential(username: string, password: string): Promise<ValidationResponse> {
+        const result = await fetch(`${process.env.AUTH_ENDPOINT}`, {
+            method: "POST",
+            body: JSON.stringify({
+                username,
+                password,
+            }),
+            headers: {
+                Authorization: `Bearer ${process.env.AUTH_KEY}`,
+                "Content-Type": "application/json"
+            },
+        }).then(data => data.json()) as ProviderResponse
+
+        console.log({result})
+
+        if (result.success) {
+            if (result.valid) {
+                return {
+                    success: true,
+                    data: {
+                        studentId: username,
+                    },
+                    errors: [],
+                };
+            } else {
+                return {
+                    success: false,
+                    errors: ["Incorrect password"],
+                };
+            }
         } else {
             return {
                 success: false,
-                errors: ["Incorrect password"],
+                errors: [result.message],
             };
         }
     },

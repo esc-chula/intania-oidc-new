@@ -20,8 +20,8 @@ export const studentRouter = createTRPCRouter({
             }),
         )
         .mutation(async ({ ctx, input }) => {
-            const cred = ctx.studentProvider.checkCredential(
-                input.password,
+            const cred = await ctx.studentProvider.checkCredential(
+                input.username,
                 input.password,
             );
 
