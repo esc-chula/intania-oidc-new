@@ -16,7 +16,7 @@ type ProviderResponse = {
     message: string;
 }
 
-export const studentProvider = {
+const provider = {
     async checkCredential(username: string, password: string): Promise<ValidationResponse> {
         const result = await fetch(`${process.env.AUTH_ENDPOINT}`, {
             method: "POST",
@@ -54,4 +54,25 @@ export const studentProvider = {
             };
         }
     },
-};
+}
+
+const mockProvider = {
+    async checkCredential(username: string, password: string): Promise<ValidationResponse> {
+        if (username == password) {
+            return {
+                success: true,
+                data: {
+                    studentId: username,
+                },
+                errors: [],
+            }
+        } else {
+            return {
+                success: false,
+                errors: ["Incorrect password"],
+            };
+        }
+    },
+}
+
+export const studentProvider = process.env.NODE_ENV === "production" ? provider : mockProvider;

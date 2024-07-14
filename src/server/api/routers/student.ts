@@ -34,19 +34,25 @@ export const studentRouter = createTRPCRouter({
 
             const studentId = cred.data.studentId;
 
-            const student = await ctx.db.query.students.findFirst({
+            var student = await ctx.db.query.students.findFirst({
                 columns: {
                     id: true,
                 },
                 where: (students, { eq }) => eq(students.studentId, studentId),
             });
+            var internalId = student?.id;
 
-            if (!student?.id) {
-                throw new TRPCError({
-                    code: "INTERNAL_SERVER_ERROR",
-                    message:
-                        "student from credential provider does not exist in the database",
-                });
+            if (!internalId) {
+                const result = (await ctx.db.insert(students).values({
+                    studentId,
+                }).returning())[0];
+                if (!result) {
+                    throw new TRPCError({
+                        code: "INTERNAL_SERVER_ERROR",
+                        message: "create user but does not appear",
+                    })
+                }
+                internalId = result.id
             }
 
             const expiredAt = new Date();
@@ -57,7 +63,7 @@ export const studentRouter = createTRPCRouter({
             await ctx.db.insert(sessions).values({
                 id: sid,
                 sessionType: "student",
-                studentId: student.id,
+                studentId: internalId,
                 expiredAt,
             });
 
