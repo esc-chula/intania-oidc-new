@@ -418,7 +418,7 @@ export default function Page() {
                                     onValueChange={(value) => {
                                         const selectedProvinceString = provinces.find(province => province.nameTh === value);
                                         field.onChange(selectedProvinceString?.provinceCode);
-                                        setHomeSelectedProvince(selectedProvinceString?.provinceCode);
+                                        setSelectedHomeProvince(selectedProvinceString?.provinceCode);
                                         // Additional logic to update districts based on selected province
                                     }}
                                 >
@@ -462,7 +462,7 @@ export default function Page() {
                                     <SelectContent>
                                         {districts.filter(district => {
                                             console.log('Filtering Districts for Province Code:', selectedHomeProvince); // Debugging
-                                            return district.provinceCode === selectedProvince;
+                                            return district.provinceCode === selectedHomeProvince;
                                         }).map((district) => (
                                             <SelectItem key={district.districtCode} value={district.nameTh}>
                                                 {district.nameTh}
