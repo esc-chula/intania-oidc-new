@@ -1,13 +1,43 @@
 import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
 import { Footer } from "@/components/footer";
-import { UserBox } from "@/components/user-box";
+import { type formSchema, UserBox } from "@/components/user-box";
+import { api } from "@/trpc/server";
+import { cookies } from "next/headers";
+import { type z } from "zod";
 
 export default async function Home() {
+    async function login(values: z.infer<typeof formSchema>) {
+        "use server";
+        const { username, password } = values;
+
+        if (!username || !password) {
+            return;
+        }
+
+        const result = await api.student.login({ username, password });
+
+        if (!result.success || !result.data) {
+            return;
+        }
+
+        const { sid, expiredAt } = result.data;
+
+        const cookieJar = cookies();
+        cookieJar.set("sid", sid, {
+            expires: expiredAt,
+        });
+
+        return {
+            sid,
+            expiredAt,
+        };
+    }
+
     return (
         <>
             <div className="flex size-full flex-col items-center">
                 <section className="absolute top-1/2 flex size-full max-w-3xl -translate-y-1/2 flex-col items-center justify-between md:h-auto md:justify-center md:px-32 lg:max-w-6xl">
-                    <UserBox />
+                    <UserBox login={login} />
                     <Footer />
                 </section>
             </div>

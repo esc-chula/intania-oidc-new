@@ -5,7 +5,7 @@ import { logout } from "./actions";
 
 export default function Login() {
     useEffect(() => {
-        logout();
+        logout().catch(console.error);
     });
 
     return (

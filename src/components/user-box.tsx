@@ -1,9 +1,44 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+"use client";
 import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Button } from "./ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "./ui/form";
 
-export const UserBox = () => {
+export const formSchema = z.object({
+    username: z.string(),
+    password: z.string(),
+});
+
+interface UserBoxProps {
+    login: (values: z.infer<typeof formSchema>) => void;
+}
+
+export const UserBox = ({ login }: UserBoxProps) => {
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            username: "",
+            password: "",
+        },
+    });
+
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        login(values);
+    }
+
     return (
         <div className="relative flex size-full flex-col gap-16 rounded-2xl p-12 md:aspect-[614/764] md:bg-card md:shadow-md lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
             <div className="flex w-full flex-col items-center gap-10 text-center md:items-start md:text-start">
@@ -20,22 +55,54 @@ export const UserBox = () => {
                     </p>
                 </div>
             </div>
-            <div className="flex w-full flex-col items-center gap-5 lg:place-self-center">
-                <div className="flex w-full flex-col gap-2">
-                    <Label className="text-muted-foreground">รหัสนิสิต</Label>
-                    <Input />
-                </div>
-                <div className="flex w-full flex-col gap-2">
-                    <Label className="text-muted-foreground">รหัสผ่าน</Label>
-                    <Input />
-                </div>
-            </div>
-            <Button
-                className="self-end text-base md:absolute md:bottom-12 md:right-12 md:text-xl lg:bottom-14 lg:right-14"
-                size="lg"
-            >
-                ถัดไป
-            </Button>
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex w-full flex-col items-center gap-5 lg:place-self-center"
+                >
+                    <FormField
+                        control={form.control}
+                        name="username"
+                        render={({ field }) => (
+                            <FormItem className="flex w-full flex-col gap-2">
+                                <FormLabel className="text-muted-foreground">
+                                    รหัสนิสิต
+                                </FormLabel>
+                                <FormControl>
+                                    <Input placeholder="" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="password"
+                        render={({ field }) => (
+                            <FormItem className="flex w-full flex-col gap-2">
+                                <FormLabel className="text-muted-foreground">
+                                    รหัสผ่าน
+                                </FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder=""
+                                        {...field}
+                                        type="password"
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <Button
+                        className="self-end text-base md:absolute md:bottom-12 md:right-12 md:text-xl lg:bottom-14 lg:right-14"
+                        size="lg"
+                        type="submit"
+                    >
+                        ถัดไป
+                    </Button>
+                </form>
+            </Form>
         </div>
     );
 };
