@@ -52,26 +52,106 @@ export default function Page() {
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>
-                                    นโยบายการจัดการข้อมูล (PDPA)
+                                    นโยบายการจัดการข้อมูลส่วนบุคคล
                                 </FormLabel>
                                 <FormLabel className="flex size-full cursor-pointer rounded-xl bg-background p-5">
                                     <div className="flex flex-col gap-4">
-                                        <p className="text-muted-foreground">
-                                            {/* TODO: Wording */}
-                                            Lorem ipsum, dolor sit amet
-                                            consectetur adipisicing elit. Culpa
-                                            cum quos sapiente quia, incidunt,
-                                            unde porro accusantium quo repellat
-                                            temporibus impedit maiores aperiam
-                                            libero nihil. Sed, minima iure.
-                                            Voluptates, iure. Voluptate totam
-                                            veritatis illum! Eaque nobis est
-                                            sequi corrupti maiores tempore
-                                            saepe, earum mollitia at delectus?
-                                            Magnam dolore ipsum deserunt.
-                                            Voluptatem iusto voluptas temporibus
-                                            incidunt possimus. Pariatur tenetur
-                                            commodi culpa!
+                                        <p className="space-y-4 font-normal text-muted-foreground">
+                                            <p className="font-semibold">
+                                                ขอบเขตนโยบาย
+                                            </p>
+
+                                            <p>
+                                                นโยบายนี้ครอบคลุมถึงการเก็บรวบรวม
+                                                ใช้ เปิดเผย
+                                                และจัดเก็บข้อมูลส่วนบุคคลของนิสิตใหม่ที่เข้าศึกษาที่คณะวิศวกรรมศาสตร์
+                                                จุฬาลงกรณ์มหาวิทยาลัย
+                                                รวมถึงข้อมูลที่ได้จากการลงทะเบียน
+                                                กิจกรรมภายในคณะ
+                                                และการใช้บริการต่างๆ ของคณะฯ
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                การเก็บรวบรวมข้อมูล
+                                            </p>
+
+                                            <p>
+                                                คณะวิศวกรรมศาสตร์
+                                                จุฬาลงกรณ์มหาวิทยาลัย
+                                                จะเก็บรวบรวมข้อมูลส่วนบุคคลของนิสิตใหม่เฉพาะข้อมูลที่จำเป็นต่อการเป็นอยู่ของนิสิต
+                                                งานทะเบียน กิจกรรมภายในคณะ
+                                                และการให้บริการต่างๆ
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                การใช้ข้อมูล
+                                            </p>
+
+                                            <p>
+                                                ข้อมูลส่วนบุคคลของนิสิตใหม่จะถูกใช้เพื่อวัตถุประสงค์ดังต่อไปนี้:
+                                            </p>
+
+                                            <ul className="list-inside list-disc">
+                                                <li>
+                                                    การลงทะเบียนและการจัดการศึกษาของนิสิตใหม่
+                                                </li>
+                                                <li>
+                                                    การประสานงานและการสื่อสารกับนิสิตใหม่
+                                                </li>
+                                                <li>
+                                                    การให้บริการต่าง ๆ
+                                                    ที่เกี่ยวข้องกับการศึกษา
+                                                </li>
+                                                <li>
+                                                    การให้บริการต่าง ๆ
+                                                    ที่เกี่ยวข้องกับกิจกรรม
+                                                </li>
+                                                <li>
+                                                    การจัดทำเอกสารที่เกี่ยวข้อง
+                                                </li>
+                                            </ul>
+
+                                            <p className="font-semibold">
+                                                การเปิดเผยข้อมูล
+                                            </p>
+
+                                            <p>
+                                                คณะวิศวกรรมศาสตร์
+                                                จุฬาลงกรณ์มหาวิทยาลัย
+                                                จะเปิดเผยข้อมูลเบื้องต้นให้แก่
+                                                กรรมการนิสิตคณะวิศวกรรมศาสตร์
+                                                จุฬาลงกรณ์มหาวิทยาลัย
+                                                เพื่อเป็นประโยชน์ต่อการประสานงาน
+                                                งานทะเบียน และกิจกรรมภายในคณะฯ
+                                                และจะไม่เปิดเผยข้อมูลส่วนบุคคลของนิสิตใหม่แก่บุคคลภายนอกโดยไม่ได้รับความยินยอมจากนิสิตใหม่
+                                                ยกเว้นในกรณีที่เป็นไปตามกฎหมายหรือมีคำสั่งศาล
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                สิทธิของนิสิตใหม่
+                                            </p>
+
+                                            <p>
+                                                นิสิตใหม่มีสิทธิในการเข้าถึงข้อมูลส่วนบุคคลของตนเอง
+                                                สามารถขอแก้ไข ลบ
+                                                หรือระงับการใช้ข้อมูลส่วนบุคคลได้ตามข้อกำหนด
+                                                ซึ่งสามารถร้องขอผ่านอีเมล
+                                                tech@intania.org
+                                            </p>
+
+                                            <p className="font-semibold">
+                                                การเปลี่ยนแปลงนโยบาย
+                                            </p>
+
+                                            <p>
+                                                คณะวิศวกรรมศาสตร์
+                                                จุฬาลงกรณ์มหาวิทยาลัย และ
+                                                กรรมการนิสิตคณะวิศวกรรมศาสตร์
+                                                จุฬาลงกรณ์มหาวิทยาลัย
+                                                อาจทำการปรับปรุงหรือเปลี่ยนแปลงนโยบายนี้ได้ตามความเหมาะสม
+                                                โดยจะแจ้งให้ทราบผ่านทางเว็บไซต์
+                                                accounts.intania.org
+                                            </p>
                                         </p>
                                         <div className="flex items-center gap-2">
                                             <FormControl>
@@ -108,9 +188,9 @@ export default function Page() {
                                             onCheckedChange={field.onChange}
                                         />
                                     </FormControl>
-                                    ยินยอมให้เมื่อจบการศึกษาข้อมูลของ
-                                    ท่านจะเป็นสมาชิกของสมาคมนิสิตเก่า-วิศวกรรมศาสตร์แห่งจุฬาลงกรณ์-
-                                    มหาวิทยาลัย (สวจ.)
+                                    ข้าพเจ้ายินยอมให้เมื่อจบการศึกษา
+                                    ข้อมูลของข้าพเจ้าจะนำส่งต่อและเป็นสมาชิกของสมาคมนิสิตเก่าวิศวกรรมศาสตร์แห่งจุฬาลงกรณ์มหาวิทยาลัย
+                                    (สวจ.)
                                 </FormLabel>
                                 <FormMessage />
                             </FormItem>
