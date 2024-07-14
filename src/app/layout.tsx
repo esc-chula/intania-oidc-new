@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 import "@/styles/globals.css";
 
-export const anuphan = Anuphan({
+const anuphan = Anuphan({
     subsets: ["latin"],
     variable: "--font-anuphan",
     weight: ["200", "300", "400", "500", "600", "700"],

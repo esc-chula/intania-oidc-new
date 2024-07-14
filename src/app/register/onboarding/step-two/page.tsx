@@ -84,7 +84,7 @@ export default function Page() {
                     {/* TODO: What name is this */}
                     <FormField
                         control={form.control}
-                        name=""
+                        name="nationalityId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>รหัสบัตรประชาชน</FormLabel>
