@@ -36,11 +36,6 @@ export default async function Home() {
         });
 
         redirect("/register");
-
-        return {
-            sid,
-            expiredAt,
-        };
     }
 
     return (

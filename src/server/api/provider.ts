@@ -30,8 +30,6 @@ const provider = {
             },
         }).then(data => data.json()) as ProviderResponse
 
-        console.log({result})
-
         if (result.success) {
             if (result.valid) {
                 return {
