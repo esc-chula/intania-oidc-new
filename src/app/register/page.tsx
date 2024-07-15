@@ -37,7 +37,11 @@ const page = () => {
                             size="lg"
                             asChild
                         >
-                            <Link href={sid ? "/register/onboarding" : "/"}>
+                            <Link
+                                href={
+                                    sid ? "/register/onboarding/step-one" : "/"
+                                }
+                            >
                                 เริ่มต้น
                             </Link>
                         </Button>

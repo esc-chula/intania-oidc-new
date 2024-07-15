@@ -34,27 +34,34 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { useEffect, useState } from "react";
+import type { Department } from "../types/form";
 
-export default function Page() {
+const formSchema = z.object({
+    studentId: z.string().max(32),
+    title: z.string().max(16),
+    firstNameTh: z.string().max(30),
+    familyNameTh: z.string().max(60),
+    nicknameTh: z.string().max(30),
+    firstNameEn: z.string().max(30),
+    familyNameEn: z.string().max(60),
+    nicknameEn: z.string().max(30),
+    preferredPronoun: z.string().max(30),
+    birthDate: z.coerce.string().datetime(),
+    departmentId: z.number(),
+});
+
+interface Props {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    studentData: any;
+    departments: Department[];
+}
+
+const FormComponent = ({ studentData, departments }: Props) => {
     const formContext = useUserForm();
     const router = useRouter();
     const [selectedBirthDate, setSelectedBirthDate] = useState<
         Date | undefined
     >();
-
-    const formSchema = z.object({
-        studentId: z.string().max(32).optional(),
-        title: z.string().max(16).optional(),
-        firstNameTh: z.string().max(30).optional(),
-        familyNameTh: z.string().max(60).optional(),
-        nicknameTh: z.string().max(30).optional(),
-        firstNameEn: z.string().max(30).optional(),
-        familyNameEn: z.string().max(60).optional(),
-        nicknameEn: z.string().max(30).optional(),
-        preferredPronoun: z.string().max(30).optional(),
-        birthDate: z.coerce.string().datetime().optional(),
-        departmentId: z.number().optional(),
-    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -72,13 +79,26 @@ export default function Page() {
     }, []);
 
     useEffect(() => {
-        form.setValue(
-            "birthDate",
-            selectedBirthDate
-                ? format(selectedBirthDate, "yyyy-MM-dd'T'hh:mm:ss'Z'")
-                : undefined,
-        );
+        if (selectedBirthDate) {
+            form.setValue(
+                "birthDate",
+                format(selectedBirthDate, "yyyy-MM-dd'T'hh:mm:ss'Z'"),
+            );
+        }
     }, [form, selectedBirthDate]);
+
+    useEffect(() => {
+        for (const key in studentData) {
+            if (key in form.getValues()) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                if (studentData[key] !== null) {
+                    //@ts-expect-error -- make it works
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                    form.setValue(key, studentData[key]);
+                }
+            }
+        }
+    }, [form, studentData]);
 
     return (
         <Form {...form}>
@@ -93,7 +113,11 @@ export default function Page() {
                         <FormItem className="!pt-0">
                             <FormLabel>รหัสนิสิต</FormLabel>
                             <FormControl>
-                                <Input placeholder="6x3xxxxx21" {...field} />
+                                <Input
+                                    placeholder="6x3xxxxx21"
+                                    {...field}
+                                    disabled
+                                />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -272,58 +296,110 @@ export default function Page() {
                         )}
                     />
                 </section>
+                <section className="flex flex-col gap-2">
+                    <FormField
+                        control={form.control}
+                        name="birthDate"
+                        render={({ field }) => (
+                            <FormItem className="flex flex-col">
+                                <FormLabel>วันเกิด</FormLabel>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <FormControl>
+                                            <Button
+                                                className={cn(
+                                                    "text-left font-normal",
+                                                    !field.value &&
+                                                        "text-muted-foreground",
+                                                )}
+                                                variant="outline"
+                                            >
+                                                {field.value ? (
+                                                    format(
+                                                        field.value,
+                                                        "dd/MM/yyyy",
+                                                    )
+                                                ) : (
+                                                    <span>เลือกวันเกิด</span>
+                                                )}
+                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                            </Button>
+                                        </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent
+                                        align="start"
+                                        className="w-auto p-2"
+                                    >
+                                        <CalendarComponent
+                                            initialFocus
+                                            mode="single"
+                                            selected={selectedBirthDate}
+                                            onDayClick={setSelectedBirthDate}
+                                            translate="th"
+                                            locale={th}
+                                        />
+                                    </PopoverContent>
+                                </Popover>
+                                <FormDescription>
+                                    ปีคริสต์ศักราช
+                                </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                </section>
                 <FormField
                     control={form.control}
-                    name="birthDate"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                            <FormLabel>วันเกิด</FormLabel>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <FormControl>
-                                        <Button
-                                            className={cn(
-                                                "text-left font-normal",
-                                                !field.value &&
-                                                    "text-muted-foreground",
-                                            )}
-                                            variant="outline"
-                                        >
-                                            {field.value ? (
-                                                format(
-                                                    field.value,
-                                                    "dd/MM/yyyy",
-                                                )
-                                            ) : (
-                                                <span>เลือกวันเกิด</span>
-                                            )}
-                                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                        </Button>
-                                    </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent
-                                    align="start"
-                                    className="w-auto p-2"
+                    name="departmentId"
+                    render={({ field }) => {
+                        return (
+                            <FormItem>
+                                <FormLabel>ภาควิชา</FormLabel>
+                                <Select
+                                    value={
+                                        departments.find(
+                                            (department) =>
+                                                department.id === field.value,
+                                        )?.nameTh
+                                    }
+                                    onValueChange={(value) => {
+                                        const selectedDepartment =
+                                            departments.find(
+                                                (department) =>
+                                                    department.nameTh === value,
+                                            );
+                                        if (!selectedDepartment) return;
+                                        field.onChange(selectedDepartment.id);
+                                    }}
                                 >
-                                    <CalendarComponent
-                                        initialFocus
-                                        mode="single"
-                                        selected={selectedBirthDate}
-                                        onDayClick={setSelectedBirthDate}
-                                        translate="th"
-                                        locale={th}
-                                    />
-                                </PopoverContent>
-                            </Popover>
-                            <FormDescription>ปีคริสต์ศักราช</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="เลือกภาควิชา" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {departments.map((department) => (
+                                            <SelectItem
+                                                key={department.id}
+                                                value={department.nameTh}
+                                            >
+                                                {department.nameTh}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        );
+                    }}
                 />
+
                 <Button type="submit" className="self-end" size="lg">
                     ถัดไป
                 </Button>
             </form>
         </Form>
     );
-}
+};
+
+export default FormComponent;
