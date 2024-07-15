@@ -7,7 +7,8 @@ const userSchema = z.object({
     studentId: z.string().max(32).optional(),
     departmentId: z.number().optional(),
     nationalId: z.string().max(15).optional(),
-    title: z.string().max(16).optional(),
+    titleTh: z.string().max(16).optional(),
+    titleEn: z.string().max(16).optional(),
     firstNameTh: z.string().max(30).optional(),
     firstNameEn: z.string().max(30).optional(),
     familyNameTh: z.string().max(60).optional(),
@@ -34,7 +35,7 @@ const userSchema = z.object({
     bloodType: z.enum(["A", "B", "AB", "O"]).optional(),
     nationalityId: z.number().optional(),
     religionId: z.number().optional(),
-    shirtSize: z.string().max(15).optional(),
+    shirtSize: z.number().max(15).optional(),
 
     currentAddressNumber: z.string().max(60).optional(),
     currentAddressProvinceId: z.number().optional(),

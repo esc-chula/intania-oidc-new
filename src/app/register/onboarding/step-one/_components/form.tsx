@@ -30,15 +30,17 @@ import {
 import { CalendarComponent } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, titleThToEn } from "@/lib/utils";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { useEffect, useState } from "react";
-import type { Department } from "../types/form";
+import type { Department } from "../_types/form";
+import { updateStudent } from "@/server/action/student";
+import type { Student } from "@/types/student";
 
 const formSchema = z.object({
     studentId: z.string().max(32),
-    title: z.string().max(16),
+    titleTh: z.string().max(16),
     firstNameTh: z.string().max(30),
     familyNameTh: z.string().max(60),
     nicknameTh: z.string().max(30),
@@ -52,7 +54,7 @@ const formSchema = z.object({
 
 interface Props {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    studentData: any;
+    studentData: Student;
     departments: Department[];
 }
 
@@ -68,7 +70,13 @@ const FormComponent = ({ studentData, departments }: Props) => {
         mode: "onChange",
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        await updateStudent({
+            id: studentData.id,
+            titleEn: titleThToEn(values.titleTh),
+            ...values,
+        });
+
         formContext.updateUserData(values);
         router.push("/register/onboarding/step-two");
     }
@@ -91,10 +99,17 @@ const FormComponent = ({ studentData, departments }: Props) => {
         for (const key in studentData) {
             if (key in form.getValues()) {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                //@ts-expect-error -- just make it works
                 if (studentData[key] !== null) {
-                    //@ts-expect-error -- make it works
+                    //@ts-expect-error -- just make it works
                     // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
                     form.setValue(key, studentData[key]);
+
+                    if (key === "birthDate") {
+                        //@ts-expect-error -- just make it works
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                        setSelectedBirthDate(new Date(studentData[key]));
+                    }
                 }
             }
         }
@@ -125,13 +140,18 @@ const FormComponent = ({ studentData, departments }: Props) => {
                 />
                 <FormField
                     control={form.control}
-                    name="title"
+                    name="titleTh"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>คำนำหน้าชื่อ</FormLabel>
                             <Select
-                                onValueChange={field.onChange}
-                                defaultValue={field.value}
+                                onValueChange={(value) => {
+                                    if (!value) {
+                                        return;
+                                    }
+                                    form.setValue("titleTh", value);
+                                }}
+                                value={field.value}
                             >
                                 <FormControl>
                                     <SelectTrigger>
@@ -268,7 +288,7 @@ const FormComponent = ({ studentData, departments }: Props) => {
                                 <FormLabel>สรรพนามที่ประสงค์ใช้</FormLabel>
                                 <Select
                                     onValueChange={field.onChange}
-                                    defaultValue={field.value}
+                                    value={field.value}
                                 >
                                     <FormControl>
                                         <SelectTrigger>

@@ -14,13 +14,15 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+    const router = useRouter();
     const formContext = useUserForm();
 
     const formSchema = z.object({
         pdpa: z.boolean(),
-        cuea: z.boolean(),
+        cuea: z.boolean().optional(),
     });
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -31,7 +33,7 @@ export default function Page() {
     function onSubmit() {
         // TODO: Post user data to backend
         formContext.postUserData().catch(console.error);
-        // router.push("TODO: Araideewa");
+        router.push("/register/complete");
     }
 
     useEffect(() => {

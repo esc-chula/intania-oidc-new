@@ -24,9 +24,37 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
-import type { Country, District, Province, Religion } from "../types/form";
+import type { Country, District, Province, Religion } from "../_types/form";
+import { type Student } from "@/types/student";
+import { updateStudent } from "@/server/action/student";
+
+const formSchema = z.object({
+    nationalId: z.string().length(13),
+    lineId: z.string().max(30).optional(),
+    facebook: z.string().max(60).optional(),
+    email: z.string().email().max(60),
+    phoneNumber: z
+        .string()
+        .regex(/^\d{3}-\d{3}-\d{4}$/)
+        .max(16),
+    nationalityId: z.number(),
+    religionId: z.number(),
+    currentAddressNumber: z.string().max(60).optional(),
+    currentAddressProvinceId: z.number(),
+    currentAddressDistrictId: z.number(),
+    currentAddressOther: z.string().max(400),
+    currentAddressLatitude: z.string().max(16),
+    currentAddressLongitude: z.string().max(16),
+    hometownAddressNumber: z.string().max(60).optional(),
+    hometownAddressProvinceId: z.number().optional(),
+    hometownAddressDistrictId: z.number().optional(),
+    hometownAddressOther: z.string().max(400).optional(),
+    hometownAddressLatitude: z.string().max(16).optional(),
+    hometownAddressLongitude: z.string().max(16).optional(),
+});
 
 type Props = {
+    studentData: Student;
     countries: Country[];
     provinces: Province[];
     districts: District[];
@@ -34,6 +62,7 @@ type Props = {
 };
 
 const FormComponent = ({
+    studentData,
     countries,
     provinces,
     districts,
@@ -42,42 +71,45 @@ const FormComponent = ({
     const formContext = useUserForm();
     const router = useRouter();
 
-    const formSchema = z.object({
-        nationalId: z.string().length(13),
-        lineId: z.string().max(30).optional(),
-        facebook: z.string().max(60).optional(),
-        email: z.string().max(60),
-        phoneNumber: z.string().max(16),
-        nationalityId: z.number(),
-        religionId: z.number(),
-        currentAddressNumber: z.string().max(60).optional(),
-        currentAddressProvinceId: z.number(),
-        currentAddressDistrictId: z.number(),
-        currentAddressOther: z.string().max(400),
-        currentAddressLatitude: z.string().max(16),
-        currentAddressLongitude: z.string().max(16),
-        hometownAddressNumber: z.string().max(60).optional(),
-        hometownAddressProvinceId: z.number().optional(),
-        hometownAddressDistrictId: z.number().optional(),
-        hometownAddressOther: z.string().max(400).optional(),
-        hometownAddressLatitude: z.string().max(16).optional(),
-        hometownAddressLongitude: z.string().max(16).optional(),
-    });
-
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        await updateStudent({
+            id: studentData.id,
+            nationalId: values.nationalId,
+            lineId: values.lineId,
+            facebook: values.facebook,
+            email: values.email,
+            phoneNumber: values.phoneNumber,
+            nationalityId: values.nationalityId,
+            religionId: values.religionId,
+            currentAddressProvinceId: values.currentAddressProvinceId,
+            // currentAddressDistrictId: values.currentAddressDistrictId,
+            currentAddressOther: values.currentAddressOther,
+            currentAddressLatitude: values.currentAddressLatitude,
+            currentAddressLongitude: values.currentAddressLongitude,
+            hometownAddressProvinceId: values.hometownAddressProvinceId,
+            // hometownAddressDistrictId: values.hometownAddressDistrictId,
+            hometownAddressOther: values.hometownAddressOther,
+            hometownAddressLatitude: values.hometownAddressLatitude,
+            hometownAddressLongitude: values.hometownAddressLongitude,
+        });
+
         formContext.updateUserData(values);
         router.push("/register/onboarding/step-three");
     }
 
     const handleLocationSelect = (lat: number, lng: number) => {
-        form.setValue("currentAddressLatitude", lat.toString());
-        form.setValue("currentAddressLongitude", lng.toString());
-        console.log(`Selected location: Latitude: ${lat}, Longitude: ${lng}`);
+        const location = {
+            lat: lat.toFixed(9).toString(),
+            lng: lng.toFixed(9).toString(),
+        };
+        form.setValue("currentAddressLatitude", location.lat);
+        form.setValue("currentAddressLongitude", location.lng);
+        // console.log(`Selected location: Latitude: ${lat}, Longitude: ${lng}`);
     };
 
     const [selectedCountry, setSelectedCountry] = useState(0);
@@ -88,6 +120,25 @@ const FormComponent = ({
         formContext.setStep(2);
         // eslint-disable-next-line react-hooks/exhaustive-deps -- this effect should only run once
     }, []);
+
+    useEffect(() => {
+        for (const key in studentData) {
+            if (key in form.getValues()) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                //@ts-expect-error -- just make it works
+                if (studentData[key] !== null) {
+                    // @ts-expect-error -- just make it works
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
+                    form.setValue(key, studentData[key]);
+
+                    if (key === "nationalityId") {
+                        // @ts-expect-error -- just make it works
+                        setSelectedCountry(studentData[key]);
+                    }
+                }
+            }
+        }
+    }, [form, studentData]);
 
     return (
         <Form {...form}>
@@ -103,6 +154,12 @@ const FormComponent = ({
                             <FormItem className="!pt-0">
                                 <FormLabel>เชื้อชาติ</FormLabel>
                                 <Select
+                                    value={
+                                        countries.find(
+                                            (country) =>
+                                                country.id === field.value,
+                                        )?.name ?? undefined
+                                    }
                                     onValueChange={(value) => {
                                         const selectedCountry = countries.find(
                                             (country) => country.name === value,
@@ -188,11 +245,20 @@ const FormComponent = ({
                             <FormItem>
                                 <FormLabel>ศาสนา</FormLabel>
                                 <Select
+                                    value={
+                                        religions.find(
+                                            (religion) =>
+                                                religion.id === field.value,
+                                        )?.nameTh ?? undefined
+                                    }
                                     onValueChange={(value) => {
                                         const selectedReligion = religions.find(
                                             (religion) =>
-                                                religion.id === parseInt(value),
+                                                religion.nameTh === value,
                                         );
+                                        if (!selectedReligion) {
+                                            return;
+                                        }
                                         field.onChange(selectedReligion?.id);
                                     }}
                                 >
@@ -247,6 +313,9 @@ const FormComponent = ({
                                         {...field}
                                     />
                                 </FormControl>
+                                <FormDescription>
+                                    กรอกในรูปแบบ 0XX-XXX-XXXX
+                                </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
@@ -286,20 +355,6 @@ const FormComponent = ({
                 </section>
 
                 <section className="flex flex-col gap-2">
-                    <FormField
-                        control={form.control}
-                        name="currentAddressLatitude"
-                        render={({ field }) => (
-                            <Input type="hidden" {...field} />
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="currentAddressLongitude"
-                        render={({ field }) => (
-                            <Input type="hidden" {...field} />
-                        )}
-                    />
                     <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
                         <GoogleMap
                             onLocationSelect={handleLocationSelect}
@@ -308,6 +363,27 @@ const FormComponent = ({
                             placeholder="ระบุตำแหน่งที่อยู่ปัจจุบัน"
                         />
                     </div>
+
+                    <FormField
+                        control={form.control}
+                        name="currentAddressLatitude"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Input type="hidden" {...field} />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="currentAddressLongitude"
+                        render={({ field }) => (
+                            <FormItem>
+                                <Input type="hidden" {...field} />
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
 
                     <FormField
                         control={form.control}
@@ -426,22 +502,8 @@ const FormComponent = ({
                     />
                 </section>
 
-                {selectedCountry !== 215 && ( // Thailand
+                {selectedCountry === 215 ? ( // Thailand
                     <section className="flex flex-col gap-2">
-                        <FormField
-                            control={form.control}
-                            name="hometownAddressLatitude"
-                            render={({ field }) => (
-                                <Input type="hidden" {...field} />
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="hometownAddressLongitude"
-                            render={({ field }) => (
-                                <Input type="hidden" {...field} />
-                            )}
-                        />
                         <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
                             <GoogleMap
                                 onLocationSelect={handleLocationSelect}
@@ -450,6 +512,27 @@ const FormComponent = ({
                                 placeholder="ระบุตำแหน่งที่อยู่ภูมิลำเนา"
                             />
                         </div>
+
+                        <FormField
+                            control={form.control}
+                            name="hometownAddressLatitude"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Input type="hidden" {...field} />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="hometownAddressLongitude"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <Input type="hidden" {...field} />
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
 
                         <FormField
                             control={form.control}
@@ -574,6 +657,23 @@ const FormComponent = ({
                             )}
                         />
                     </section>
+                ) : (
+                    <FormField
+                        control={form.control}
+                        name="hometownAddressOther"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>ที่อยู่ภูมิลำเนา</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="กรอกที่อยู่ภูมิลำเนา"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 )}
 
                 <Button type="submit" className="self-end" size="lg">

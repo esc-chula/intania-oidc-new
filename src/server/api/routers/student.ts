@@ -34,25 +34,30 @@ export const studentRouter = createTRPCRouter({
 
             const studentId = cred.data.studentId;
 
-            var student = await ctx.db.query.students.findFirst({
+            const student = await ctx.db.query.students.findFirst({
                 columns: {
                     id: true,
                 },
                 where: (students, { eq }) => eq(students.studentId, studentId),
             });
-            var internalId = student?.id;
+            let internalId = student?.id;
 
             if (!internalId) {
-                const result = (await ctx.db.insert(students).values({
-                    studentId,
-                }).returning())[0];
+                const result = (
+                    await ctx.db
+                        .insert(students)
+                        .values({
+                            studentId,
+                        })
+                        .returning()
+                )[0];
                 if (!result) {
                     throw new TRPCError({
                         code: "INTERNAL_SERVER_ERROR",
                         message: "create user but does not appear",
-                    })
+                    });
                 }
-                internalId = result.id
+                internalId = result.id;
             }
 
             const expiredAt = new Date();
@@ -99,7 +104,8 @@ export const studentRouter = createTRPCRouter({
                 studentId: z.string().max(32).optional(),
                 departmentId: z.number().optional(),
                 nationalId: z.string().max(15).optional(),
-                title: z.string().max(16).optional(),
+                titleTh: z.string().max(16).optional(),
+                titleEn: z.string().max(16).optional(),
                 firstNameTh: z.string().max(30).optional(),
                 firstNameEn: z.string().max(30).optional(),
                 familyNameTh: z.string().max(60).optional(),
@@ -117,7 +123,7 @@ export const studentRouter = createTRPCRouter({
                 medicalConditions: z.string().max(100).optional(), // comma-sepearated string
                 medications: z.string().max(100).optional(), // comma-sepearated string
 
-                email: z.string().email(),
+                email: z.string().email().optional(),
                 emailVerified: z.boolean().optional(),
                 phoneNumber: z.string().max(16).optional(),
                 phoneNumberVerified: z.boolean().optional(),
