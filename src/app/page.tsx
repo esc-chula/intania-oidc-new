@@ -32,6 +32,7 @@ export default async function Home() {
         const cookieJar = cookies();
         cookieJar.set("sid", sid, {
             expires: expiredAt,
+            httpOnly: true,
         });
 
         redirect("/register");
