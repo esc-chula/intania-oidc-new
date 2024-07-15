@@ -208,6 +208,8 @@ export const students = createTable(
 
         profilePictureKey: varchar("profile_picture_key", { length: 30 }),
 
+        cueaDataTransferAgreement: boolean("cuea_data_transfer_agreement").default(false),
+
         createdAt: timestamp("created_at", { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),

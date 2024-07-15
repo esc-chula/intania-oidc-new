@@ -40,14 +40,14 @@ import type { Student } from "@/types/student";
 
 const formSchema = z.object({
     studentId: z.string().max(32),
-    titleTh: z.string().max(16),
-    firstNameTh: z.string().max(30),
-    familyNameTh: z.string().max(60),
-    nicknameTh: z.string().max(30),
-    firstNameEn: z.string().max(30),
-    familyNameEn: z.string().max(60),
-    nicknameEn: z.string().max(30),
-    preferredPronoun: z.string().max(30),
+    titleTh: z.string().max(30),
+    firstNameTh: z.string().max(90),
+    familyNameTh: z.string().max(90),
+    nicknameTh: z.string().max(50),
+    firstNameEn: z.string().max(90),
+    familyNameEn: z.string().max(90),
+    nicknameEn: z.string().max(50),
+    preferredPronoun: z.string().max(50),
     birthDate: z.coerce.string().datetime(),
     departmentId: z.number(),
 });

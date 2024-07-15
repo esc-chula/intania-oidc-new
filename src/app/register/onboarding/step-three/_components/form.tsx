@@ -28,10 +28,10 @@ import type { Student } from "@/types/student";
 import { updateStudent } from "@/server/action/student";
 
 const formSchema = z.object({
-    foodLimitations: z.string().max(100).optional(), // comma-sepearated string
-    drugAllergies: z.string().max(100).optional(), // comma-sepearated string
-    medicalConditions: z.string().max(100).optional(), // comma-sepearated string
-    medications: z.string().max(100).optional(), // comma-sepearated string
+    foodLimitations: z.string().max(200).optional(), // comma-sepearated string
+    drugAllergies: z.string().max(200).optional(), // comma-sepearated string
+    medicalConditions: z.string().max(200).optional(), // comma-sepearated string
+    medications: z.string().max(200).optional(), // comma-sepearated string
     bloodType: z.enum(["A", "B", "AB", "O"]),
     shirtSize: z.number(),
 });
