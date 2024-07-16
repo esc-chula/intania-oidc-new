@@ -1,0 +1,1 @@
+ALTER TABLE "intania-oidc_students" ADD COLUMN "cuea_data_transfer_agreement" boolean DEFAULT false;
