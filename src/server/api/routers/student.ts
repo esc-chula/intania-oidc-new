@@ -166,6 +166,8 @@ export const studentRouter = createTRPCRouter({
                 siblingOrder: z.number().optional(),
 
                 profilePictureKey: z.string().max(30).optional(),
+
+                cueaDataTransferAgreement: z.boolean().optional(),
             }),
         )
         .mutation(async ({ ctx, input }) => {
