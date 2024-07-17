@@ -17,7 +17,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useUserForm } from "@/contexts/form-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -25,7 +24,8 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
 import type { Student } from "@/types/student";
-import { updateStudent } from "@/server/action/student";
+import { updateStudent } from "@/server/actions/student";
+import { useStudentForm } from "@/contexts/form-context";
 
 const formSchema = z.object({
     foodLimitations: z.string().max(200).optional(), // comma-sepearated string
@@ -41,14 +41,30 @@ type Props = {
 };
 
 const FormComponent = ({ studentData }: Props) => {
-    const formContext = useUserForm();
-    const router = useRouter();
+    // STEP
+    const { setStep } = useStudentForm();
+    useEffect(() => {
+        setStep(3);
+    }, [setStep]);
 
+    // FORM
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
-
+    useEffect(() => {
+        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
+            if (key in formSchema.shape && studentData[key] != null) {
+                if (key in formSchema.shape) {
+                    form.setValue(
+                        key as keyof z.infer<typeof formSchema>,
+                        studentData[key] as never,
+                    );
+                }
+            }
+        });
+    }, [form, studentData]);
+    const router = useRouter();
     async function onSubmit(values: z.infer<typeof formSchema>) {
         await updateStudent({
             id: studentData.id,
@@ -60,29 +76,11 @@ const FormComponent = ({ studentData }: Props) => {
             shirtSize: values.shirtSize,
         });
 
-        formContext.updateUserData(values);
         router.push("/register/onboarding/step-four");
     }
 
-    useEffect(() => {
-        formContext.setStep(3);
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- this effect should only run once
-    }, []);
-
-    useEffect(() => {
-        for (const key in studentData) {
-            if (key in form.getValues()) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                //@ts-expect-error -- just make it works
-                if (studentData[key] !== null) {
-                    // @ts-expect-error -- just make it works
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                    form.setValue(key, studentData[key]);
-                }
-            }
-        }
-    }, [form, studentData]);
-
+    // HANDLERS
+    // TODO: put this in db?
     const shirtSizes = [
         { label: 'S (36")', value: 36 },
         { label: 'M (38")', value: 38 },

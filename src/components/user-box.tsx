@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 "use client";
+
 import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -16,17 +14,14 @@ import {
     FormLabel,
     FormMessage,
 } from "./ui/form";
+import { loginStudent } from "@/server/actions/student";
 
 export const formSchema = z.object({
     username: z.string(),
     password: z.string(),
 });
 
-interface UserBoxProps {
-    login: (values: z.infer<typeof formSchema>) => void;
-}
-
-export const UserBox = ({ login }: UserBoxProps) => {
+export const UserBox = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -35,8 +30,8 @@ export const UserBox = ({ login }: UserBoxProps) => {
         },
     });
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        login(values);
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        await loginStudent(values.username, values.password);
     }
 
     return (

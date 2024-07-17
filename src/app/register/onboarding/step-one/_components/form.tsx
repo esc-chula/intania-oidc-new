@@ -17,7 +17,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useUserForm } from "@/contexts/form-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -35,8 +34,9 @@ import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import type { Department } from "../_types/form";
-import { updateStudent } from "@/server/action/student";
+import { updateStudent } from "@/server/actions/student";
 import type { Student } from "@/types/student";
+import { useStudentForm } from "@/contexts/form-context";
 
 const formSchema = z.object({
     studentId: z.string().max(32),
@@ -53,39 +53,59 @@ const formSchema = z.object({
 });
 
 interface Props {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     studentData: Student;
     departments: Department[];
 }
 
 const FormComponent = ({ studentData, departments }: Props) => {
-    const formContext = useUserForm();
-    const router = useRouter();
-    const [selectedBirthDate, setSelectedBirthDate] = useState<
-        Date | undefined
-    >();
+    // STEP
+    const { setStep } = useStudentForm();
+    useEffect(() => {
+        setStep(1);
+    }, [setStep]);
 
+    // FORM
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
-
+    useEffect(() => {
+        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
+            if (
+                key in formSchema.shape &&
+                studentData[key] !== null &&
+                studentData[key] !== undefined
+            ) {
+                if (key === "birthDate" && studentData.birthDate) {
+                    const birthDate = new Date(studentData.birthDate);
+                    setSelectedBirthDate(birthDate);
+                    form.setValue(
+                        "birthDate",
+                        format(birthDate, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+                    );
+                } else if (key in formSchema.shape) {
+                    form.setValue(
+                        key as keyof z.infer<typeof formSchema>,
+                        studentData[key] as never,
+                    );
+                }
+            }
+        });
+    }, [form, studentData]);
+    const router = useRouter();
     async function onSubmit(values: z.infer<typeof formSchema>) {
         await updateStudent({
             id: studentData.id,
             titleEn: titleThToEn(values.titleTh),
             ...values,
         });
-
-        formContext.updateUserData(values);
         router.push("/register/onboarding/step-two");
     }
 
-    useEffect(() => {
-        formContext.setStep(1);
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- this effect should only run once
-    }, []);
-
+    // HANDLERS
+    const [selectedBirthDate, setSelectedBirthDate] = useState<
+        Date | undefined
+    >();
     useEffect(() => {
         if (selectedBirthDate) {
             form.setValue(
@@ -94,26 +114,6 @@ const FormComponent = ({ studentData, departments }: Props) => {
             );
         }
     }, [form, selectedBirthDate]);
-
-    useEffect(() => {
-        for (const key in studentData) {
-            if (key in form.getValues()) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                //@ts-expect-error -- just make it works
-                if (studentData[key] !== null) {
-                    //@ts-expect-error -- just make it works
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                    form.setValue(key, studentData[key]);
-
-                    if (key === "birthDate") {
-                        //@ts-expect-error -- just make it works
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                        setSelectedBirthDate(new Date(studentData[key]));
-                    }
-                }
-            }
-        }
-    }, [form, studentData]);
 
     return (
         <Form {...form}>

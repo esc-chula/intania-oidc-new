@@ -1,4 +1,4 @@
-import { UserFormContextProvider } from "@/contexts/form-context";
+import StudentFormContextProvider from "@/contexts/form-context";
 import Progress from "./_components/progress";
 import Transition from "./template";
 import { cookies } from "next/headers";
@@ -14,10 +14,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     return (
         <article className="flex size-full flex-col gap-24 px-6 py-7">
-            <UserFormContextProvider>
+            <StudentFormContextProvider>
                 <Progress />
                 <Transition>{children}</Transition>
-            </UserFormContextProvider>
+            </StudentFormContextProvider>
         </article>
     );
 };

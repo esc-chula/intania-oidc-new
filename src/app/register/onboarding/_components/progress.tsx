@@ -1,14 +1,17 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { useUserForm } from "@/contexts/form-context";
+import { useStudentForm } from "@/contexts/form-context";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ArrowLeftIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const Progress = () => {
-    const { step, setStep } = useUserForm();
+    const { step, setStep } = useStudentForm();
     const router = useRouter();
+    const pathname = usePathname();
+
+    if (pathname === "/register/onboarding/complete") return null;
 
     return (
         <>

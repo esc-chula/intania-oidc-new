@@ -17,7 +17,6 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { useUserForm } from "@/contexts/form-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -41,14 +40,15 @@ import {
 } from "@/components/ui/command";
 import type { Student } from "@/types/student";
 import { type FamilyMemberStatuses, type FamilyStatuses } from "../_types/form";
-import { updateStudent } from "@/server/action/student";
+import { updateStudent } from "@/server/actions/student";
+import { useStudentForm } from "@/contexts/form-context";
 
 const formSchema = z.object({
-    fatherName: z.string().max(150), // full name in english
+    fatherName: z.string().max(150),
     fatherBirthYear: z.number(),
     fatherStatusId: z.number().optional(),
 
-    motherName: z.string().max(150), // full name in english
+    motherName: z.string().max(150),
     motherBirthYear: z.number(),
     motherStatusId: z.number().optional(),
 
@@ -68,21 +68,44 @@ type Props = {
     familyMemberStatuses: FamilyMemberStatuses[];
 };
 
-const FormCompoent = ({
+const FormComponent = ({
     studentData,
     familyStatuses,
     familyMemberStatuses,
 }: Props) => {
-    const formContext = useUserForm();
-    const router = useRouter();
+    // STEP
+    const { setStep } = useStudentForm();
+    useEffect(() => {
+        setStep(4);
+    }, [setStep]);
 
+    // FORM
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
+    useEffect(() => {
+        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
+            if (key in formSchema.shape && studentData[key] != null) {
+                const value = studentData[key];
 
+                if (key === "siblingTotal" || key === "siblingOrder") {
+                    if (typeof value === "number") {
+                        form.setValue(key, value.toString());
+                    }
+                } else if (key in formSchema.shape) {
+                    form.setValue(
+                        key as keyof z.infer<typeof formSchema>,
+                        value as never,
+                    );
+                }
+            }
+        });
+    }, [form, studentData]);
+    const router = useRouter();
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const updatedValue = {
+        await updateStudent({
+            id: studentData.id,
             fatherName: values.fatherName,
             fatherBirthYear: values.fatherBirthYear,
             motherName: values.motherName,
@@ -92,45 +115,10 @@ const FormCompoent = ({
             siblingOrder: parseInt(values.siblingOrder),
             parent: values.parent,
             parentPhoneNumber: values.parentPhoneNumber,
-        };
-
-        await updateStudent({
-            id: studentData.id,
-            ...updatedValue,
         });
 
-        formContext.updateUserData(updatedValue);
         router.push("/register/onboarding/step-five");
     }
-
-    useEffect(() => {
-        formContext.setStep(4);
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- this effect should only run once
-    }, []);
-
-    useEffect(() => {
-        for (const key in studentData) {
-            if (key in form.getValues()) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                //@ts-expect-error -- just make it works
-                if (studentData[key] !== null) {
-                    // @ts-expect-error -- just make it works
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                    form.setValue(key, studentData[key]);
-                    if (key === "siblingTotal") {
-                        // @ts-expect-error -- just make it works
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                        form.setValue(key, studentData[key].toString());
-                    }
-                    if (key === "siblingOrder") {
-                        // @ts-expect-error -- just make it works
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                        form.setValue(key, studentData[key].toString());
-                    }
-                }
-            }
-        }
-    }, [form, studentData]);
 
     return (
         <Form {...form}>
@@ -159,7 +147,7 @@ const FormCompoent = ({
                         control={form.control}
                         name="fatherBirthYear"
                         render={({ field }) => (
-                            <FormItem className="flex flex-col">
+                            <FormItem className="flex flex-col pt-2">
                                 <FormLabel>ปีเกิดบิดา</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -251,7 +239,7 @@ const FormCompoent = ({
                         control={form.control}
                         name="motherBirthYear"
                         render={({ field }) => (
-                            <FormItem className="flex flex-col">
+                            <FormItem className="flex flex-col pt-2">
                                 <FormLabel>ปีเกิดมารดา</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
@@ -475,4 +463,4 @@ const FormCompoent = ({
     );
 };
 
-export default FormCompoent;
+export default FormComponent;

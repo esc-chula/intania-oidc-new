@@ -16,7 +16,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { useUserForm } from "@/contexts/form-context";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -26,7 +25,8 @@ import { useEffect, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
 import type { Country, District, Province, Religion } from "../_types/form";
 import { type Student } from "@/types/student";
-import { updateStudent } from "@/server/action/student";
+import { updateStudent } from "@/server/actions/student";
+import { useStudentForm } from "@/contexts/form-context";
 
 const formSchema = z.object({
     nationalId: z.string().length(13),
@@ -68,15 +68,50 @@ const FormComponent = ({
     districts,
     religions,
 }: Props) => {
-    const formContext = useUserForm();
-    const router = useRouter();
+    // STEP
+    const { setStep } = useStudentForm();
+    useEffect(() => {
+        setStep(2);
+    }, [setStep]);
 
+    // FORM
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
-
+    useEffect(() => {
+        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
+            if (key in formSchema.shape && studentData[key] != null) {
+                if (
+                    key === "nationalityId" &&
+                    typeof studentData[key] === "number"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCountry(studentData[key]);
+                } else if (
+                    key === "currentAddressProvinceId" &&
+                    typeof studentData[key] === "number"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedProvince(studentData[key]);
+                } else if (
+                    key === "hometownAddressProvinceId" &&
+                    typeof studentData[key] === "number"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedHomeProvince(studentData[key]);
+                } else if (key in formSchema.shape) {
+                    form.setValue(
+                        key as keyof z.infer<typeof formSchema>,
+                        studentData[key] as never,
+                    );
+                }
+            }
+        });
+    }, [form, studentData]);
+    const router = useRouter();
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        // TODO: Province and District ID invalid foreign key
         await updateStudent({
             id: studentData.id,
             nationalId: values.nationalId,
@@ -86,22 +121,25 @@ const FormComponent = ({
             phoneNumber: values.phoneNumber,
             nationalityId: values.nationalityId,
             religionId: values.religionId,
-            currentAddressProvinceId: values.currentAddressProvinceId,
+            // currentAddressProvinceId: values.currentAddressProvinceId,
             // currentAddressDistrictId: values.currentAddressDistrictId,
             currentAddressOther: values.currentAddressOther,
             currentAddressLatitude: values.currentAddressLatitude,
             currentAddressLongitude: values.currentAddressLongitude,
-            hometownAddressProvinceId: values.hometownAddressProvinceId,
+            // hometownAddressProvinceId: values.hometownAddressProvinceId,
             // hometownAddressDistrictId: values.hometownAddressDistrictId,
             hometownAddressOther: values.hometownAddressOther,
             hometownAddressLatitude: values.hometownAddressLatitude,
             hometownAddressLongitude: values.hometownAddressLongitude,
         });
 
-        formContext.updateUserData(values);
         router.push("/register/onboarding/step-three");
     }
 
+    // HANDLERS
+    const [selectedCountry, setSelectedCountry] = useState(0);
+    const [selectedProvince, setSelectedProvince] = useState(0);
+    const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
     const handleLocationSelect = (lat: number, lng: number) => {
         const location = {
             lat: lat.toFixed(9).toString(),
@@ -109,36 +147,7 @@ const FormComponent = ({
         };
         form.setValue("currentAddressLatitude", location.lat);
         form.setValue("currentAddressLongitude", location.lng);
-        // console.log(`Selected location: Latitude: ${lat}, Longitude: ${lng}`);
     };
-
-    const [selectedCountry, setSelectedCountry] = useState(0);
-    const [selectedProvince, setSelectedProvince] = useState(0);
-    const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
-
-    useEffect(() => {
-        formContext.setStep(2);
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- this effect should only run once
-    }, []);
-
-    useEffect(() => {
-        for (const key in studentData) {
-            if (key in form.getValues()) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                //@ts-expect-error -- just make it works
-                if (studentData[key] !== null) {
-                    // @ts-expect-error -- just make it works
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-                    form.setValue(key, studentData[key]);
-
-                    if (key === "nationalityId") {
-                        // @ts-expect-error -- just make it works
-                        setSelectedCountry(studentData[key]);
-                    }
-                }
-            }
-        }
-    }, [form, studentData]);
 
     return (
         <Form {...form}>
