@@ -325,8 +325,16 @@ export default function FormComponent({ studentData, departments }: Props) {
                             <FormItem>
                                 <FormLabel>สรรพนามที่ประสงค์ใช้</FormLabel>
                                 <Select
-                                    onValueChange={field.onChange}
                                     value={field.value}
+                                    onValueChange={(value) => {
+                                        if (!value) {
+                                            return;
+                                        }
+                                        form.setValue(
+                                            "preferredPronoun",
+                                            value,
+                                        );
+                                    }}
                                 >
                                     <FormControl>
                                         <SelectTrigger>
