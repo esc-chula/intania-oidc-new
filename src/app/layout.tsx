@@ -12,7 +12,7 @@ const anuphan = Anuphan({
 });
 
 export const metadata = {
-    title: "Intania OIDC",
+    title: "Intania Accounts",
     icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 

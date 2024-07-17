@@ -15,10 +15,11 @@ import {
     FormMessage,
 } from "./ui/form";
 import { loginStudent } from "@/server/actions/student";
+import { useState } from "react";
 
 export const formSchema = z.object({
-    username: z.string(),
-    password: z.string(),
+    username: z.string().length(10),
+    password: z.string().min(2),
 });
 
 export const UserBox = () => {
@@ -30,25 +31,39 @@ export const UserBox = () => {
         },
     });
 
+    const [error, setError] = useState<string | null>(null);
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        await loginStudent(values.username, values.password);
+        try {
+            await loginStudent(values.username, values.password);
+            setError(null);
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message);
+            } else {
+                setError("An unknown error occurred");
+            }
+        }
     }
 
     return (
         <div className="relative flex size-full flex-col gap-16 rounded-2xl p-12 md:aspect-[614/764] md:bg-card md:shadow-md lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
-            <div className="flex w-full flex-col items-center gap-10 text-center md:items-start md:text-start">
-                <ESCLogoWithoutText className="h-14 w-fit fill-primary md:h-16" />
-                <div className="flex flex-col">
-                    <h2 className="text-2xl font-semibold md:text-3xl">
-                        เข้าสู่ระบบ
-                    </h2>
-                    <h1 className="text-5xl font-bold text-primary md:text-6xl">
-                        INTANIA
-                    </h1>
-                    <p className="font-medium text-muted-foreground md:text-xl">
-                        ใช้รหัส CUNET เพื่อเข้าสู่ระบบ
-                    </p>
+            <div className="flex w-full flex-col justify-between text-center md:text-start">
+                <div className="flex flex-col items-center gap-10 md:items-start">
+                    <ESCLogoWithoutText className="h-14 w-fit fill-primary md:h-16" />
+                    <div className="flex flex-col">
+                        <h2 className="text-2xl font-semibold md:text-3xl">
+                            เข้าสู่ระบบ
+                        </h2>
+                        <h1 className="text-5xl font-bold text-primary md:text-6xl">
+                            INTANIA
+                        </h1>
+                        <p className="font-medium text-muted-foreground md:text-xl">
+                            ใช้รหัส CUNET เพื่อเข้าสู่ระบบ
+                        </p>
+                    </div>
                 </div>
+                <p className="text-red-500">{error && error}</p>
             </div>
             <Form {...form}>
                 <form
@@ -66,7 +81,7 @@ export const UserBox = () => {
                                 <FormControl>
                                     <Input placeholder="" {...field} />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />
@@ -85,7 +100,7 @@ export const UserBox = () => {
                                         type="password"
                                     />
                                 </FormControl>
-                                <FormMessage />
+                                <FormMessage className="text-xs" />
                             </FormItem>
                         )}
                     />

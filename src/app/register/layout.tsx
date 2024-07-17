@@ -1,3 +1,9 @@
+export const metadata = {
+    title: "ลงทะเบียนนิสิตใหม่ - Intania Accounts",
+    description:
+        "ระบบลงทะเบียนนิสิตใหม่ คณะวิศวกรรมศาสตร์ จุฬาลงกรณ์มหาวิทยาลัย",
+};
+
 interface LayoutProps {
     children: React.ReactNode;
 }

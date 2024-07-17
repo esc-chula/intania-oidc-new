@@ -51,11 +51,13 @@ const page = () => {
                             </Button>
                         </CardFooter>
                     </Card>
-                    <div className="pt-4 text-center text-sm text-neutral-500">
-                        <Link href="/logout" className="hover:underline">
-                            ลงทะเบียนด้วยบัญชีอื่น
-                        </Link>
-                    </div>
+                    {sid && (
+                        <div className="pt-4 text-center text-sm text-neutral-500">
+                            <Link href="/logout" className="hover:underline">
+                                ลงทะเบียนด้วยบัญชีอื่น
+                            </Link>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
