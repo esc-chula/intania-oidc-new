@@ -12,8 +12,6 @@ export async function loginStudent(
 ): Promise<void> {
     const res = await api.student.login({ username, password });
 
-    console.log(res);
-
     if (!res.success) {
         if (res.errors.length > 0) {
             throw new Error(res.errors[0]);

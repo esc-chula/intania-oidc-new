@@ -93,7 +93,9 @@ export default function FormComponent({ studentData, departments }: Props) {
         });
     }, [form, studentData]);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         await updateStudent({
             id: studentData.id,
             titleEn: titleThToEn(values.titleTh),
@@ -414,7 +416,12 @@ export default function FormComponent({ studentData, departments }: Props) {
                     }}
                 />
 
-                <Button type="submit" className="self-end" size="lg">
+                <Button
+                    type="submit"
+                    className="self-end"
+                    size="lg"
+                    disabled={loading}
+                >
                     ถัดไป
                 </Button>
             </form>

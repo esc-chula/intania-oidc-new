@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     Form,
     FormControl,
@@ -54,7 +54,9 @@ export default function FormComponent({ studentData }: Props) {
         });
     }, [form, studentData]);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         await updateStudent({
             id: studentData.id,
             cueaDataTransferAgreement: values.cueaDataTransferAgreement,
@@ -124,7 +126,12 @@ export default function FormComponent({ studentData }: Props) {
                         )}
                     />
                 </div>
-                <Button type="submit" className="self-end" size="lg">
+                <Button
+                    type="submit"
+                    className="self-end"
+                    size="lg"
+                    disabled={loading}
+                >
                     ถัดไป
                 </Button>
             </form>

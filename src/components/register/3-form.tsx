@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Student } from "@/types/student";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
@@ -65,7 +65,9 @@ export default function FormComponent({ studentData }: Props) {
         });
     }, [form, studentData]);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         await updateStudent({
             id: studentData.id,
             foodLimitations: values.foodLimitations,
@@ -244,7 +246,12 @@ export default function FormComponent({ studentData }: Props) {
                         )}
                     />
                 </section>
-                <Button type="submit" className="self-end" size="lg">
+                <Button
+                    type="submit"
+                    className="self-end"
+                    size="lg"
+                    disabled={loading}
+                >
                     ถัดไป
                 </Button>
             </form>

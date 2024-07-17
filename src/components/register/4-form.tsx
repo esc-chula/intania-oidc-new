@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
     Popover,
     PopoverContent,
@@ -58,8 +58,8 @@ const formSchema = z.object({
     parentPhoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/),
     parentAddress: z.string().max(400).optional(),
 
-    siblingTotal: z.string(),
-    siblingOrder: z.string(),
+    siblingTotal: z.number(),
+    siblingOrder: z.number(),
 });
 
 type Props = {
@@ -91,7 +91,7 @@ export default function FormComponent({
 
                 if (key === "siblingTotal" || key === "siblingOrder") {
                     if (typeof value === "number") {
-                        form.setValue(key, value.toString());
+                        form.setValue(key, value);
                     }
                 } else if (key in formSchema.shape) {
                     form.setValue(
@@ -103,7 +103,9 @@ export default function FormComponent({
         });
     }, [form, studentData]);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
         await updateStudent({
             id: studentData.id,
             fatherName: values.fatherName,
@@ -111,8 +113,8 @@ export default function FormComponent({
             motherName: values.motherName,
             motherBirthYear: values.motherBirthYear,
             familyStatusId: values.familyStatusId,
-            siblingTotal: parseInt(values.siblingTotal),
-            siblingOrder: parseInt(values.siblingOrder),
+            siblingTotal: values.siblingTotal,
+            siblingOrder: values.siblingOrder,
             parent: values.parent,
             parentPhoneNumber: values.parentPhoneNumber,
         });
@@ -359,9 +361,22 @@ export default function FormComponent({
                                     <FormLabel>จำนวนพี่น้อง</FormLabel>
                                     <FormControl>
                                         <Input
-                                            // expect number got string
                                             placeholder="กรอกจำนวนพี่น้อง"
-                                            {...field}
+                                            value={field.value}
+                                            onChange={(e) => {
+                                                const value = parseInt(
+                                                    e.target.value,
+                                                );
+                                                field.onChange(
+                                                    isNaN(value)
+                                                        ? undefined
+                                                        : value,
+                                                );
+                                            }}
+                                            name={field.name}
+                                            disabled={field.disabled}
+                                            onBlur={field.onBlur}
+                                            ref={field.ref}
                                         />
                                     </FormControl>
                                     <FormDescription>
@@ -382,7 +397,21 @@ export default function FormComponent({
                                 <FormControl>
                                     <Input
                                         placeholder="กรอกลำดับพี่น้อง"
-                                        {...field}
+                                        value={field.value}
+                                        onChange={(e) => {
+                                            const value = parseInt(
+                                                e.target.value,
+                                            );
+                                            field.onChange(
+                                                isNaN(value)
+                                                    ? undefined
+                                                    : value,
+                                            );
+                                        }}
+                                        name={field.name}
+                                        disabled={field.disabled}
+                                        onBlur={field.onBlur}
+                                        ref={field.ref}
                                     />
                                 </FormControl>
                                 <FormDescription>
@@ -455,7 +484,12 @@ export default function FormComponent({
                         )}
                     />
                 </section>
-                <Button type="submit" className="self-end" size="lg">
+                <Button
+                    type="submit"
+                    className="self-end"
+                    size="lg"
+                    disabled={loading}
+                >
                     ถัดไป
                 </Button>
             </form>

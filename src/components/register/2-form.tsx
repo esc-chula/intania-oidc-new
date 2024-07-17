@@ -74,6 +74,34 @@ export default function FormComponent({
         setStep(2);
     }, [setStep]);
 
+    // MAP
+    const [selectedCurrentLocationLat, setSelectedCurrentLocationLat] =
+        useState<string | null>(null);
+    const [selectedCurrentLocationLng, setSelectedCurrentLocationLng] =
+        useState<string | null>(null);
+    const [selectedHomeLocationLat, setSelectedHomeLocationLat] = useState<
+        string | null
+    >(null);
+    const [selectedHomeLocationLng, setSelectedHomeLocationLng] = useState<
+        string | null
+    >(null);
+    const handleCurrentLocationSelect = (lat: number, lng: number) => {
+        const location = {
+            lat: lat.toFixed(9).toString(),
+            lng: lng.toFixed(9).toString(),
+        };
+        form.setValue("currentAddressLatitude", location.lat);
+        form.setValue("currentAddressLongitude", location.lng);
+    };
+    const handleHomeLocationSelect = (lat: number, lng: number) => {
+        const location = {
+            lat: lat.toFixed(9).toString(),
+            lng: lng.toFixed(9).toString(),
+        };
+        form.setValue("hometownAddressLatitude", location.lat);
+        form.setValue("hometownAddressLongitude", location.lng);
+    };
+
     // FORM
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -93,13 +121,37 @@ export default function FormComponent({
                     typeof studentData[key] === "number"
                 ) {
                     form.setValue(key, studentData[key]);
-                    setSelectedProvince(studentData[key]);
+                    setSelectedCurrentProvince(studentData[key]);
                 } else if (
                     key === "hometownAddressProvinceId" &&
                     typeof studentData[key] === "number"
                 ) {
                     form.setValue(key, studentData[key]);
                     setSelectedHomeProvince(studentData[key]);
+                } else if (
+                    key === "currentAddressLatitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCurrentLocationLat(studentData[key]);
+                } else if (
+                    key === "currentAddressLongitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCurrentLocationLng(studentData[key]);
+                } else if (
+                    key === "hometownAddressLatitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedHomeLocationLat(studentData[key]);
+                } else if (
+                    key === "hometownAddressLongitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedHomeLocationLng(studentData[key]);
                 } else if (key in formSchema.shape) {
                     form.setValue(
                         key as keyof z.infer<typeof formSchema>,
@@ -110,8 +162,9 @@ export default function FormComponent({
         });
     }, [form, studentData]);
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        // TODO: Province and District ID invalid foreign key
+        setLoading(true);
         await updateStudent({
             id: studentData.id,
             nationalId: values.nationalId,
@@ -121,13 +174,13 @@ export default function FormComponent({
             phoneNumber: values.phoneNumber,
             nationalityId: values.nationalityId,
             religionId: values.religionId,
-            // currentAddressProvinceId: values.currentAddressProvinceId,
-            // currentAddressDistrictId: values.currentAddressDistrictId,
+            currentAddressProvinceId: values.currentAddressProvinceId,
+            currentAddressDistrictId: values.currentAddressDistrictId,
             currentAddressOther: values.currentAddressOther,
             currentAddressLatitude: values.currentAddressLatitude,
             currentAddressLongitude: values.currentAddressLongitude,
-            // hometownAddressProvinceId: values.hometownAddressProvinceId,
-            // hometownAddressDistrictId: values.hometownAddressDistrictId,
+            hometownAddressProvinceId: values.hometownAddressProvinceId,
+            hometownAddressDistrictId: values.hometownAddressDistrictId,
             hometownAddressOther: values.hometownAddressOther,
             hometownAddressLatitude: values.hometownAddressLatitude,
             hometownAddressLongitude: values.hometownAddressLongitude,
@@ -138,16 +191,8 @@ export default function FormComponent({
 
     // HANDLERS
     const [selectedCountry, setSelectedCountry] = useState(0);
-    const [selectedProvince, setSelectedProvince] = useState(0);
+    const [selectedCurrentProvince, setSelectedCurrentProvince] = useState(0);
     const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
-    const handleLocationSelect = (lat: number, lng: number) => {
-        const location = {
-            lat: lat.toFixed(9).toString(),
-            lng: lng.toFixed(9).toString(),
-        };
-        form.setValue("currentAddressLatitude", location.lat);
-        form.setValue("currentAddressLongitude", location.lng);
-    };
 
     return (
         <Form {...form}>
@@ -366,7 +411,20 @@ export default function FormComponent({
                 <section className="flex flex-col gap-2">
                     <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
                         <GoogleMap
-                            onLocationSelect={handleLocationSelect}
+                            onLocationSelect={handleCurrentLocationSelect}
+                            selectedLocation={
+                                selectedCurrentLocationLat &&
+                                selectedCurrentLocationLng
+                                    ? {
+                                          lat: parseFloat(
+                                              selectedCurrentLocationLat,
+                                          ),
+                                          lng: parseFloat(
+                                              selectedCurrentLocationLng,
+                                          ),
+                                      }
+                                    : undefined
+                            }
                             width="100%"
                             height="100%"
                             placeholder="ระบุตำแหน่งที่อยู่ปัจจุบัน"
@@ -401,6 +459,15 @@ export default function FormComponent({
                             <FormItem className="!pt-0">
                                 <FormLabel>จังหวัดที่อยู่ปัจจุบัน</FormLabel>
                                 <Select
+                                    value={
+                                        field.value
+                                            ? provinces.find(
+                                                  (province) =>
+                                                      province.id ===
+                                                      field.value,
+                                              )?.nameTh
+                                            : undefined
+                                    }
                                     onValueChange={(value) => {
                                         const selectedProvinceString =
                                             provinces.find(
@@ -413,12 +480,11 @@ export default function FormComponent({
                                         }
 
                                         field.onChange(
-                                            selectedProvinceString.provinceCode,
+                                            selectedProvinceString.id,
                                         );
-                                        setSelectedProvince(
-                                            selectedProvinceString.provinceCode,
+                                        setSelectedCurrentProvince(
+                                            selectedProvinceString.id,
                                         );
-                                        // Additional logic to update districts based on selected province
                                     }}
                                 >
                                     <FormControl>
@@ -427,7 +493,6 @@ export default function FormComponent({
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {/* Map through provinces data */}
                                         {provinces.map((province) => (
                                             <SelectItem
                                                 key={province.provinceCode}
@@ -450,15 +515,24 @@ export default function FormComponent({
                             <FormItem className="!pt-0">
                                 <FormLabel>เขตที่อยู่ปัจจุบัน</FormLabel>
                                 <Select
+                                    value={
+                                        field.value
+                                            ? districts.find(
+                                                  (district) =>
+                                                      district.id ===
+                                                      field.value,
+                                              )?.nameTh
+                                            : undefined
+                                    }
                                     onValueChange={(value) => {
                                         const selectedDistrict = districts.find(
                                             (district) =>
                                                 district.nameTh === value,
                                         );
-                                        field.onChange(
-                                            selectedDistrict?.districtCode,
-                                        );
-                                        // Additional logic to update districts based on selected province
+                                        if (!selectedDistrict) {
+                                            return;
+                                        }
+                                        field.onChange(selectedDistrict.id);
                                     }}
                                 >
                                     <FormControl>
@@ -469,13 +543,15 @@ export default function FormComponent({
                                     <SelectContent>
                                         {districts
                                             .filter((district) => {
-                                                console.log(
-                                                    "Filtering Districts for Province Code:",
-                                                    selectedProvince,
-                                                ); // Debugging
+                                                const selectedCurrentProvinceCode =
+                                                    provinces.find(
+                                                        (province) =>
+                                                            province.id ===
+                                                            selectedCurrentProvince,
+                                                    )?.provinceCode;
                                                 return (
                                                     district.provinceCode ===
-                                                    selectedProvince
+                                                    selectedCurrentProvinceCode
                                                 );
                                             })
                                             .map((district) => (
@@ -515,7 +591,20 @@ export default function FormComponent({
                     <section className="flex flex-col gap-2">
                         <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
                             <GoogleMap
-                                onLocationSelect={handleLocationSelect}
+                                onLocationSelect={handleHomeLocationSelect}
+                                selectedLocation={
+                                    selectedHomeLocationLat &&
+                                    selectedHomeLocationLng
+                                        ? {
+                                              lat: parseFloat(
+                                                  selectedHomeLocationLat,
+                                              ),
+                                              lng: parseFloat(
+                                                  selectedHomeLocationLng,
+                                              ),
+                                          }
+                                        : undefined
+                                }
                                 width="100%"
                                 height="100%"
                                 placeholder="ระบุตำแหน่งที่อยู่ภูมิลำเนา"
@@ -552,6 +641,15 @@ export default function FormComponent({
                                         จังหวัดที่อยู่ภูมิลำเนา
                                     </FormLabel>
                                     <Select
+                                        value={
+                                            field.value
+                                                ? provinces.find(
+                                                      (province) =>
+                                                          province.id ===
+                                                          field.value,
+                                                  )?.nameTh
+                                                : undefined
+                                        }
                                         onValueChange={(value) => {
                                             const selectedProvinceString =
                                                 provinces.find(
@@ -565,12 +663,11 @@ export default function FormComponent({
                                             }
 
                                             field.onChange(
-                                                selectedProvinceString?.provinceCode,
+                                                selectedProvinceString?.id,
                                             );
                                             setSelectedHomeProvince(
-                                                selectedProvinceString?.provinceCode,
+                                                selectedProvinceString?.id,
                                             );
-                                            // Additional logic to update districts based on selected province
                                         }}
                                     >
                                         <FormControl>
@@ -602,6 +699,15 @@ export default function FormComponent({
                                 <FormItem className="!pt-0">
                                     <FormLabel>เขตที่อยู่ภูมิลำเนา</FormLabel>
                                     <Select
+                                        value={
+                                            field.value
+                                                ? districts.find(
+                                                      (district) =>
+                                                          district.id ===
+                                                          field.value,
+                                                  )?.nameTh
+                                                : undefined
+                                        }
                                         onValueChange={(value) => {
                                             const selectedDistrict =
                                                 districts.find(
@@ -610,9 +716,8 @@ export default function FormComponent({
                                                         value,
                                                 );
                                             field.onChange(
-                                                selectedDistrict?.districtCode,
+                                                selectedDistrict?.id,
                                             );
-                                            // Additional logic to update districts based on selected province
                                         }}
                                     >
                                         <FormControl>
@@ -623,13 +728,15 @@ export default function FormComponent({
                                         <SelectContent>
                                             {districts
                                                 .filter((district) => {
-                                                    console.log(
-                                                        "Filtering Districts for Province Code:",
-                                                        selectedHomeProvince,
-                                                    ); // Debugging
+                                                    const selectedHomeProvinceCode =
+                                                        provinces.find(
+                                                            (province) =>
+                                                                province.id ===
+                                                                selectedHomeProvince,
+                                                        )?.provinceCode;
                                                     return (
                                                         district.provinceCode ===
-                                                        selectedHomeProvince
+                                                        selectedHomeProvinceCode
                                                     );
                                                 })
                                                 .map((district) => (
@@ -685,7 +792,12 @@ export default function FormComponent({
                     />
                 )}
 
-                <Button type="submit" className="self-end" size="lg">
+                <Button
+                    type="submit"
+                    className="self-end"
+                    size="lg"
+                    disabled={loading}
+                >
                     ถัดไป
                 </Button>
             </form>

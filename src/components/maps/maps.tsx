@@ -1,33 +1,50 @@
-import React, { useState } from 'react';
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import React, { useEffect, useState } from "react";
+import { GoogleMap, Marker, useJsApiLoader } from "@react-google-maps/api";
 
 const mapOptions = {
     center: {
         lat: 13.73826,
-        lng: 100.532413
+        lng: 100.532413,
     }, // Chula location
     zoom: 10,
     disableDefaultUI: true,
 };
 
-interface Location{
+interface Location {
     lat: number | null;
     lng: number | null;
-};
+}
 
 interface GoogleMapsProps {
     onLocationSelect: (lat: number, lng: number) => void;
     width?: string;
     height?: string;
     placeholder: string;
+    selectedLocation?: Location;
 }
 
-export default function GoogleMaps({ onLocationSelect, width, height, placeholder }: GoogleMapsProps) {
-    const [selectedLocation, setSelectedLocation] = useState <Location>({ lat: null, lng: null });
+export default function GoogleMaps({
+    onLocationSelect,
+    width,
+    height,
+    placeholder,
+    selectedLocation: predefinedLocation,
+}: GoogleMapsProps) {
+    const [selectedLocation, setSelectedLocation] = useState<Location>({
+        lat: null,
+        lng: null,
+    });
+
+    useEffect(() => {
+        if (predefinedLocation) {
+            setSelectedLocation(predefinedLocation);
+        }
+    }, [predefinedLocation]);
+
     const [showOverlay, setShowOverlay] = useState(true);
 
     const { isLoaded } = useJsApiLoader({
-        id: 'google-map-script',
+        id: "google-map-script",
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ?? "",
     });
 
@@ -43,40 +60,47 @@ export default function GoogleMaps({ onLocationSelect, width, height, placeholde
         }
     };
 
-
     if (!isLoaded) return <div>Loading...</div>;
 
     return (
-    
-        <div style={{ position: 'relative', height: '100%', width: '100%' }}>
+        <div style={{ position: "relative", height: "100%", width: "100%" }}>
             {showOverlay && (
-            <div
-                style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Black with opacity
-                    color: 'white',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 2, // Ensure it's above the map
-                }}
-                onClick={() => setShowOverlay(false)} // Hide overlay on click  
-                className = "font-bold text-lg"
-            >
-                {placeholder}
-            </div>
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: "rgba(0, 0, 0, 0.5)", // Black with opacity
+                        color: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 2, // Ensure it's above the map
+                    }}
+                    onClick={() => setShowOverlay(false)} // Hide overlay on click
+                    className="text-lg font-bold"
+                >
+                    {placeholder}
+                </div>
             )}
             <GoogleMap
-                mapContainerStyle={width && height ? { width, height } : { width: "100%", height: "100%" }}
+                mapContainerStyle={
+                    width && height
+                        ? { width, height }
+                        : { width: "100%", height: "100%" }
+                }
                 options={mapOptions}
                 onClick={handleMapClick}
             >
                 {selectedLocation.lat && selectedLocation.lng && (
-                    <Marker position={{ lat: selectedLocation.lat, lng: selectedLocation.lng }} />
+                    <Marker
+                        position={{
+                            lat: selectedLocation.lat,
+                            lng: selectedLocation.lng,
+                        }}
+                    />
                 )}
             </GoogleMap>
         </div>
