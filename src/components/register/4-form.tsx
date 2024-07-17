@@ -108,15 +108,7 @@ export default function FormComponent({
         setLoading(true);
         await updateStudent({
             id: studentData.id,
-            fatherName: values.fatherName,
-            fatherBirthYear: values.fatherBirthYear,
-            motherName: values.motherName,
-            motherBirthYear: values.motherBirthYear,
-            familyStatusId: values.familyStatusId,
-            siblingTotal: values.siblingTotal,
-            siblingOrder: values.siblingOrder,
-            parent: values.parent,
-            parentPhoneNumber: values.parentPhoneNumber,
+            ...values,
         });
 
         router.push("/register/onboarding/step-five");
@@ -219,6 +211,45 @@ export default function FormComponent({
                             </FormItem>
                         )}
                     />
+                    <FormField
+                        control={form.control}
+                        name="fatherStatusId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>สถานะบิดา</FormLabel>
+                                <Select
+                                    value={
+                                        field.value
+                                            ? field.value.toString()
+                                            : undefined
+                                    }
+                                    onValueChange={(value) => {
+                                        if (!value) {
+                                            return;
+                                        }
+                                        field.onChange(parseInt(value));
+                                    }}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="เลือกสถานะบิดา" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {familyMemberStatuses.map((status) => (
+                                            <SelectItem
+                                                value={status.id.toString()}
+                                                key={status.id}
+                                            >
+                                                {status.valueTh}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
                 </section>
                 <section className="flex flex-col gap-2">
                     <FormField
@@ -307,6 +338,45 @@ export default function FormComponent({
                                 <FormDescription>
                                     ปีคริสต์ศักราช
                                 </FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="motherStatusId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>สถานะมารดา</FormLabel>
+                                <Select
+                                    value={
+                                        field.value
+                                            ? field.value.toString()
+                                            : undefined
+                                    }
+                                    onValueChange={(value) => {
+                                        if (!value) {
+                                            return;
+                                        }
+                                        field.onChange(parseInt(value));
+                                    }}
+                                >
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="เลือกสถานะมารดา" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {familyMemberStatuses.map((status) => (
+                                            <SelectItem
+                                                value={status.id.toString()}
+                                                key={status.id}
+                                            >
+                                                {status.valueTh}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}

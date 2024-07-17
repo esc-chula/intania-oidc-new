@@ -42,9 +42,11 @@ const formSchema = z.object({
     studentId: z.string().max(32),
     titleTh: z.string().max(30),
     firstNameTh: z.string().max(90),
+    middleNameTh: z.string().max(90).optional(),
     familyNameTh: z.string().max(90),
     nicknameTh: z.string().max(50),
     firstNameEn: z.string().max(90),
+    middleNameEn: z.string().max(90).optional(),
     familyNameEn: z.string().max(90),
     nicknameEn: z.string().max(50),
     preferredPronoun: z.string().max(50),
@@ -200,6 +202,23 @@ export default function FormComponent({ studentData, departments }: Props) {
                     />
                     <FormField
                         control={form.control}
+                        name="middleNameTh"
+                        render={({ field }) => (
+                            <FormItem className={cn(!field.value && "hidden")}>
+                                <FormLabel>ชื่อกลาง (TH)</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="กรอกชื่อกลางภาษาไทย"
+                                        type={field.value ? "text" : "hidden"}
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
                         name="familyNameTh"
                         render={({ field }) => (
                             <FormItem>
@@ -241,6 +260,23 @@ export default function FormComponent({ studentData, departments }: Props) {
                                 <FormControl>
                                     <Input
                                         placeholder="กรอกชื่อภาษาอังกฤษ"
+                                        {...field}
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="middleNameEn"
+                        render={({ field }) => (
+                            <FormItem className={cn(!field.value && "hidden")}>
+                                <FormLabel>ชื่อกลาง (EN)</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="กรอกชื่อกลางภาษาอังกฤษ"
+                                        type={field.value ? "text" : "hidden"}
                                         {...field}
                                     />
                                 </FormControl>

@@ -56,7 +56,7 @@ export default function GoogleMaps({
             setSelectedLocation({ lat, lng });
             onLocationSelect(lat, lng);
         } else {
-            console.log("No location selected.");
+            // no latLng in event
         }
     };
 

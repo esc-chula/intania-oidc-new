@@ -70,12 +70,7 @@ export default function FormComponent({ studentData }: Props) {
         setLoading(true);
         await updateStudent({
             id: studentData.id,
-            foodLimitations: values.foodLimitations,
-            drugAllergies: values.drugAllergies,
-            medicalConditions: values.medicalConditions,
-            medications: values.medications,
-            bloodType: values.bloodType,
-            shirtSize: values.shirtSize,
+            ...values,
         });
 
         router.push("/register/onboarding/step-four");
@@ -101,43 +96,37 @@ export default function FormComponent({ studentData }: Props) {
                 <FormField
                     control={form.control}
                     name="shirtSize"
-                    render={({ field }) => {
-                        console.log(field);
-                        return (
-                            <FormItem className="!pt-0">
-                                <FormLabel>ไซส์เสื้อ</FormLabel>
-                                <Select
-                                    value={
-                                        field.value
-                                            ? field.value.toString()
-                                            : ""
-                                    }
-                                    onValueChange={(value) => {
-                                        if (!value) return;
-                                        console.log(value);
-                                        field.onChange(parseInt(value));
-                                    }}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="เลือกไซส์เสื้อ" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {shirtSizes.map((size) => (
-                                            <SelectItem
-                                                key={size.value}
-                                                value={size.value.toString()}
-                                            >
-                                                {size.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        );
-                    }}
+                    render={({ field }) => (
+                        <FormItem className="!pt-0">
+                            <FormLabel>ไซส์เสื้อ</FormLabel>
+                            <Select
+                                value={
+                                    field.value ? field.value.toString() : ""
+                                }
+                                onValueChange={(value) => {
+                                    if (!value) return;
+                                    field.onChange(parseInt(value));
+                                }}
+                            >
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="เลือกไซส์เสื้อ" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {shirtSizes.map((size) => (
+                                        <SelectItem
+                                            key={size.value}
+                                            value={size.value.toString()}
+                                        >
+                                            {size.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
                 <section className="flex flex-col gap-2">
                     <FormField

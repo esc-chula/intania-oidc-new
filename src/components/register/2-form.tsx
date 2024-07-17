@@ -273,25 +273,28 @@ export default function FormComponent({
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="nationalId"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>รหัสบัตรประชาชน</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกรหัสบัตรประชาชน"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    กรอกเฉพาะตัวเลข 13 หลักติดกัน
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    {selectedCountry === 215 && (
+                        <FormField
+                            control={form.control}
+                            name="nationalId"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>รหัสบัตรประชาชน</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกรหัสบัตรประชาชน"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        กรอกเฉพาะตัวเลข 13 หลักติดกัน
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    )}
+
                     <FormField
                         control={form.control}
                         name="religionId"
