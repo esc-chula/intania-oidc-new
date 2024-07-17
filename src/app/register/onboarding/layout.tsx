@@ -1,10 +1,10 @@
 import StudentFormContextProvider from "@/contexts/form-context";
-import Progress from "./_components/progress";
 import Transition from "./template";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import Header from "@/components/register/header";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+export default function Layout({ children }: { children: React.ReactNode }) {
     const cookieStore = cookies();
     const sid = cookieStore.get("sid");
 
@@ -15,11 +15,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     return (
         <article className="flex size-full flex-col gap-24 px-6 py-7">
             <StudentFormContextProvider>
-                <Progress />
+                <Header />
                 <Transition>{children}</Transition>
             </StudentFormContextProvider>
         </article>
     );
-};
-
-export default Layout;
+}

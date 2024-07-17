@@ -1,6 +1,6 @@
 "use client";
 
-import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
+import ESCLogoWithoutText from "@/components/esc/esc-logo-without-text";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +13,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "./ui/form";
+} from "../ui/form";
 import { loginStudent } from "@/server/actions/student";
 import { useState } from "react";
 
@@ -22,7 +22,7 @@ export const formSchema = z.object({
     password: z.string().min(2),
 });
 
-export const UserBox = () => {
+export default function LoginBox() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -115,4 +115,4 @@ export const UserBox = () => {
             </Form>
         </div>
     );
-};
+}

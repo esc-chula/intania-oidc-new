@@ -39,7 +39,7 @@ import {
     CommandList,
 } from "@/components/ui/command";
 import type { Student } from "@/types/student";
-import { type FamilyMemberStatuses, type FamilyStatuses } from "../_types/form";
+import { type FamilyMemberStatuses, type FamilyStatuses } from "@/types/misc";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 
@@ -68,11 +68,11 @@ type Props = {
     familyMemberStatuses: FamilyMemberStatuses[];
 };
 
-const FormComponent = ({
+export default function FormComponent({
     studentData,
     familyStatuses,
     familyMemberStatuses,
-}: Props) => {
+}: Props) {
     // STEP
     const { setStep } = useStudentForm();
     useEffect(() => {
@@ -461,6 +461,4 @@ const FormComponent = ({
             </form>
         </Form>
     );
-};
-
-export default FormComponent;
+}

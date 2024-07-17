@@ -3,7 +3,7 @@
 import { LucideChevronDown } from "lucide-react";
 import { useState } from "react";
 
-const Pdpa = () => {
+export default function Pdpa() {
     const [expanded, setExpanded] = useState(false);
 
     return (
@@ -88,6 +88,4 @@ const Pdpa = () => {
             </div>
         </div>
     );
-};
-
-export default Pdpa;
+}

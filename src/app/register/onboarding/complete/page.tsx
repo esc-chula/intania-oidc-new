@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-async function Page() {
+export default async function Page() {
     const me = (await api.student.me().catch((e) => {
         if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
             redirect("/logout");
@@ -24,5 +24,3 @@ async function Page() {
         </div>
     );
 }
-
-export default Page;

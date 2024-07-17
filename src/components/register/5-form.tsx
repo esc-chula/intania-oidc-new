@@ -29,7 +29,7 @@ type Props = {
     studentData: Student;
 };
 
-const FormComponent = ({ studentData }: Props) => {
+export default function FormComponent({ studentData }: Props) {
     // STEP
     const { setStep } = useStudentForm();
     useEffect(() => {
@@ -130,6 +130,4 @@ const FormComponent = ({ studentData }: Props) => {
             </form>
         </Form>
     );
-};
-
-export default FormComponent;
+}

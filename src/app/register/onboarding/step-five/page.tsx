@@ -1,8 +1,8 @@
 import { api } from "@/trpc/server";
-import FormComponent from "./_components/form";
 import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
 import type { Student } from "@/types/student";
+import FormComponent from "@/components/register/5-form";
 
 export default async function Page() {
     const me = (await api.student.me().catch((e) => {

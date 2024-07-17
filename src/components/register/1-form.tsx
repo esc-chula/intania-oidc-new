@@ -33,7 +33,7 @@ import { cn, titleThToEn } from "@/lib/utils";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
 import { useEffect, useState } from "react";
-import type { Department } from "../_types/form";
+import type { Department } from "@/types/misc";
 import { updateStudent } from "@/server/actions/student";
 import type { Student } from "@/types/student";
 import { useStudentForm } from "@/contexts/form-context";
@@ -57,7 +57,7 @@ interface Props {
     departments: Department[];
 }
 
-const FormComponent = ({ studentData, departments }: Props) => {
+export default function FormComponent({ studentData, departments }: Props) {
     // STEP
     const { setStep } = useStudentForm();
     useEffect(() => {
@@ -420,6 +420,4 @@ const FormComponent = ({ studentData, departments }: Props) => {
             </form>
         </Form>
     );
-};
-
-export default FormComponent;
+}

@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { ArrowLeftIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
-const Progress = () => {
+export default function Header() {
     const { step, setStep } = useStudentForm();
     const router = useRouter();
     const pathname = usePathname();
@@ -49,6 +49,4 @@ const Progress = () => {
             </Button>
         </>
     );
-};
-
-export default Progress;
+}

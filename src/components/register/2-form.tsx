@@ -23,7 +23,7 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
-import type { Country, District, Province, Religion } from "../_types/form";
+import type { Country, District, Province, Religion } from "@/types/misc";
 import { type Student } from "@/types/student";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
@@ -61,13 +61,13 @@ type Props = {
     religions: Religion[];
 };
 
-const FormComponent = ({
+export default function FormComponent({
     studentData,
     countries,
     provinces,
     districts,
     religions,
-}: Props) => {
+}: Props) {
     // STEP
     const { setStep } = useStudentForm();
     useEffect(() => {
@@ -691,6 +691,4 @@ const FormComponent = ({
             </form>
         </Form>
     );
-};
-
-export default FormComponent;
+}

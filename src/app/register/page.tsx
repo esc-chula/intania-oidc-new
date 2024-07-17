@@ -1,4 +1,4 @@
-import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
+import ESCLogoWithoutText from "@/components/esc/esc-logo-without-text";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { api } from "@/trpc/server";
