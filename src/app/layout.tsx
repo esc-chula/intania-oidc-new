@@ -12,8 +12,8 @@ const anuphan = Anuphan({
 });
 
 export const metadata = {
-    title: "Intania Accounts",
-    icons: [{ rel: "icon", url: "/favicon.ico" }],
+    title: "เข้าสู่ระบบ - Intania Accounts",
+    icons: [{ rel: "icon", url: "/favicon.svg" }],
 };
 
 export default function RootLayout({
