@@ -26,27 +26,37 @@ const page = () => {
                         </p>
                     </div>
                 </div>
-                <Card>
-                    <CardContent className="pt-6 text-center text-muted-foreground">
-                        ข้อมูลที่กรอกนับจากนี้จะถูกนำไปใช้ตลอดการมีสถานะเป็นนิสิตคณะวิศวะฯจุฬาฯ
-                        โปรดตรวจสอบและยืนยัน ความถูกต้องหลังจากกรอกเสร็จและส่ง
-                    </CardContent>
-                    <CardFooter>
-                        <Button
-                            className="size-full py-3 text-base md:text-xl"
-                            size="lg"
-                            asChild
-                        >
-                            <Link
-                                href={
-                                    sid ? "/register/onboarding/step-one" : "/"
-                                }
+                <div>
+                    <Card>
+                        <CardContent className="pt-6 text-center text-muted-foreground">
+                            ข้อมูลที่กรอกนับจากนี้จะถูกนำไปใช้ตลอดการมีสถานะเป็นนิสิตคณะวิศวะฯจุฬาฯ
+                            โปรดตรวจสอบและยืนยัน
+                            ความถูกต้องหลังจากกรอกเสร็จและส่ง
+                        </CardContent>
+                        <CardFooter>
+                            <Button
+                                className="size-full py-3 text-base md:text-xl"
+                                size="lg"
+                                asChild
                             >
-                                เริ่มต้น
-                            </Link>
-                        </Button>
-                    </CardFooter>
-                </Card>
+                                <Link
+                                    href={
+                                        sid
+                                            ? "/register/onboarding/step-one"
+                                            : "/"
+                                    }
+                                >
+                                    เริ่มต้น
+                                </Link>
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                    <div className="pt-4 text-center text-sm text-neutral-500">
+                        <Link href="/logout" className="hover:underline">
+                            ลงทะเบียนด้วยบัญชีอื่น
+                        </Link>
+                    </div>
+                </div>
             </div>
         </div>
     );
