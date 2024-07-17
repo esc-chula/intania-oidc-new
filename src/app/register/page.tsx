@@ -1,10 +1,26 @@
 import ESCLogoWithoutText from "@/components/esc/ESCLogoWithoutText";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { api } from "@/trpc/server";
+import type { Student } from "@/types/student";
+import { TRPCError } from "@trpc/server";
 import { cookies } from "next/headers";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
-const page = () => {
+async function Year() {
+    const me = (await api.student.me().catch((e) => {
+        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
+            redirect("/logout");
+        }
+    })) as Student;
+
+    if (!me.studentId) return null;
+
+    return <span>ปีการศึกษา 25{me.studentId.slice(0, 2)}</span>;
+}
+
+export default async function Page() {
     const cookieStore = cookies();
     const sid = cookieStore.get("sid");
 
@@ -13,7 +29,7 @@ const page = () => {
             <div className="relative flex size-full min-h-dvh flex-col justify-between gap-16 rounded-2xl p-12">
                 <div className="flex w-full flex-col items-center gap-10 text-center">
                     <ESCLogoWithoutText className="h-14 w-fit fill-primary md:h-16" />
-                    <div className="flex flex-col">
+                    <div className="flex flex-col gap-2">
                         <h2 className="text-2xl font-semibold md:text-3xl">
                             เข้าสู่ระบบ
                         </h2>
@@ -22,7 +38,7 @@ const page = () => {
                         </h1>
                         <p className="flex flex-wrap items-center justify-center gap-2 text-center font-medium md:text-xl">
                             แบบฟอร์มลงทะเบียนนิสิตใหม่
-                            <span>ปีการศึกษา 2567</span>
+                            {sid && <Year />}
                         </p>
                     </div>
                 </div>
@@ -62,6 +78,4 @@ const page = () => {
             </div>
         </div>
     );
-};
-
-export default page;
+}
