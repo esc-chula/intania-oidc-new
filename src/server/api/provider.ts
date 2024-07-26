@@ -8,17 +8,22 @@ export type ValidationResponse = {
     errors: string[];
 };
 
-type ProviderResponse = {
-    success: true;
-    valid: boolean;
-} | {
-    success: false;
-    message: string;
-}
+type ProviderResponse =
+    | {
+          success: true;
+          valid: boolean;
+      }
+    | {
+          success: false;
+          message: string;
+      };
 
 const provider = {
-    async checkCredential(username: string, password: string): Promise<ValidationResponse> {
-        const result = await fetch(`${process.env.AUTH_ENDPOINT}`, {
+    async checkCredential(
+        username: string,
+        password: string,
+    ): Promise<ValidationResponse> {
+        const result = (await fetch(`${process.env.AUTH_ENDPOINT}`, {
             method: "POST",
             body: JSON.stringify({
                 username,
@@ -26,9 +31,9 @@ const provider = {
             }),
             headers: {
                 Authorization: `Bearer ${process.env.AUTH_KEY}`,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-        }).then(data => data.json()) as ProviderResponse
+        }).then((data) => data.json())) as ProviderResponse;
 
         if (result.success) {
             if (result.valid) {
@@ -52,10 +57,13 @@ const provider = {
             };
         }
     },
-}
+};
 
 const mockProvider = {
-    async checkCredential(username: string, password: string): Promise<ValidationResponse> {
+    async checkCredential(
+        username: string,
+        password: string,
+    ): Promise<ValidationResponse> {
         if (username == password) {
             return {
                 success: true,
@@ -63,7 +71,7 @@ const mockProvider = {
                     studentId: username,
                 },
                 errors: [],
-            }
+            };
         } else {
             return {
                 success: false,
@@ -71,6 +79,7 @@ const mockProvider = {
             };
         }
     },
-}
+};
 
-export const studentProvider = process.env.NODE_ENV === "production" ? provider : mockProvider;
+export const studentProvider =
+    process.env.NODE_ENV === "production" ? provider : mockProvider;

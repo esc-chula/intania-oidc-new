@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-    - main
+      - main
 
 env:
   IMAGE_NAME: ghcr.io/esc-chula/intania-oidc-new
