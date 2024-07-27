@@ -55,7 +55,7 @@ jobs:
         id: git-cliff
         with:
           config: cliff.toml
-          args: --verbose --unreleased --strip all
+          args: --verbose --unreleased --strip all --tag ${{ github.event.inputs.target }}
         env:
           OUTPUT: CHANGES.md
           GITHUB_REPO: ${{ github.repository }}
