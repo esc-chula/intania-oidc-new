@@ -1,19 +1,31 @@
-# Create T3 App
+<div>
+    <h1 align="center">Intania OIDC</h1>
+</div>
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Getting started
 
-## What's next? How do I make an app with this?
+Getting your Postgres and Redis running. Make a copy of `.env.example` and name
+it `.env` and config it to match your setting. `AUTH_KEY` and `AUTH_ENDPOINT`
+does not it to be set since it is only use for production.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+After thing has been set, seed the database with
+```
+bun db:migrate
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# Don't forget to clone submodule
+git submodule update
+bun run scripts/seed/index.ts
 
--   [Next.js](https://nextjs.org)
--   [NextAuth.js](https://next-auth.js.org)
--   [Prisma](https://prisma.io)
--   [Drizzle](https://orm.drizzle.team)
--   [Tailwind CSS](https://tailwindcss.com)
--   [tRPC](https://trpc.io)
+# Some mock data can also be added.
+bun run scripts/seed/mock.ts
+
+# Start the application
+bun run dev
+```
+
+In the home page (login page), you can login with any username, the password is
+the same as username e.g. you can login with username `6560000021` and password
+`6560000021`.
 
 ## Learn More
 
@@ -24,6 +36,7 @@ To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the fo
 
 You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
 
-## How do I deploy this?
+## Feature plan
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- OIDC
+- Audit log
