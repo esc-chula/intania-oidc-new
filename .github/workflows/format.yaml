@@ -15,5 +15,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install prettier plugin
+        run: npm i -D prettier-plugin-tailwindcss
+
       - name: Run prettier check
         run: npx prettier . --check
