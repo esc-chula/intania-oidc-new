@@ -41,8 +41,8 @@ jobs:
           RESULT="$IMAGE_NAME:latest,$IMAGE_NAME:$SHA"
 
           case "$REF" in
-          refs/tags/*)
-              RESULT="${RESULT},$IMAGE_NAME:${REF#refs/tags/}"
+          refs/tags/v*)
+              RESULT="${RESULT},$IMAGE_NAME:${REF#refs/tags/v}"
           ;;
           esac
 
