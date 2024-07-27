@@ -1,18 +1,18 @@
 [
-    {
-        "valueTh": "อยู่ร่วมกัน",
-        "valueEn": "Live Together"
-    },
-    {
-        "valueTh": "หย่าร้าง",
-        "valueEn": "Divorce"
-    },
-    {
-        "valueTh": "แยกกันอยู่",
-        "valueEn": "Separate"
-    },
-    {
-        "valueTh": "อื่น ๆ",
-        "valueEn": "Other"
-    }
+  {
+    "valueTh": "อยู่ร่วมกัน",
+    "valueEn": "Live Together"
+  },
+  {
+    "valueTh": "หย่าร้าง",
+    "valueEn": "Divorce"
+  },
+  {
+    "valueTh": "แยกกันอยู่",
+    "valueEn": "Separate"
+  },
+  {
+    "valueTh": "อื่น ๆ",
+    "valueEn": "Other"
+  }
 ]

@@ -146,12 +146,8 @@
           "name": "intania-oidc_thai_districts_province_code_intania-oidc_thai_provinces_province_code_fk",
           "tableFrom": "intania-oidc_thai_districts",
           "tableTo": "intania-oidc_thai_provinces",
-          "columnsFrom": [
-            "province_code"
-          ],
-          "columnsTo": [
-            "province_code"
-          ],
+          "columnsFrom": ["province_code"],
+          "columnsTo": ["province_code"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -161,9 +157,7 @@
         "intania-oidc_thai_districts_disctrict_code_unique": {
           "name": "intania-oidc_thai_districts_disctrict_code_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "disctrict_code"
-          ]
+          "columns": ["disctrict_code"]
         }
       }
     },
@@ -216,9 +210,7 @@
         "intania-oidc_thai_provinces_province_code_unique": {
           "name": "intania-oidc_thai_provinces_province_code_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "province_code"
-          ]
+          "columns": ["province_code"]
         }
       }
     },
@@ -713,9 +705,7 @@
       "indexes": {
         "student_id_idx": {
           "name": "student_id_idx",
-          "columns": [
-            "student_id"
-          ],
+          "columns": ["student_id"],
           "isUnique": false
         }
       },
@@ -724,12 +714,8 @@
           "name": "intania-oidc_students_department_id_intania-oidc_engineering_departments_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_engineering_departments",
-          "columnsFrom": [
-            "department_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["department_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -737,12 +723,8 @@
           "name": "intania-oidc_students_nationality_id_intania-oidc_countries_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_countries",
-          "columnsFrom": [
-            "nationality_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["nationality_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -750,12 +732,8 @@
           "name": "intania-oidc_students_religion_id_intania-oidc_religions_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_religions",
-          "columnsFrom": [
-            "religion_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["religion_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -763,12 +741,8 @@
           "name": "intania-oidc_students_current_address_province_id_intania-oidc_thai_provinces_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_thai_provinces",
-          "columnsFrom": [
-            "current_address_province_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["current_address_province_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -776,12 +750,8 @@
           "name": "intania-oidc_students_current_address_district_id_intania-oidc_thai_districts_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_thai_districts",
-          "columnsFrom": [
-            "current_address_district_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["current_address_district_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -789,12 +759,8 @@
           "name": "intania-oidc_students_hometown_address_province_id_intania-oidc_thai_provinces_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_thai_provinces",
-          "columnsFrom": [
-            "hometown_address_province_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["hometown_address_province_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -802,12 +768,8 @@
           "name": "intania-oidc_students_hometown_address_district_id_intania-oidc_thai_districts_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_thai_districts",
-          "columnsFrom": [
-            "hometown_address_district_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["hometown_address_district_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -815,12 +777,8 @@
           "name": "intania-oidc_students_father_status_id_intania-oidc_family_member_statuses_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_family_member_statuses",
-          "columnsFrom": [
-            "father_status_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["father_status_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -828,12 +786,8 @@
           "name": "intania-oidc_students_mother_status_id_intania-oidc_family_member_statuses_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_family_member_statuses",
-          "columnsFrom": [
-            "mother_status_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["mother_status_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -841,12 +795,8 @@
           "name": "intania-oidc_students_family_status_id_intania-oidc_family_statuses_id_fk",
           "tableFrom": "intania-oidc_students",
           "tableTo": "intania-oidc_family_statuses",
-          "columnsFrom": [
-            "family_status_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["family_status_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -859,21 +809,12 @@
     "public.blood_type": {
       "name": "blood_type",
       "schema": "public",
-      "values": [
-        "A",
-        "B",
-        "AB",
-        "O"
-      ]
+      "values": ["A", "B", "AB", "O"]
     },
     "public.parents": {
       "name": "parents",
       "schema": "public",
-      "values": [
-        "Father",
-        "Mother",
-        "Other"
-      ]
+      "values": ["Father", "Mother", "Other"]
     }
   },
   "schemas": {},

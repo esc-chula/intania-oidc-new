@@ -8,7 +8,7 @@ const config = {
     useTabs: false,
     overrides: [
         {
-            files: ["**/*.yaml", "**/*.yml"],
+            files: ["**/*.yaml", "**/*.yml", "**/*.json"],
             options: {
                 tabWidth: 2,
             },

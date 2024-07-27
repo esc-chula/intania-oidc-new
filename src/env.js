@@ -34,7 +34,7 @@ export const env = createEnv({
         DATABASE_URL: process.env.DATABASE_URL,
         NODE_ENV: process.env.NODE_ENV || "development",
         REDIS_HOST: process.env.REDIS_HOST,
-        REDIS_PORT: parseInt(process.env.REDIS_PORT || "6379"),
+        REDIS_PORT: parseInt(process.env.REDIS_PORT ?? "6379"),
         REDIS_USERNAME: process.env.REDIS_USERNAME,
         REDIS_PASSWORD: process.env.REDIS_PASSWORD,
         // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,

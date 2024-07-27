@@ -1,14 +1,14 @@
 [
-    {
-        "valueTh": "มีชีวิต",
-        "valueEn": "Live"
-    },
-    {
-        "valueTh": "ถึงแก่กรรม",
-        "valueEn": "Pass away"
-    },
-    {
-        "valueTh": "ขาดการติดต่อ",
-        "valueEn": "Lost Contact"
-    }
+  {
+    "valueTh": "มีชีวิต",
+    "valueEn": "Live"
+  },
+  {
+    "valueTh": "ถึงแก่กรรม",
+    "valueEn": "Pass away"
+  },
+  {
+    "valueTh": "ขาดการติดต่อ",
+    "valueEn": "Lost Contact"
+  }
 ]
