@@ -4,109 +4,26 @@
 import { relations, sql } from "drizzle-orm";
 import {
     index,
-    pgTableCreator,
     serial,
     timestamp,
     varchar,
     boolean,
-    pgEnum,
-    char,
     integer,
     date,
     smallint,
     numeric,
 } from "drizzle-orm/pg-core";
-
-/**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
- */
-export const createTable = pgTableCreator((name) => `intania-oidc_${name}`);
-
-export const bloodTypes = pgEnum("blood_type", ["A", "B", "AB", "O"]);
-
-export const parent = pgEnum("parents", ["Father", "Mother", "Other"]);
-
-export const sessionTypes = pgEnum("session_type", ["student"]);
-
-export const familyMemberStatuses = createTable("family_member_statuses", {
-    id: serial("id").primaryKey(),
-    valueTh: varchar("value_th", { length: 30 }),
-    valueEn: varchar("value_en", { length: 30 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const familyStatuses = createTable("family_statuses", {
-    id: serial("id").primaryKey(),
-    valueTh: varchar("value_th", { length: 30 }),
-    valueEn: varchar("value_en", { length: 30 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const countries = createTable("countries", {
-    id: serial("id").primaryKey(),
-    code: char("code", { length: 2 }),
-    name: varchar("name", { length: 60 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const religions = createTable("religions", {
-    id: serial("id").primaryKey(),
-    nameTh: varchar("name_th", { length: 30 }),
-    nameEn: varchar("name_en", { length: 30 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const thaiProvinces = createTable("thai_provinces", {
-    id: serial("id").primaryKey(),
-    provinceCode: smallint("province_code").unique(),
-    nameTh: varchar("name_th", { length: 40 }),
-    nameEn: varchar("name_en", { length: 40 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const thaiDistricts = createTable("thai_districts", {
-    id: serial("id").primaryKey(),
-    provinceCode: smallint("province_code").references(
-        () => thaiProvinces.provinceCode,
-    ),
-    districtCode: smallint("disctrict_code").unique(),
-    postalCode: integer("postal_code"),
-    nameTh: varchar("name_th", { length: 40 }),
-    nameEn: varchar("name_en", { length: 40 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
-
-export const engineeringDepartments = createTable("engineering_departments", {
-    id: serial("id").primaryKey(),
-    nameTh: varchar("name_th", { length: 80 }),
-    nameEn: varchar("name_en", { length: 80 }),
-    code: varchar("code", { length: 10 }),
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }),
-});
+import { createTable } from "./lib/table";
+import { familyMemberStatuses, familyStatuses, parent } from "./family";
+import { engineeringDepartments } from "./department";
+import { sessions } from "./session";
+import {
+    bloodTypes,
+    countries,
+    religions,
+    thaiDistricts,
+    thaiProvinces,
+} from "./common";
 
 export const students = createTable(
     "students",
@@ -222,25 +139,6 @@ export const students = createTable(
     }),
 );
 
-export const sessions = createTable("sessions", {
-    id: varchar("id", { length: 64 }).primaryKey(),
-    sessionType: sessionTypes("session_type").notNull(),
-    studentId: integer("student_id").references(() => students.id),
-    revoked: boolean("revoked").default(false).notNull(),
-
-    createdAt: timestamp("created_at", { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    expiredAt: timestamp("expired_at", { withTimezone: true }).notNull(),
-});
-
-export const sessionRelations = relations(sessions, ({ one }) => ({
-    student: one(students, {
-        fields: [sessions.studentId],
-        references: [students.id],
-    }),
-}));
-
 export const studentRelations = relations(students, ({ one, many }) => ({
     nationality: one(countries, {
         fields: [students.nationalityId],
@@ -279,15 +177,4 @@ export const studentRelations = relations(students, ({ one, many }) => ({
         references: [thaiDistricts.id],
     }),
     sessions: many(sessions),
-}));
-
-export const thaiDistrictRelations = relations(thaiDistricts, ({ one }) => ({
-    province: one(thaiProvinces, {
-        fields: [thaiDistricts.provinceCode],
-        references: [thaiProvinces.provinceCode],
-    }),
-}));
-
-export const thaiProvinceRelations = relations(thaiProvinces, ({ many }) => ({
-    districts: many(thaiDistricts),
 }));
