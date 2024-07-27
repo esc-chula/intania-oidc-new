@@ -1,3 +1,5 @@
+import { env } from "@/env";
+
 export type StudentInfo = {
     studentId: string;
 };
@@ -82,4 +84,4 @@ const mockProvider = {
 };
 
 export const studentProvider =
-    process.env.NODE_ENV === "production" ? provider : mockProvider;
+    env.NODE_ENV === "production" ? provider : mockProvider;

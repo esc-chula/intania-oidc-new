@@ -5,12 +5,13 @@ import {
     protectedProcedure,
     publicProcedure,
 } from "@/server/api/trpc";
-import { sessions, students } from "@/server/db/schema";
+import { students } from "@/server/db/schema";
 
-import { randomBytes } from "crypto";
 import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { studentDto } from "../dto";
+import { randomString } from "@/lib/random";
+import * as redis from "@/server/redis";
 
 export const studentRouter = createTRPCRouter({
     login: publicProcedure
@@ -64,13 +65,12 @@ export const studentRouter = createTRPCRouter({
             const expiredAt = new Date();
             expiredAt.setDate(expiredAt.getDate() + 1);
 
-            const sid = generateSessionId();
+            const sid = randomString(64);
 
-            await ctx.db.insert(sessions).values({
-                id: sid,
+            await redis.setSession(sid, {
                 sessionType: "student",
                 studentId: internalId,
-                expiredAt,
+                expiredAt: expiredAt.getTime(),
             });
 
             return {
@@ -129,7 +129,3 @@ export const studentRouter = createTRPCRouter({
         };
     }),
 });
-
-function generateSessionId() {
-    return randomBytes(48).toString("base64url");
-}
