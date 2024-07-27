@@ -11,6 +11,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import type { PublicContext } from "./context";
 import type { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import * as redis from "@/server/redis";
 
 /**
  * 2. INITIALIZATION
@@ -120,14 +121,7 @@ async function getSessionFromCookie(
         };
     }
 
-    const session = await ctx.db.query.sessions.findFirst({
-        where: (session, { eq, and, gt, not }) =>
-            and(
-                eq(session.id, sid.value),
-                not(session.revoked),
-                gt(session.expiredAt, new Date()),
-            ),
-    });
+    const session = await redis.getSession(sid.value);
 
     if (!session) {
         return {

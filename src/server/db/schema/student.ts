@@ -16,7 +16,6 @@ import {
 import { createTable } from "./lib/table";
 import { familyMemberStatuses, familyStatuses, parent } from "./family";
 import { engineeringDepartments } from "./department";
-import { sessions } from "./session";
 import {
     bloodTypes,
     countries,
@@ -176,5 +175,4 @@ export const studentRelations = relations(students, ({ one, many }) => ({
         fields: [students.hometownAddressDistrictId],
         references: [thaiDistricts.id],
     }),
-    sessions: many(sessions),
 }));

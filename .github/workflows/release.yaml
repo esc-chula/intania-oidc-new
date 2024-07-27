@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          filter: 'blob:none'
+          filter: "blob:none"
           fetch-depth: 0
 
       # Update changelog
