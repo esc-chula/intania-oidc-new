@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - "v*"
 
 env:
   IMAGE_NAME: ghcr.io/esc-chula/intania-oidc-new
@@ -29,10 +31,28 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ github.token }}
 
+      - name: Gather tags name
+        env:
+          IMAGE_NAME: ${{ env.IMAGE_NAME }}
+          SHA: ${{ github.sha }}
+          REF: ${{ github.ref }}
+        id: tags
+        run: |
+          RESULT="$IMAGE_NAME:latest,$IMAGE_NAME:$SHA"
+
+          case "$REF" in
+          refs/tags/*)
+              RESULT="${RESULT},$IMAGE_NAME:${REF#refs/tags/}"
+          ;;
+          esac
+          
+          echo "tags = $RESULT"
+          echo "tags=$RESULT" >> "$GITHUB_OUTPUT"
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }},${{ env.IMAGE_NAME }}:latest
+          tags: ${{ steps.tags.outputs.tags }}
           cache-from: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache
           cache-to: type=registry,ref=${{ env.IMAGE_NAME }}:buildcache,mode=max
