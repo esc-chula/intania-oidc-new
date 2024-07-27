@@ -45,7 +45,7 @@ jobs:
               RESULT="${RESULT},$IMAGE_NAME:${REF#refs/tags/}"
           ;;
           esac
-          
+
           echo "tags = $RESULT"
           echo "tags=$RESULT" >> "$GITHUB_OUTPUT"
 
