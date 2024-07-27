@@ -2,41 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
-## 0.1.2 - 2024-07-27
+## [0.1.2](https://github.com/esc-chula/intania-oidc-new/compare/v0.1.1..v0.1.2) - 2024-07-27
 
-### Bug Fixes
+### <!-- 1 -->🐛 Bug Fixes
 
 - Release commit - (https://github.com/esc-chula/intania-oidc-new/commit/8a78656964754ed00c7b0533ec4c603a9e7409b9)
 
-## 0.1.1 - 2024-07-27
+## [0.1.1](https://github.com/esc-chula/intania-oidc-new/compare/v0.1.0..v0.1.1) - 2024-07-27
 
-### Bug Fixes
+### <!-- 1 -->🐛 Bug Fixes
 
 - Checkout - (https://github.com/esc-chula/intania-oidc-new/commit/944c1269c12fb7f7d324366786ce986791c96d07)
 
-## 0.1.0 - 2024-07-27
+## [0.1.0](https://github.com/esc-chula/intania-oidc-new/compare/..v0.1.0) - 2024-07-27
 
-### Bug Fixes
-
-- Submodule - (https://github.com/esc-chula/intania-oidc-new/commit/30adf4903e7b69ecece4039c7963985a8106d758)
-- Thai grammar - (https://github.com/esc-chula/intania-oidc-new/commit/642d8e109924545c880a3dde65ddf86d612d3043)
-- Build error - (https://github.com/esc-chula/intania-oidc-new/commit/2cdb2f3cd44f4c2d3bdf0b2ecb6434c0a52204f0)
-- ENV=VALUE - (https://github.com/esc-chula/intania-oidc-new/commit/99262ea4d4ee13bef5b9ef4b980ac43682c97447)
-- [**breaking**] Schema - (https://github.com/esc-chula/intania-oidc-new/commit/c778e288368c0317e1ae6622320865ffaaad04d6)
-- ShirtSize - (https://github.com/esc-chula/intania-oidc-new/commit/df20a8dff8d000ee2f65d745a17ed9d507479bff)
-- Address form - (https://github.com/esc-chula/intania-oidc-new/commit/e26c9acd4def653b42fe764aa455e764d9f18702)
-- Login redirect - (https://github.com/esc-chula/intania-oidc-new/commit/e7558b1d82704543f312580d656154e530b2e5cc)
-- Schema - (https://github.com/esc-chula/intania-oidc-new/commit/ace14fac91a9a26260d20d5c666e7519b921a437)
-- Incorrect key - (https://github.com/esc-chula/intania-oidc-new/commit/a5606b045e3558d716680dbf8846eb000bd8119b)
-- Forms - (https://github.com/esc-chula/intania-oidc-new/commit/e31e5be354626ef01ca0d7523dc29120b086a9dd)
-- Prefilled form 1 - (https://github.com/esc-chula/intania-oidc-new/commit/382288ec09853f3252861c7248657f311198167c)
-- Format - (https://github.com/esc-chula/intania-oidc-new/commit/1a7764732131a40875b5404594c6618c76c82f0f)
-- Release - (https://github.com/esc-chula/intania-oidc-new/commit/9e091057deca0fb7c2233d9370ff7bd6941f5cae)
-- Tag for unreleased - (https://github.com/esc-chula/intania-oidc-new/commit/c54c4a0e589416d0d5466c2ce78cdc6c3ad122d0)
-- Add checkout - (https://github.com/esc-chula/intania-oidc-new/commit/9814abeb199b05b1807401028b86771aeb39dfc1)
-- Concurrency - (https://github.com/esc-chula/intania-oidc-new/commit/53798797a86ab2d239ec6f0d8a1e2cc63dfe98c0)
-
-### Features
+### <!-- 0 -->⛰️  Features
 
 - Init - (https://github.com/esc-chula/intania-oidc-new/commit/8adff14c76d9cbfc0d4217df358b8d84d62d96ab)
 - Schema - (https://github.com/esc-chula/intania-oidc-new/commit/cab7fde1526640b990097aa619104b70a73f9614)
@@ -61,6 +41,30 @@ All notable changes to this project will be documented in this file.
 - Changelog ([#3](https://github.com/esc-chula/intania-oidc-new/issues/3)) - (https://github.com/esc-chula/intania-oidc-new/commit/8ec35a61a8250f9cafecc52fcc72e40027dd596e)
 - Release - (https://github.com/esc-chula/intania-oidc-new/commit/2f0ee46738ad3c900a1e89e0f0008a68f3256b28)
 
+### <!-- 1 -->🐛 Bug Fixes
+
+- Submodule - (https://github.com/esc-chula/intania-oidc-new/commit/30adf4903e7b69ecece4039c7963985a8106d758)
+- Thai grammar - (https://github.com/esc-chula/intania-oidc-new/commit/642d8e109924545c880a3dde65ddf86d612d3043)
+- Build error - (https://github.com/esc-chula/intania-oidc-new/commit/2cdb2f3cd44f4c2d3bdf0b2ecb6434c0a52204f0)
+- ENV=VALUE - (https://github.com/esc-chula/intania-oidc-new/commit/99262ea4d4ee13bef5b9ef4b980ac43682c97447)
+- [**breaking**] Schema - (https://github.com/esc-chula/intania-oidc-new/commit/c778e288368c0317e1ae6622320865ffaaad04d6)
+- ShirtSize - (https://github.com/esc-chula/intania-oidc-new/commit/df20a8dff8d000ee2f65d745a17ed9d507479bff)
+- Address form - (https://github.com/esc-chula/intania-oidc-new/commit/e26c9acd4def653b42fe764aa455e764d9f18702)
+- Login redirect - (https://github.com/esc-chula/intania-oidc-new/commit/e7558b1d82704543f312580d656154e530b2e5cc)
+- Schema - (https://github.com/esc-chula/intania-oidc-new/commit/ace14fac91a9a26260d20d5c666e7519b921a437)
+- Incorrect key - (https://github.com/esc-chula/intania-oidc-new/commit/a5606b045e3558d716680dbf8846eb000bd8119b)
+- Forms - (https://github.com/esc-chula/intania-oidc-new/commit/e31e5be354626ef01ca0d7523dc29120b086a9dd)
+- Prefilled form 1 - (https://github.com/esc-chula/intania-oidc-new/commit/382288ec09853f3252861c7248657f311198167c)
+- Format - (https://github.com/esc-chula/intania-oidc-new/commit/1a7764732131a40875b5404594c6618c76c82f0f)
+- Release - (https://github.com/esc-chula/intania-oidc-new/commit/9e091057deca0fb7c2233d9370ff7bd6941f5cae)
+- Tag for unreleased - (https://github.com/esc-chula/intania-oidc-new/commit/c54c4a0e589416d0d5466c2ce78cdc6c3ad122d0)
+- Add checkout - (https://github.com/esc-chula/intania-oidc-new/commit/9814abeb199b05b1807401028b86771aeb39dfc1)
+- Concurrency - (https://github.com/esc-chula/intania-oidc-new/commit/53798797a86ab2d239ec6f0d8a1e2cc63dfe98c0)
+
+### <!-- 5 -->🎨 Styling
+
+- Format - (https://github.com/esc-chula/intania-oidc-new/commit/aff3eb81bef3f6d915b3295a2ddc5867552d4406)
+
 ### Miscellaneous Tasks
 
 - Format - (https://github.com/esc-chula/intania-oidc-new/commit/b6d792397ff2d21ac5df73f4b2f07011e9ad6f62)
@@ -77,9 +81,5 @@ All notable changes to this project will be documented in this file.
 
 - So much things and improvement - (https://github.com/esc-chula/intania-oidc-new/commit/44c62082750b95fa38a759a9cdfb9778370b3869)
 - Cleanup and restructure - (https://github.com/esc-chula/intania-oidc-new/commit/6840c52c5b150ef8656af2abf71067cb5a607a51)
-
-### Styling
-
-- Format - (https://github.com/esc-chula/intania-oidc-new/commit/aff3eb81bef3f6d915b3295a2ddc5867552d4406)
 
 <!-- generated by git-cliff -->
