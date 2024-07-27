@@ -35,7 +35,9 @@ jobs:
 
       # Update package.json
       - name: Update package.json
-        run: jq '.version = ("${{ github.event.inputs.target }}" | sub("v"; ""))' package.json > package.json
+        run: |
+          PACKAGEJSON=$(jq --indent 4 '.version = ("${{ github.event.inputs.target }}" | sub("v"; ""))' package.json)
+          echo "$PACKAGEJSON" > package.json
 
       - name: Commit
         uses: stefanzweifel/git-auto-commit-action@v5
