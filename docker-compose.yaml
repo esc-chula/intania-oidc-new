@@ -12,3 +12,38 @@ services:
     ports:
       - 6379:6379
     command: ["redis-server", "--requirepass", "123456"]
+
+  hydra:
+    image: oryd/hydra:v2.2.0
+    ports:
+      - "4444:4444" # Public port
+      - "4445:4445" # Admin port
+      - "5555:5555" # Port for hydra token user
+      - "9090:9090" # Port for development client
+    command: serve all --dev
+    environment:
+      DSN: postgres://hydra:secret@hydradb:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
+      SECRETS_SYSTEM: youReallyNeedToChangeThis
+      URLS_SELF_ISSUER: http://127.0.0.1:4444
+      URLS_CONSENT: http://127.0.0.1:3000/oauth2/consent
+      URLS_LOGIN: http://127.0.0.1:3000/oauth2/login
+      URLS_LOGOUT: http://127.0.0.1:3000/oauth2/logout
+    restart: unless-stopped
+    depends_on:
+      - hydra-migrate
+
+  hydra-migrate:
+    image: oryd/hydra:v2.2.0
+    command: migrate sql -e --yes
+    environment:
+      DSN: postgres://hydra:secret@hydradb:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
+    restart: on-failure
+    depends_on:
+      - hydradb
+
+  hydradb:
+    image: postgres:16-bookworm
+    environment:
+      POSTGRES_USER: hydra
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: hydra
