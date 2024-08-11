@@ -37,6 +37,7 @@ export const env = createEnv({
         REDIS_PORT: parseInt(process.env.REDIS_PORT ?? "6379"),
         REDIS_USERNAME: process.env.REDIS_USERNAME,
         REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+        ALLOW_REDIRECT_URLS: process.env.ALLOW_REDIRECT_URLS 
         // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     },
     /**

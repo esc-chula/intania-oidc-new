@@ -3,13 +3,25 @@ import LoginBox from "@/components/login/login-box";
 import LoginFooter from "@/components/login/login-footer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 export default async function Page() {
     const cookieStore = cookies();
     const sid = cookieStore.get("sid");
-    if (sid) {
-        redirect("/register");
-    }
+    const searchParams = useSearchParams();
+    const redirectUrl = searchParams.get("redirect");
+
+    useEffect(() => {
+        if (sid) {
+            const allowedRedirect = validateRedirectUrl(redirectUrl);
+            if (allowedRedirect) {
+                redirect(allowedRedirect);
+            } else {
+                redirect("/profile");
+            }
+        }
+    }, [sid, redirectUrl]);
 
     return (
         <>
@@ -22,4 +34,26 @@ export default async function Page() {
             <ESCLogoBackground />
         </>
     );
+}
+
+function validateRedirectUrl(redirectUrl: string | null): string | null {
+    if (!redirectUrl) return null;
+
+    const allowedUrls = process.env.ALLOW_REDIRECT_URLS?.split(",") || [];
+    try {
+        const url = new URL(redirectUrl);
+
+        const isValid = allowedUrls.some((allowedUrl) => {
+            const allowed = new URL(allowedUrl);
+            return (
+                url.protocol === allowed.protocol &&
+                url.hostname === allowed.hostname &&
+                (!allowed.port || url.port === allowed.port)
+            );
+        });
+
+        return isValid ? redirectUrl : null;
+    } catch (e) {
+        return null;
+    }
 }
