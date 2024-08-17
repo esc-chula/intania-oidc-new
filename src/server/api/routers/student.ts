@@ -78,6 +78,7 @@ export const studentRouter = createTRPCRouter({
                 data: {
                     sid,
                     expiredAt,
+                    internalId,
                 },
                 errors: [],
             };
