@@ -3,25 +3,24 @@ import LoginBox from "@/components/login/login-box";
 import LoginFooter from "@/components/login/login-footer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 
-export default async function Page() {
+export default async function Page({
+    params,
+}: {
+    params: { redirect: string };
+}) {
     const cookieStore = cookies();
     const sid = cookieStore.get("sid");
-    const searchParams = useSearchParams();
-    const redirectUrl = searchParams.get("redirect");
+    const redirectUrl = params.redirect;
 
-    useEffect(() => {
-        if (sid) {
-            const allowedRedirect = validateRedirectUrl(redirectUrl);
-            if (allowedRedirect) {
-                redirect(allowedRedirect);
-            } else {
-                redirect("/profile");
-            }
+    if (sid) {
+        const allowedRedirect = validateRedirectUrl(redirectUrl);
+        if (allowedRedirect) {
+            redirect(allowedRedirect);
+        } else {
+            redirect("/profile");
         }
-    }, [sid, redirectUrl]);
+    }
 
     return (
         <>
@@ -39,7 +38,7 @@ export default async function Page() {
 function validateRedirectUrl(redirectUrl: string | null): string | null {
     if (!redirectUrl) return null;
 
-    const allowedUrls = process.env.ALLOW_REDIRECT_URLS?.split(",") || [];
+    const allowedUrls = process.env.ALLOW_REDIRECT_URLS?.split(",") ?? [];
     try {
         const url = new URL(redirectUrl);
 
