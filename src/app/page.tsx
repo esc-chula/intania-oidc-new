@@ -5,13 +5,13 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export default async function Page({
-    params,
+    searchParams,
 }: {
-    params: { redirect: string };
+    searchParams: { redirect: string };
 }) {
     const cookieStore = cookies();
     const sid = cookieStore.get("sid");
-    const redirectUrl = params.redirect;
+    const redirectUrl = searchParams.redirect;
 
     if (sid) {
         const allowedRedirect = validateRedirectUrl(redirectUrl);
