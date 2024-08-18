@@ -30,60 +30,54 @@ export default async function Page({
     let studentName: string | undefined = undefined;
 
     try {
-        await hydra
-            .getOAuth2ConsentRequest({ consentChallenge: challenge })
-            .then(async ({ data: consentRequest }) => {
-                const grantScope: string[] =
-                    consentRequest.requested_scope ?? [];
-                sharedResources = getSharedResourcesFromScope(grantScope);
-                appName = consentRequest.client?.client_name;
+        const { data: consentRequest } = await hydra.getOAuth2ConsentRequest({
+            consentChallenge: challenge,
+        });
+        const grantScope: string[] = consentRequest.requested_scope ?? [];
+        sharedResources = getSharedResourcesFromScope(grantScope);
+        appName = consentRequest.client?.client_name;
 
-                const student = (await api.student.me()) as Student;
-                studentId = student.studentId;
-                if (student.firstNameTh && student.familyNameTh) {
-                    studentName = `${student.firstNameTh} ${student.familyNameTh}`;
-                }
+        const student = (await api.student.me()) as Student;
+        studentId = student.studentId;
+        if (student.firstNameTh && student.familyNameTh) {
+            studentName = `${student.firstNameTh} ${student.familyNameTh}`;
+        }
 
-                if (consentRequest.subject !== student.id.toString()) {
-                    await hydra
-                        .rejectOAuth2ConsentRequest({
-                            consentChallenge: challenge,
-                            rejectOAuth2Request: {
-                                error: "access_denied",
-                                error_description:
-                                    "session not match with consent request subject",
-                            },
-                        })
-                        .then(({ data: body }) => {
-                            redirect(body.redirect_to);
-                        });
-                    return;
-                }
+        if (consentRequest.subject !== student.id.toString()) {
+            await hydra
+                .rejectOAuth2ConsentRequest({
+                    consentChallenge: challenge,
+                    rejectOAuth2Request: {
+                        error: "access_denied",
+                        error_description:
+                            "session not match with consent request subject",
+                    },
+                })
+                .then(({ data: body }) => {
+                    redirect(body.redirect_to);
+                });
+        }
 
-                if (
-                    consentRequest.skip ??
-                    consentRequest.client?.skip_consent
-                ) {
-                    const { id_token } = createOAuth2ConsentRequestSession(
-                        consentRequest,
-                        student,
-                    );
+        if (consentRequest.skip ?? consentRequest.client?.skip_consent) {
+            const { id_token } = createOAuth2ConsentRequestSession(
+                consentRequest,
+                student,
+            );
 
-                    await hydra
-                        .acceptOAuth2ConsentRequest({
-                            consentChallenge: challenge,
-                            acceptOAuth2ConsentRequest: {
-                                grant_scope: grantScope,
-                                session: {
-                                    id_token,
-                                },
-                            },
-                        })
-                        .then(({ data: body }) => {
-                            redirect(body.redirect_to);
-                        });
-                }
-            });
+            await hydra
+                .acceptOAuth2ConsentRequest({
+                    consentChallenge: challenge,
+                    acceptOAuth2ConsentRequest: {
+                        grant_scope: grantScope,
+                        session: {
+                            id_token,
+                        },
+                    },
+                })
+                .then(({ data: body }) => {
+                    redirect(body.redirect_to);
+                });
+        }
     } catch (error) {
         if (isRedirectError(error)) {
             throw error;

@@ -48,48 +48,47 @@ export async function handleOAuthLogin(
 export async function handleOAuthAcceptConsent(
     consentChallenge: string,
 ): Promise<void> {
+    const { data: consentRequest } = await hydra.getOAuth2ConsentRequest({
+        consentChallenge: consentChallenge,
+    });
+    const grantScope: string[] = consentRequest.requested_scope ?? [];
+
+    const student = (await api.student.me()) as Student;
+
+    if (consentRequest.subject !== student.id.toString()) {
+        await hydra
+            .rejectOAuth2ConsentRequest({
+                consentChallenge: consentChallenge,
+                rejectOAuth2Request: {
+                    error: "access_denied",
+                    error_description:
+                        "session not match with consent request subject",
+                },
+            })
+            .then(({ data: body }) => {
+                redirect(body.redirect_to);
+            });
+        return;
+    }
+    const { id_token } = createOAuth2ConsentRequestSession(
+        consentRequest,
+        student,
+    );
+
     await hydra
-        .getOAuth2ConsentRequest({ consentChallenge: consentChallenge })
-        .then(async ({ data: consentRequest }) => {
-            const grantScope: string[] = consentRequest.requested_scope ?? [];
-
-            const student = (await api.student.me()) as Student;
-
-            if (consentRequest.subject !== student.id.toString()) {
-                await hydra
-                    .rejectOAuth2ConsentRequest({
-                        consentChallenge: consentChallenge,
-                        rejectOAuth2Request: {
-                            error: "access_denied",
-                            error_description:
-                                "session not match with consent request subject",
-                        },
-                    })
-                    .then(({ data: body }) => {
-                        redirect(body.redirect_to);
-                    });
-                return;
-            }
-            const { id_token } = createOAuth2ConsentRequestSession(
-                consentRequest,
-                student,
-            );
-
-            await hydra
-                .acceptOAuth2ConsentRequest({
-                    consentChallenge: consentChallenge,
-                    acceptOAuth2ConsentRequest: {
-                        remember: true,
-                        remember_for: 0,
-                        grant_scope: grantScope,
-                        session: {
-                            id_token,
-                        },
-                    },
-                })
-                .then(({ data: body }) => {
-                    redirect(body.redirect_to);
-                });
+        .acceptOAuth2ConsentRequest({
+            consentChallenge: consentChallenge,
+            acceptOAuth2ConsentRequest: {
+                remember: true,
+                remember_for: 0,
+                grant_scope: grantScope,
+                session: {
+                    id_token,
+                },
+            },
+        })
+        .then(({ data: body }) => {
+            redirect(body.redirect_to);
         });
 }
 
