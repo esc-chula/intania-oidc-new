@@ -24,7 +24,7 @@ export function titleThToEn(titleTh: string): string {
     }
 }
 
-const THScopeMap: Record<string, string> = {
+const THScopeNameMapping: Record<string, string> = {
     profile: "ชื่อ",
     student_id: "รหัสนิสิต",
     email: "อีเมล",
@@ -39,14 +39,13 @@ const THScopeMap: Record<string, string> = {
 };
 
 export function getSharedResourcesFromScope(grantScope: string[]): string[] {
-    const sharedData: string[] = [];
-    for (const scope in THScopeMap) {
-        const value = THScopeMap[scope];
-        if (grantScope.includes(scope) && value) {
-            sharedData.push(value);
+    const sharedResources: string[] = [];
+    for (const [scope, THName] of Object.entries(THScopeNameMapping)) {
+        if (grantScope.includes(scope)) {
+            sharedResources.push(THName);
         }
     }
-    return sharedData;
+    return sharedResources;
 }
 
 const scopeMapping: Record<
@@ -107,27 +106,22 @@ export function createOAuth2ConsentRequestSession(
     consentRequest: OAuth2ConsentRequest,
     student: Student,
 ) {
-    try {
-        if (consentRequest.subject !== student.id.toString()) {
-            throw new Error(
-                "student id is not match with consent request subject",
-            );
-        }
-        const grantScope: string[] = consentRequest.requested_scope ?? [];
-
-        const id_token: Record<string, unknown> = {};
-
-        Object.keys(scopeMapping).forEach((scope) => {
-            const mapping = scopeMapping[scope];
-            if (grantScope.includes(scope) && mapping) {
-                mapping(student, id_token);
-            }
-        });
-
-        return {
-            id_token,
-        };
-    } catch (error) {
-        throw error;
+    if (consentRequest.subject !== student.id.toString()) {
+        throw new Error(
+            "student id does not match with consent request subject",
+        );
     }
+    const grantScope: string[] = consentRequest.requested_scope ?? [];
+
+    const id_token: Record<string, unknown> = {};
+
+    for (const [scope, mapping] of Object.entries(scopeMapping)) {
+        if (grantScope.includes(scope)) {
+            mapping(student, id_token);
+        }
+    }
+
+    return {
+        id_token,
+    };
 }

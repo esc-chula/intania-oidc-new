@@ -40,7 +40,9 @@ export default async function Page({
 
                 const student = (await api.student.me()) as Student;
                 studentId = student.studentId;
-                studentName = studentName;
+                if (student.firstNameTh && student.familyNameTh) {
+                    studentName = `${student.firstNameTh} ${student.familyNameTh}`;
+                }
 
                 if (consentRequest.subject !== student.id.toString()) {
                     await hydra
