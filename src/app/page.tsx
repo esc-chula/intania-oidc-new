@@ -3,6 +3,7 @@ import LoginBox from "@/components/login/login-box";
 import LoginFooter from "@/components/login/login-footer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { env } from "@/env";
 
 export default async function Page({
     searchParams,
@@ -38,7 +39,7 @@ export default async function Page({
 function validateRedirectUrl(redirectUrl: string | null): string | null {
     if (!redirectUrl) return null;
 
-    const allowedUrls = process.env.ALLOW_REDIRECT_URLS?.split(",") ?? [];
+    const allowedUrls = env.ALLOW_REDIRECT_URLS?.split(",") ?? [];
     try {
         const url = new URL(redirectUrl);
 
