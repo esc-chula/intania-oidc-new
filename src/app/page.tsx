@@ -15,9 +15,8 @@ export default async function Page({
     const redirectUrl = searchParams.redirect;
 
     if (sid) {
-        const allowedRedirect = validateRedirectUrl(redirectUrl);
-        if (allowedRedirect) {
-            redirect(allowedRedirect);
+        if (validateRedirectUrl(redirectUrl)) {
+            redirect(redirectUrl);
         } else {
             redirect("/profile");
         }
@@ -36,8 +35,8 @@ export default async function Page({
     );
 }
 
-function validateRedirectUrl(redirectUrl: string | null): string | null {
-    if (!redirectUrl) return null;
+function validateRedirectUrl(redirectUrl: string | null): boolean {
+    if (!redirectUrl) return false;
 
     const allowedUrls = env.ALLOW_REDIRECT_URLS?.split(",") ?? [];
     try {
@@ -52,8 +51,8 @@ function validateRedirectUrl(redirectUrl: string | null): string | null {
             );
         });
 
-        return isValid ? redirectUrl : null;
+        return isValid;
     } catch (e) {
-        return null;
+        return false;
     }
 }
