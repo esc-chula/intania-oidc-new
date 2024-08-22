@@ -3,12 +3,23 @@ import LoginBox from "@/components/login/login-box";
 import LoginFooter from "@/components/login/login-footer";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { env } from "@/env";
 
-export default async function Page() {
+export default async function Page({
+    searchParams,
+}: {
+    searchParams: { redirect: string };
+}) {
     const cookieStore = cookies();
     const sid = cookieStore.get("sid");
+    const redirectUrl = searchParams.redirect;
+
     if (sid) {
-        redirect("/register");
+        if (validateRedirectUrl(redirectUrl)) {
+            redirect(redirectUrl);
+        } else {
+            redirect("/profile");
+        }
     }
 
     return (
@@ -22,4 +33,26 @@ export default async function Page() {
             <ESCLogoBackground />
         </>
     );
+}
+
+function validateRedirectUrl(redirectUrl: string | null): boolean {
+    if (!redirectUrl) return false;
+
+    const allowedUrls = env.ALLOW_REDIRECT_URLS?.split(",") ?? [];
+    try {
+        const url = new URL(redirectUrl);
+
+        const isValid = allowedUrls.some((allowedUrl) => {
+            const allowed = new URL(allowedUrl);
+            return (
+                url.protocol === allowed.protocol &&
+                url.hostname === allowed.hostname &&
+                (!allowed.port || url.port === allowed.port)
+            );
+        });
+
+        return isValid;
+    } catch (e) {
+        return false;
+    }
 }
