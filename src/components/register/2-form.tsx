@@ -158,7 +158,7 @@ export default function FormComponent({
     const [loading, setLoading] = useState(false);
     function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
-        console.log("submit laew i")
+        console.log("submit laew i");
         updateStudent({
             id: studentData.id,
             nationalId: values.nationalId,
@@ -191,7 +191,7 @@ export default function FormComponent({
     return (
         <Form {...form}>
             <form
-                onSubmit={() => form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
             >
                 <section className="flex flex-col gap-2 !pt-0">

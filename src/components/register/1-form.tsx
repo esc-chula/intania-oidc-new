@@ -45,9 +45,9 @@ const formSchema = z.object({
     middleNameTh: z.string().max(90).optional(),
     familyNameTh: z.string().max(90),
     nicknameTh: z.string().max(50),
-    firstNameEn: z.string().max(90),
+    firstNameEn: z.string().min(1).max(90),
     middleNameEn: z.string().max(90).optional(),
-    familyNameEn: z.string().max(90),
+    familyNameEn: z.string().min(1).max(90),
     nicknameEn: z.string().max(50),
     preferredPronoun: z.string().max(50),
     birthDate: z.date(),
@@ -73,18 +73,15 @@ export default function FormComponent({ studentData, departments }: Props) {
     });
     useEffect(() => {
         (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
-            const d = studentData[key];
-            if (!d) {
-                return;
-            }
-            if (key in formSchema.shape) {
+            if (
+                key in formSchema.shape &&
+                studentData[key] !== null &&
+                studentData[key] !== undefined
+            ) {
                 if (key === "birthDate" && studentData.birthDate) {
                     const birthDate = new Date(studentData.birthDate);
                     setSelectedBirthDate(birthDate);
-                    form.setValue(
-                        "birthDate",
-                        birthDate,
-                    );
+                    form.setValue("birthDate", birthDate);
                 } else if (key in formSchema.shape) {
                     form.setValue(
                         key as keyof z.infer<typeof formSchema>,
@@ -92,13 +89,18 @@ export default function FormComponent({ studentData, departments }: Props) {
                     );
                 }
             } else if (key === "department") {
-                form.setValue("departmentId", d.id as number)
+                form.setValue(
+                    "departmentId",
+                    studentData.department.id as number,
+                );
             }
         });
     }, [form, studentData]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     async function onSubmit(values: z.infer<typeof formSchema>) {
+        console.log(values);
+
         setLoading(true);
         await updateStudent({
             id: studentData.id,
@@ -114,10 +116,7 @@ export default function FormComponent({ studentData, departments }: Props) {
     >();
     useEffect(() => {
         if (selectedBirthDate) {
-            form.setValue(
-                "birthDate",
-                selectedBirthDate
-            );
+            form.setValue("birthDate", selectedBirthDate);
         }
     }, [form, selectedBirthDate]);
 
