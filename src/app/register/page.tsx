@@ -1,28 +1,32 @@
 import ESCLogoWithoutText from "@/components/esc/esc-logo-without-text";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { api } from "@/trpc/server";
-import type { Student } from "@/types/student";
-import { TRPCError } from "@trpc/server";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { me } from "@/server/controller/auth";
 
-async function Year() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+async function Year({ sid }: { sid?: string }) {
+    if (!sid) return null;
 
-    if (!me.studentId) return null;
+    const meResponse = await me(sid);
 
-    return <span>ปีการศึกษา 25{me.studentId.slice(0, 2)}</span>;
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student || !meData.account?.publicId || !meData.account) {
+        throw new Error("Something went wrong");
+    }
+
+    return <span>ปีการศึกษา 25{meData.student?.studentId?.slice(0, 2)}</span>;
 }
 
 export default async function Page() {
     const cookieStore = cookies();
-    const sid = cookieStore.get("sid");
+    const sid = cookieStore.get("sid")?.value;
 
     return (
         <div className="flex size-full flex-col items-center">
@@ -38,7 +42,7 @@ export default async function Page() {
                         </h1>
                         <p className="flex flex-wrap items-center justify-center gap-2 text-center font-medium md:text-xl">
                             แบบฟอร์มลงทะเบียนนิสิตใหม่
-                            {sid && <Year />}
+                            {sid && <Year sid={sid} />}
                         </p>
                     </div>
                 </div>

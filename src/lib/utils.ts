@@ -1,8 +1,7 @@
-import { type Student } from "@/types/student";
+import type { Student } from "@/generated/intania/auth/student/v1/student";
 import { type OAuth2ConsentRequest } from "@ory/hydra-client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import departments from "../../scripts/seed/engineering_departments.json" with { type: "json" };
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -99,12 +98,15 @@ const scopeMapping: Record<
         idToken.profile_picture_key = student.profilePictureKey;
     },
     department: (student, idToken) => {
-        idToken.department_id = student.departmentId;
-        const department = departments.find(
-            (dep) => dep.id === student.departmentId,
-        );
-        idToken.department_name_en = department?.nameEn ?? null;
-        idToken.department_name_th = department?.nameTh ?? null;
+        // TODO: Fix this
+        // idToken.department_id = student.departmentId;
+        // const department = departments.find(
+        //     (dep) => dep.id === student.departmentId,
+        // );
+        // idToken.department_name_en = department?.nameEn ?? null;
+        // idToken.department_name_th = department?.nameTh ?? null;
+        idToken.department_id = 1;
+        idToken.department_name_th = "ttt";
     },
 };
 

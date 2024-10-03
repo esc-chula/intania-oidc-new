@@ -19,17 +19,23 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
-import type { Country, District, Province, Religion } from "@/types/misc";
-import { type Student } from "@/types/student";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
+import {
+    type Country,
+    type District,
+    type Province,
+    type Religion,
+    type Student,
+} from "@/generated/intania/auth/student/v1/student";
+import { z } from "zod";
+import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
-    nationalId: z.string().length(13),
+    nationalId: z.string().length(13).optional(),
     lineId: z.string().max(30).optional(),
     facebook: z.string().max(60).optional(),
     email: z.string().email().max(60),
@@ -39,19 +45,23 @@ const formSchema = z.object({
         .max(16),
     nationalityId: z.number(),
     religionId: z.number(),
-    currentAddressNumber: z.string().max(60).optional(),
+    // TODO: add this
+    // currentAddressNumber: z.string().max(60).optional(),
     currentAddressProvinceId: z.number(),
     currentAddressDistrictId: z.number(),
     currentAddressOther: z.string().max(400),
-    currentAddressLatitude: z.string().max(16),
-    currentAddressLongitude: z.string().max(16),
-    hometownAddressNumber: z.string().max(60).optional(),
+    currentAddressLatitude: z.number(),
+    currentAddressLongitude: z.number(),
+    // TODO: add this
+    // hometownAddressNumber: z.string().max(60).optional(),
     hometownAddressProvinceId: z.number().optional(),
     hometownAddressDistrictId: z.number().optional(),
     hometownAddressOther: z.string().max(400).optional(),
-    hometownAddressLatitude: z.string().max(16).optional(),
-    hometownAddressLongitude: z.string().max(16).optional(),
+    hometownAddressLatitude: z.number().optional(),
+    hometownAddressLongitude: z.number().optional(),
 });
+
+type FormSchema = z.infer<typeof formSchema>;
 
 type Props = {
     studentData: Student;
@@ -86,113 +96,172 @@ export default function FormComponent({
         string | null
     >(null);
     const handleCurrentLocationSelect = (lat: number, lng: number) => {
-        const location = {
-            lat: lat.toFixed(9).toString(),
-            lng: lng.toFixed(9).toString(),
-        };
-        form.setValue("currentAddressLatitude", location.lat);
-        form.setValue("currentAddressLongitude", location.lng);
+        form.setValue("currentAddressLatitude", lat);
+        form.setValue("currentAddressLongitude", lng);
     };
     const handleHomeLocationSelect = (lat: number, lng: number) => {
-        const location = {
-            lat: lat.toFixed(9).toString(),
-            lng: lng.toFixed(9).toString(),
-        };
-        form.setValue("hometownAddressLatitude", location.lat);
-        form.setValue("hometownAddressLongitude", location.lng);
+        form.setValue("hometownAddressLatitude", lat);
+        form.setValue("hometownAddressLongitude", lng);
     };
-
-    // FORM
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        mode: "onChange",
-    });
-    useEffect(() => {
-        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
-            if (key in formSchema.shape && studentData[key] != null) {
-                if (
-                    key === "nationalityId" &&
-                    typeof studentData[key] === "number"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCountry(studentData[key]);
-                } else if (
-                    key === "currentAddressProvinceId" &&
-                    typeof studentData[key] === "number"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCurrentProvince(studentData[key]);
-                } else if (
-                    key === "hometownAddressProvinceId" &&
-                    typeof studentData[key] === "number"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedHomeProvince(studentData[key]);
-                } else if (
-                    key === "currentAddressLatitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCurrentLocationLat(studentData[key]);
-                } else if (
-                    key === "currentAddressLongitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCurrentLocationLng(studentData[key]);
-                } else if (
-                    key === "hometownAddressLatitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedHomeLocationLat(studentData[key]);
-                } else if (
-                    key === "hometownAddressLongitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedHomeLocationLng(studentData[key]);
-                } else if (key in formSchema.shape) {
-                    form.setValue(
-                        key as keyof z.infer<typeof formSchema>,
-                        studentData[key] as never,
-                    );
-                }
-            }
-        });
-    }, [form, studentData]);
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
-        await updateStudent({
-            id: studentData.id,
-            nationalId: values.nationalId,
-            lineId: values.lineId,
-            facebook: values.facebook,
-            email: values.email,
-            phoneNumber: values.phoneNumber,
-            nationalityId: values.nationalityId,
-            religionId: values.religionId,
-            currentAddressProvinceId: values.currentAddressProvinceId,
-            currentAddressDistrictId: values.currentAddressDistrictId,
-            currentAddressOther: values.currentAddressOther,
-            currentAddressLatitude: values.currentAddressLatitude,
-            currentAddressLongitude: values.currentAddressLongitude,
-            hometownAddressProvinceId: values.hometownAddressProvinceId,
-            hometownAddressDistrictId: values.hometownAddressDistrictId,
-            hometownAddressOther: values.hometownAddressOther,
-            hometownAddressLatitude: values.hometownAddressLatitude,
-            hometownAddressLongitude: values.hometownAddressLongitude,
-        });
-
-        router.push("/register/onboarding/step-three");
-    }
 
     // HANDLERS
     const [selectedCountry, setSelectedCountry] = useState(0);
     const [selectedCurrentProvince, setSelectedCurrentProvince] = useState(0);
     const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
+
+    const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
+        () => ({
+            currentAddressProvince: {
+                formBinding: {
+                    formKey: "currentAddressProvinceId",
+                },
+                stateBinding: setSelectedCurrentProvince,
+                objectKey: ["id"],
+            },
+            currentAddressDistrict: {
+                formBinding: {
+                    formKey: "currentAddressDistrictId",
+                },
+                objectKey: ["id"],
+            },
+            currentAddressOther: {
+                formBinding: {},
+            },
+            currentAddressLatitude: {
+                stateBinding: setSelectedCurrentLocationLat,
+                formBinding: {},
+            },
+            currentAddressLongitude: {
+                stateBinding: setSelectedCurrentLocationLng,
+                formBinding: {},
+            },
+            hometownAddressProvince: {
+                formBinding: {
+                    formKey: "hometownAddressProvinceId",
+                },
+                stateBinding: setSelectedHomeProvince,
+                objectKey: ["id"],
+            },
+            hometownAddressDistrict: {
+                formBinding: {
+                    formKey: "hometownAddressDistrictId",
+                },
+                objectKey: ["id"],
+            },
+            hometownAddressOther: {
+                formBinding: {},
+            },
+            hometownAddressLatitude: {
+                stateBinding: setSelectedHomeLocationLat,
+                formBinding: {},
+            },
+            hometownAddressLongitude: {
+                stateBinding: setSelectedHomeLocationLng,
+                formBinding: {},
+            },
+            nationality: {
+                stateBinding: setSelectedCountry,
+                formBinding: {
+                    formKey: "nationalityId",
+                },
+                objectKey: ["id"],
+            },
+            nationalId: {
+                formBinding: {},
+            },
+            email: {
+                formBinding: {},
+            },
+            phoneNumber: {
+                formBinding: {},
+            },
+            facebook: {
+                formBinding: {},
+            },
+            lineId: {
+                formBinding: {},
+            },
+            religion: {
+                formBinding: {
+                    formKey: "religionId",
+                },
+                objectKey: ["id"],
+            },
+        }),
+        [],
+    );
+
+    // FORM
+    const form = useForm<FormSchema>({
+        resolver: zodResolver(formSchema),
+        mode: "onChange",
+    });
+    useEffect(() => {
+        const keys = Object.keys(studentData) as (keyof Student)[];
+        keys.forEach((key) => {
+            let value = studentData[key];
+
+            if (value === null || value === undefined) {
+                return;
+            }
+
+            const binding = bindingMap[key];
+            if (!binding) {
+                return;
+            }
+
+            if (typeof value === "object" && !Array.isArray(value)) {
+                const ok = binding.objectKey ?? [];
+                value = ok.reduce((acc, cur) => acc[cur as never], value);
+            }
+
+            if (binding.stateBinding) {
+                binding.stateBinding(value);
+            }
+            if (binding.formBinding) {
+                const k =
+                    binding.formBinding.formKey ?? (key as keyof FormSchema);
+                form.setValue(k, value as never);
+            }
+        });
+    }, [form, studentData, bindingMap]);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    async function onSubmit(values: FormSchema) {
+        setLoading(true);
+
+        const body: Student = {
+            id: studentData.id,
+            nationality: {
+                id: values.nationalityId,
+            },
+            religion: {
+                id: values.religionId,
+            },
+            currentAddressProvince: {
+                id: values.currentAddressProvinceId,
+            },
+            currentAddressDistrict: {
+                id: values.currentAddressDistrictId,
+            },
+            ...values,
+        };
+
+        if (values.hometownAddressProvinceId) {
+            body.hometownAddressProvince = {
+                id: values.hometownAddressProvinceId,
+            };
+        }
+        if (values.hometownAddressDistrictId) {
+            body.hometownAddressDistrict = {
+                id: values.hometownAddressDistrictId,
+            };
+        }
+
+        await updateStudent(body);
+
+        router.push("/register/onboarding/step-three");
+    }
 
     return (
         <Form {...form}>
@@ -262,7 +331,9 @@ export default function FormComponent({
                                             .map((nationality, index) => (
                                                 <SelectItem
                                                     key={index}
-                                                    value={nationality.name}
+                                                    value={
+                                                        nationality.name ?? ""
+                                                    }
                                                 >
                                                     {nationality.name}
                                                 </SelectItem>
@@ -273,7 +344,7 @@ export default function FormComponent({
                             </FormItem>
                         )}
                     />
-                    {selectedCountry === 215 && (
+                    {selectedCountry === 221 && (
                         <FormField
                             control={form.control}
                             name="nationalId"
@@ -329,7 +400,7 @@ export default function FormComponent({
                                         {religions.map((religion) => (
                                             <SelectItem
                                                 key={religion.id}
-                                                value={religion.nameTh}
+                                                value={religion.nameTh ?? ""}
                                             >
                                                 {religion.nameTh}
                                             </SelectItem>
@@ -499,7 +570,7 @@ export default function FormComponent({
                                         {provinces.map((province) => (
                                             <SelectItem
                                                 key={province.provinceCode}
-                                                value={province.nameTh}
+                                                value={province.nameTh ?? ""}
                                             >
                                                 {province.nameTh}
                                             </SelectItem>
@@ -560,7 +631,9 @@ export default function FormComponent({
                                             .map((district) => (
                                                 <SelectItem
                                                     key={district.districtCode}
-                                                    value={district.nameTh}
+                                                    value={
+                                                        district.nameTh ?? ""
+                                                    }
                                                 >
                                                     {district.nameTh}
                                                 </SelectItem>
@@ -590,7 +663,7 @@ export default function FormComponent({
                     />
                 </section>
 
-                {selectedCountry === 215 ? ( // Thailand
+                {selectedCountry === 221 ? ( // Thailand
                     <section className="flex flex-col gap-2">
                         <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
                             <GoogleMap
@@ -683,7 +756,9 @@ export default function FormComponent({
                                             {provinces.map((province) => (
                                                 <SelectItem
                                                     key={province.provinceCode}
-                                                    value={province.nameTh}
+                                                    value={
+                                                        province.nameTh ?? ""
+                                                    }
                                                 >
                                                     {province.nameTh}
                                                 </SelectItem>
@@ -747,7 +822,10 @@ export default function FormComponent({
                                                         key={
                                                             district.districtCode
                                                         }
-                                                        value={district.nameTh}
+                                                        value={
+                                                            district.nameTh ??
+                                                            ""
+                                                        }
                                                     >
                                                         {district.nameTh}
                                                     </SelectItem>

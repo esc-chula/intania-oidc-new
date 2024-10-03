@@ -20,7 +20,6 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
     Popover,
     PopoverContent,
@@ -32,27 +31,35 @@ import { CalendarIcon } from "lucide-react";
 import { cn, titleThToEn } from "@/lib/utils";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
-import { useEffect, useState } from "react";
-import type { Department } from "@/types/misc";
+import { useEffect, useMemo, useState } from "react";
 import { updateStudent } from "@/server/actions/student";
-import type { Student } from "@/types/student";
 import { useStudentForm } from "@/contexts/form-context";
+import {
+    type Department,
+    type Student,
+} from "@/generated/intania/auth/student/v1/student";
+import { z } from "zod";
+import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
     studentId: z.string().max(32),
     titleTh: z.string().max(30),
-    firstNameTh: z.string().max(90),
+    firstNameTh: z.string().min(1).max(90),
+    // TODO
     middleNameTh: z.string().max(90).optional(),
-    familyNameTh: z.string().max(90),
+    familyNameTh: z.string().min(1).max(90),
     nicknameTh: z.string().max(50),
-    firstNameEn: z.string().max(90),
+    firstNameEn: z.string().min(1).max(90),
+    // TODO
     middleNameEn: z.string().max(90).optional(),
-    familyNameEn: z.string().max(90),
-    nicknameEn: z.string().max(50),
+    familyNameEn: z.string().min(1).max(90),
+    nicknameEn: z.string().min(1).max(50),
     preferredPronoun: z.string().max(50),
-    birthDate: z.coerce.string().datetime(),
+    birthDate: z.date(),
     departmentId: z.number(),
 });
+
+type FormSchema = z.infer<typeof formSchema>;
 
 interface Props {
     studentData: Student;
@@ -67,44 +74,10 @@ export default function FormComponent({ studentData, departments }: Props) {
     }, [setStep]);
 
     // FORM
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
-    useEffect(() => {
-        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
-            if (
-                key in formSchema.shape &&
-                studentData[key] !== null &&
-                studentData[key] !== undefined
-            ) {
-                if (key === "birthDate" && studentData.birthDate) {
-                    const birthDate = new Date(studentData.birthDate);
-                    setSelectedBirthDate(birthDate);
-                    form.setValue(
-                        "birthDate",
-                        format(birthDate, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
-                    );
-                } else if (key in formSchema.shape) {
-                    form.setValue(
-                        key as keyof z.infer<typeof formSchema>,
-                        studentData[key] as never,
-                    );
-                }
-            }
-        });
-    }, [form, studentData]);
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
-        await updateStudent({
-            id: studentData.id,
-            titleEn: titleThToEn(values.titleTh),
-            ...values,
-        });
-        router.push("/register/onboarding/step-two");
-    }
 
     // HANDLERS
     const [selectedBirthDate, setSelectedBirthDate] = useState<
@@ -112,12 +85,96 @@ export default function FormComponent({ studentData, departments }: Props) {
     >();
     useEffect(() => {
         if (selectedBirthDate) {
-            form.setValue(
-                "birthDate",
-                format(selectedBirthDate, "yyyy-MM-dd'T'hh:mm:ss'Z'"),
-            );
+            form.setValue("birthDate", selectedBirthDate);
         }
     }, [form, selectedBirthDate]);
+
+    const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
+        () => ({
+            titleTh: {
+                formBinding: {},
+            },
+            firstNameTh: {
+                formBinding: {},
+            },
+            familyNameTh: {
+                formBinding: {},
+            },
+            nicknameTh: {
+                formBinding: {},
+            },
+            firstNameEn: {
+                formBinding: {},
+            },
+            familyNameEn: {
+                formBinding: {},
+            },
+            nicknameEn: {
+                formBinding: {},
+            },
+            preferredPronoun: {
+                formBinding: {},
+            },
+            birthDate: {
+                formBinding: {},
+                stateBinding: setSelectedBirthDate,
+            },
+            department: {
+                formBinding: {
+                    formKey: "departmentId",
+                },
+                objectKey: ["id"],
+            },
+            studentId: {
+                formBinding: {},
+            },
+        }),
+        [],
+    );
+
+    useEffect(() => {
+        const keys = Object.keys(studentData) as (keyof Student)[];
+        keys.forEach((key) => {
+            let value = studentData[key];
+
+            if (value === null || value === undefined) {
+                return;
+            }
+
+            const binding = bindingMap[key];
+            if (!binding) {
+                return;
+            }
+
+            if (typeof value === "object" && !Array.isArray(value)) {
+                const ok = binding.objectKey ?? [];
+                value = ok.reduce((acc, cur) => acc[cur as never], value);
+            }
+
+            if (binding.stateBinding) {
+                binding.stateBinding(value);
+            }
+            if (binding.formBinding) {
+                const k =
+                    binding.formBinding.formKey ?? (key as keyof FormSchema);
+                form.setValue(k, value as never);
+            }
+        });
+    }, [form, studentData, bindingMap]);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    async function onSubmit(values: FormSchema) {
+        setLoading(true);
+        await updateStudent({
+            id: studentData.id,
+            titleEn: titleThToEn(values.titleTh),
+            department: {
+                id: values.departmentId,
+            },
+            ...values,
+        });
+        router.push("/register/onboarding/step-two");
+    }
 
     return (
         <Form {...form}>
@@ -447,7 +504,7 @@ export default function FormComponent({ studentData, departments }: Props) {
                                         {departments.map((department) => (
                                             <SelectItem
                                                 key={department.id}
-                                                value={department.nameTh}
+                                                value={department.nameTh ?? ""}
                                             >
                                                 {department.nameTh}
                                             </SelectItem>

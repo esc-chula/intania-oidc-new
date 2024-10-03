@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     Popover,
     PopoverContent,
@@ -38,10 +38,14 @@ import {
     CommandItem,
     CommandList,
 } from "@/components/ui/command";
-import type { Student } from "@/types/student";
-import { type FamilyMemberStatuses, type FamilyStatuses } from "@/types/misc";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
+import type {
+    FamilyMemberStatus,
+    FamilyStatus,
+    Student,
+} from "@/generated/intania/auth/student/v1/student";
+import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
     fatherName: z.string().max(150),
@@ -62,10 +66,12 @@ const formSchema = z.object({
     siblingOrder: z.number(),
 });
 
+type FormSchema = z.infer<typeof formSchema>;
+
 type Props = {
     studentData: Student;
-    familyStatuses: FamilyStatuses[];
-    familyMemberStatuses: FamilyMemberStatuses[];
+    familyStatuses: FamilyStatus[];
+    familyMemberStatuses: FamilyMemberStatus[];
 };
 
 export default function FormComponent({
@@ -80,36 +86,113 @@ export default function FormComponent({
     }, [setStep]);
 
     // FORM
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
-    useEffect(() => {
-        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
-            if (key in formSchema.shape && studentData[key] != null) {
-                const value = studentData[key];
 
-                if (key === "siblingTotal" || key === "siblingOrder") {
-                    if (typeof value === "number") {
-                        form.setValue(key, value);
-                    }
-                } else if (key in formSchema.shape) {
-                    form.setValue(
-                        key as keyof z.infer<typeof formSchema>,
-                        value as never,
-                    );
-                }
+    const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
+        () => ({
+            fatherName: {
+                formBinding: {},
+            },
+            fatherBirthYear: {
+                formBinding: {},
+            },
+            fatherStatus: {
+                formBinding: {
+                    formKey: "fatherStatusId",
+                },
+                objectKey: ["id"],
+            },
+            motherName: {
+                formBinding: {},
+            },
+            motherBirthYear: {
+                formBinding: {},
+            },
+            motherStatus: {
+                formBinding: {
+                    formKey: "motherStatusId",
+                },
+                objectKey: ["id"],
+            },
+            familyStatus: {
+                formBinding: {
+                    formKey: "familyStatusId",
+                },
+                objectKey: ["id"],
+            },
+            siblingOrder: {
+                formBinding: {},
+            },
+            siblingTotal: {
+                formBinding: {},
+            },
+            parent: {
+                formBinding: {},
+            },
+            parentPhoneNumber: {
+                formBinding: {},
+            },
+        }),
+        [],
+    );
+
+    useEffect(() => {
+        const keys = Object.keys(studentData) as (keyof Student)[];
+        keys.forEach((key) => {
+            let value = studentData[key];
+
+            if (value === null || value === undefined) {
+                return;
+            }
+
+            const binding = bindingMap[key];
+            if (!binding) {
+                return;
+            }
+
+            if (typeof value === "object" && !Array.isArray(value)) {
+                const ok = binding.objectKey ?? [];
+                value = ok.reduce((acc, cur) => acc[cur as never], value);
+            }
+
+            if (binding.stateBinding) {
+                binding.stateBinding(value);
+            }
+            if (binding.formBinding) {
+                const k =
+                    binding.formBinding.formKey ?? (key as keyof FormSchema);
+                form.setValue(k, value as never);
             }
         });
-    }, [form, studentData]);
+    }, [form, studentData, bindingMap]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: FormSchema) {
         setLoading(true);
-        await updateStudent({
+
+        const body: Student = {
             id: studentData.id,
+            familyStatus: {
+                id: values.familyStatusId,
+            },
             ...values,
-        });
+        };
+
+        if (values.fatherStatusId) {
+            body.fatherStatus = {
+                id: values.fatherStatusId,
+            };
+        }
+        if (values.motherStatusId) {
+            body.motherStatus = {
+                id: values.motherStatusId,
+            };
+        }
+
+        await updateStudent(body);
 
         router.push("/register/onboarding/step-five");
     }

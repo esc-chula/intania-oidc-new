@@ -1,26 +1,41 @@
-import { api } from "@/trpc/server";
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
-import type { Student } from "@/types/student";
-import type { FamilyStatuses, FamilyMemberStatuses } from "@/types/misc";
 import FormComponent from "@/components/register/4-form";
+import { cookies } from "next/headers";
+import { listStudentMapping, me } from "@/server/controller/auth";
 
 export default async function Page() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+    const sessionId = cookies().get("sid")?.value;
+    if (!sessionId) return redirect("/logout");
 
-    const miscData = await api.student.getMiscInfo();
+    const meResponse = await me(sessionId);
 
-    const familyStatuses = miscData?.familyStatuses as FamilyStatuses[];
-    const familyMemberStatuses =
-        miscData?.familyMemberStatuses as FamilyMemberStatuses[];
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student || !meData.account?.publicId) {
+        throw new Error("Something went wrong");
+    }
+
+    const miscDataResponse = await listStudentMapping([
+        "family_statuses",
+        "family_member_statuses",
+    ]);
+    if (!miscDataResponse.success) {
+        throw new Error("Something went wrong");
+    }
+
+    const miscData = miscDataResponse.data;
+
+    const familyStatuses = miscData?.familyStatuses;
+    const familyMemberStatuses = miscData?.familyMemberStatuses;
 
     return (
         <FormComponent
-            studentData={me}
+            studentData={meData.student}
             familyStatuses={familyStatuses}
             familyMemberStatuses={familyMemberStatuses}
         />

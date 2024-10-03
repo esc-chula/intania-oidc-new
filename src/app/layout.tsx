@@ -1,5 +1,4 @@
 import { Anuphan } from "next/font/google";
-import { TRPCReactProvider } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 
 import "@/styles/globals.css";
@@ -30,7 +29,7 @@ export default function RootLayout({
                     anuphan.variable,
                 )}
             >
-                <TRPCReactProvider>{children}</TRPCReactProvider>
+                {children}
                 <Toaster />
             </body>
         </html>
