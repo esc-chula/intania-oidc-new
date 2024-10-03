@@ -1,20 +1,27 @@
-import { api } from "@/trpc/server";
 import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
 import type { Department } from "@/types/misc";
 import { type Student } from "@/types/student";
 import FormComponent from "@/components/register/1-form";
+import { grpc } from "@/server/grpc";
+import { cookies } from "next/headers";
 
 export default async function Page() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+    const jar = cookies();
+    const sessionId = jar.get("sid")?.value;
+    if (!sessionId) return redirect("/logout");
 
-    const miscData = await api.student.getMiscInfo();
+    const me = await grpc.account.me({
+        sessionId,
+    }).catch(_ => {
+        redirect("/logout")
+    });
 
-    const departments = miscData?.engineeringDepartments as Department[];
+    const miscData = await grpc.student.listStudentMapping({
+        masks: ["departments"],
+    });
 
-    return <FormComponent studentData={me} departments={departments} />;
+    const departments = miscData.departments;
+
+    return <FormComponent studentData={me.student} departments={departments} />;
 }

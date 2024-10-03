@@ -1,1 +1,0 @@
-DROP TABLE "intania-oidc_sessions";

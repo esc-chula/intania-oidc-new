@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package intania.auth.account.v1;
+
+option go_package = "github.com/esc-chula/intania-auth/generated/proto/account/v1";
+
+import "intania/auth/student/v1/student.proto";
+import "google/protobuf/timestamp.proto";
+
+service AccountService {
+  rpc StudentLogin(StudentLoginRequest) returns (StudentLoginResponse) {}
+
+  // Used to retrieve information about session and the user.
+  rpc Me(MeRequest) returns (MeResponse) {}
+
+  // Used to retrieve information about session without the user information.
+  rpc IntrospectSession(IntrospectSessionRequest) returns (IntrospectSessionResponse) {}
+}
+
+enum AccountType {
+  ACCOUNT_TYPE_UNSPECIFIED = 0;
+  ACCOUNT_TYPE_STUDENT = 1;
+}
+
+message StudentLoginRequest {
+  string username = 1;
+  string password = 2;
+  bool verify_with_ldap = 3;
+}
+message StudentLoginResponse {
+  Session session = 1;
+  intania.auth.student.v1.Student student = 2;
+}
+
+message MeRequest {
+  string session_id = 1;
+}
+message MeResponse {
+  Session session = 1;
+  oneof account_data {
+    intania.auth.student.v1.Student student = 2;
+  }
+}
+
+message IntrospectSessionRequest {
+  string session_id = 1;
+}
+message IntrospectSessionResponse {
+  Session session = 1;
+}
+
+message Session {
+  string id = 1;
+  AccountType account_type = 2;
+  int32 account_id = 3;
+  google.protobuf.Timestamp expires_at = 4;
+}

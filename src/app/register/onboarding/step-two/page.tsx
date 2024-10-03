@@ -1,23 +1,28 @@
-import { api } from "@/trpc/server";
 import type { Country, District, Province, Religion } from "@/types/misc";
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
-import type { Student } from "@/types/student";
 import FormComponent from "@/components/register/2-form";
+import { grpc } from "@/server/grpc";
+import { cookies } from "next/headers";
 
 export default async function Page() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+    const jar = cookies();
+    const sessionId = jar.get("sid")?.value;
+    if (!sessionId) return redirect("/logout");
 
-    const miscData = await api.student.getMiscInfo();
+    const me = await grpc.account.me({
+        sessionId,
+    }).catch(_ => {
+        redirect("/logout")
+    });
 
-    const countries = miscData?.countries as Country[];
-    const provinces = miscData?.thaiProvinces as Province[];
-    const districts = miscData?.thaiDistricts as District[];
-    const religions = miscData?.religions as Religion[];
+    const miscData = await grpc.student.listStudentMapping({
+        masks: ["countries", "provinces", "districts", "religions"],
+    });
+
+    const countries = miscData.countries as Country[];
+    const provinces = miscData.provinces as Province[];
+    const districts = miscData.districts as District[];
+    const religions = miscData.religions as Religion[];
 
     return (
         <FormComponent

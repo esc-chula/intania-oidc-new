@@ -1,13 +1,11 @@
 export interface Base {
     id: number;
-    createdAt: Date;
-    updatedAt: Date;
 }
 
 export interface Department extends Base {
-    code: string;
-    nameTh: string;
-    nameEn: string;
+    code?: string;
+    nameTh?: string;
+    nameEn?: string;
 }
 
 export interface Country extends Base {

@@ -50,7 +50,7 @@ const formSchema = z.object({
     familyNameEn: z.string().max(90),
     nicknameEn: z.string().max(50),
     preferredPronoun: z.string().max(50),
-    birthDate: z.coerce.string().datetime(),
+    birthDate: z.date(),
     departmentId: z.number(),
 });
 
@@ -73,17 +73,17 @@ export default function FormComponent({ studentData, departments }: Props) {
     });
     useEffect(() => {
         (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
-            if (
-                key in formSchema.shape &&
-                studentData[key] !== null &&
-                studentData[key] !== undefined
-            ) {
+            const d = studentData[key];
+            if (!d) {
+                return;
+            }
+            if (key in formSchema.shape) {
                 if (key === "birthDate" && studentData.birthDate) {
                     const birthDate = new Date(studentData.birthDate);
                     setSelectedBirthDate(birthDate);
                     form.setValue(
                         "birthDate",
-                        format(birthDate, "yyyy-MM-dd'T'HH:mm:ss'Z'"),
+                        birthDate,
                     );
                 } else if (key in formSchema.shape) {
                     form.setValue(
@@ -91,6 +91,8 @@ export default function FormComponent({ studentData, departments }: Props) {
                         studentData[key] as never,
                     );
                 }
+            } else if (key === "department") {
+                form.setValue("departmentId", d.id as number)
             }
         });
     }, [form, studentData]);
@@ -114,7 +116,7 @@ export default function FormComponent({ studentData, departments }: Props) {
         if (selectedBirthDate) {
             form.setValue(
                 "birthDate",
-                format(selectedBirthDate, "yyyy-MM-dd'T'hh:mm:ss'Z'"),
+                selectedBirthDate
             );
         }
     }, [form, selectedBirthDate]);
@@ -447,7 +449,7 @@ export default function FormComponent({ studentData, departments }: Props) {
                                         {departments.map((department) => (
                                             <SelectItem
                                                 key={department.id}
-                                                value={department.nameTh}
+                                                value={department.nameTh || ""}
                                             >
                                                 {department.nameTh}
                                             </SelectItem>

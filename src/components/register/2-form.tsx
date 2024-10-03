@@ -43,14 +43,14 @@ const formSchema = z.object({
     currentAddressProvinceId: z.number(),
     currentAddressDistrictId: z.number(),
     currentAddressOther: z.string().max(400),
-    currentAddressLatitude: z.string().max(16),
-    currentAddressLongitude: z.string().max(16),
+    currentAddressLatitude: z.number(),
+    currentAddressLongitude: z.number(),
     hometownAddressNumber: z.string().max(60).optional(),
     hometownAddressProvinceId: z.number().optional(),
     hometownAddressDistrictId: z.number().optional(),
     hometownAddressOther: z.string().max(400).optional(),
-    hometownAddressLatitude: z.string().max(16).optional(),
-    hometownAddressLongitude: z.string().max(16).optional(),
+    hometownAddressLatitude: z.number().optional(),
+    hometownAddressLongitude: z.number().optional(),
 });
 
 type Props = {
@@ -86,20 +86,12 @@ export default function FormComponent({
         string | null
     >(null);
     const handleCurrentLocationSelect = (lat: number, lng: number) => {
-        const location = {
-            lat: lat.toFixed(9).toString(),
-            lng: lng.toFixed(9).toString(),
-        };
-        form.setValue("currentAddressLatitude", location.lat);
-        form.setValue("currentAddressLongitude", location.lng);
+        form.setValue("currentAddressLatitude", lat);
+        form.setValue("currentAddressLongitude", lng);
     };
     const handleHomeLocationSelect = (lat: number, lng: number) => {
-        const location = {
-            lat: lat.toFixed(9).toString(),
-            lng: lng.toFixed(9).toString(),
-        };
-        form.setValue("hometownAddressLatitude", location.lat);
-        form.setValue("hometownAddressLongitude", location.lng);
+        form.setValue("hometownAddressLatitude", lat);
+        form.setValue("hometownAddressLongitude", lng);
     };
 
     // FORM
@@ -160,12 +152,14 @@ export default function FormComponent({
                 }
             }
         });
+        console.log(form);
     }, [form, studentData]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    function onSubmit(values: z.infer<typeof formSchema>) {
         setLoading(true);
-        await updateStudent({
+        console.log("submit laew i")
+        updateStudent({
             id: studentData.id,
             nationalId: values.nationalId,
             lineId: values.lineId,
@@ -197,7 +191,7 @@ export default function FormComponent({
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={() => form.handleSubmit(onSubmit)}
                 className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
             >
                 <section className="flex flex-col gap-2 !pt-0">
@@ -590,7 +584,7 @@ export default function FormComponent({
                     />
                 </section>
 
-                {selectedCountry === 215 ? ( // Thailand
+                {selectedCountry === 221 ? ( // Thailand
                     <section className="flex flex-col gap-2">
                         <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
                             <GoogleMap
