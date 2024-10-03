@@ -89,6 +89,103 @@ export default function FormComponent({
     const [selectedHomeLocationLng, setSelectedHomeLocationLng] = useState<
         string | null
     >(null);
+    const handleCurrentLocationSelect = (lat: number, lng: number) => {
+        form.setValue("currentAddressLatitude", lat);
+        form.setValue("currentAddressLongitude", lng);
+    };
+    const handleHomeLocationSelect = (lat: number, lng: number) => {
+        form.setValue("hometownAddressLatitude", lat);
+        form.setValue("hometownAddressLongitude", lng);
+    };
+
+    // FORM
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        mode: "onChange",
+    });
+    useEffect(() => {
+        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
+            if (key in formSchema.shape && studentData[key] != null) {
+                if (
+                    key === "nationalityId" &&
+                    typeof studentData[key] === "number"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCountry(studentData[key]);
+                } else if (
+                    key === "currentAddressProvinceId" &&
+                    typeof studentData[key] === "number"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCurrentProvince(studentData[key]);
+                } else if (
+                    key === "hometownAddressProvinceId" &&
+                    typeof studentData[key] === "number"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedHomeProvince(studentData[key]);
+                } else if (
+                    key === "currentAddressLatitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCurrentLocationLat(studentData[key]);
+                } else if (
+                    key === "currentAddressLongitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedCurrentLocationLng(studentData[key]);
+                } else if (
+                    key === "hometownAddressLatitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedHomeLocationLat(studentData[key]);
+                } else if (
+                    key === "hometownAddressLongitude" &&
+                    typeof studentData[key] === "string"
+                ) {
+                    form.setValue(key, studentData[key]);
+                    setSelectedHomeLocationLng(studentData[key]);
+                } else if (key in formSchema.shape) {
+                    form.setValue(
+                        key as keyof z.infer<typeof formSchema>,
+                        studentData[key] as never,
+                    );
+                }
+            }
+        });
+        console.log(form);
+    }, [form, studentData]);
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+    function onSubmit(values: z.infer<typeof formSchema>) {
+        setLoading(true);
+        console.log("submit laew i")
+        updateStudent({
+            id: studentData.id,
+            nationalId: values.nationalId,
+            lineId: values.lineId,
+            facebook: values.facebook,
+            email: values.email,
+            phoneNumber: values.phoneNumber,
+            nationalityId: values.nationalityId,
+            religionId: values.religionId,
+            currentAddressProvinceId: values.currentAddressProvinceId,
+            currentAddressDistrictId: values.currentAddressDistrictId,
+            currentAddressOther: values.currentAddressOther,
+            currentAddressLatitude: values.currentAddressLatitude,
+            currentAddressLongitude: values.currentAddressLongitude,
+            hometownAddressProvinceId: values.hometownAddressProvinceId,
+            hometownAddressDistrictId: values.hometownAddressDistrictId,
+            hometownAddressOther: values.hometownAddressOther,
+            hometownAddressLatitude: values.hometownAddressLatitude,
+            hometownAddressLongitude: values.hometownAddressLongitude,
+        });
+
+        router.push("/register/onboarding/step-three");
+    }
 
     // HANDLERS
     const [selectedCountry, setSelectedCountry] = useState(0);
@@ -256,7 +353,7 @@ export default function FormComponent({
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={() => form.handleSubmit(onSubmit)}
                 className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
             >
                 <section className="flex flex-col gap-2 !pt-0">

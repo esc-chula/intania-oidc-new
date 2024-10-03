@@ -36,7 +36,7 @@ import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 import { Department, Student } from "@/generated/intania/auth/student/v1/student";
 import { z } from "zod";
-import { BindingMapping, directMap } from "@/types/helper";
+import { BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
     studentId: z.string().max(32),
