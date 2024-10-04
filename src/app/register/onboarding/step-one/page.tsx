@@ -1,7 +1,5 @@
 import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
-import type { Department } from "@/types/misc";
-import { type Student } from "@/types/student";
 import FormComponent from "@/components/register/1-form";
 import { grpc } from "@/server/grpc";
 import { cookies } from "next/headers";
@@ -16,6 +14,10 @@ export default async function Page() {
     }).catch(_ => {
         redirect("/logout")
     });
+
+    if (!me.student) {
+        throw new Error("Something went wrong")
+    }
 
     const miscData = await grpc.student.listStudentMapping({
         masks: ["departments"],

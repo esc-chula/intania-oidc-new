@@ -20,12 +20,12 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import type { Student } from "@/types/student";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
+import { Student } from "@/generated/intania/auth/student/v1/student";
+import { z } from "zod";
 
 const formSchema = z.object({
     foodLimitations: z.string().max(200).optional(), // comma-sepearated string
@@ -35,6 +35,8 @@ const formSchema = z.object({
     bloodType: z.enum(["A", "B", "AB", "O"]),
     shirtSize: z.number(),
 });
+
+type FormSchema = z.infer<typeof formSchema>
 
 type Props = {
     studentData: Student;
@@ -48,7 +50,7 @@ export default function FormComponent({ studentData }: Props) {
     }, [setStep]);
 
     // FORM
-    const form = useForm<z.infer<typeof formSchema>>({
+    const form = useForm<FormSchema>({
         resolver: zodResolver(formSchema),
         mode: "onChange",
     });
@@ -57,7 +59,7 @@ export default function FormComponent({ studentData }: Props) {
             if (key in formSchema.shape && studentData[key] != null) {
                 if (key in formSchema.shape) {
                     form.setValue(
-                        key as keyof z.infer<typeof formSchema>,
+                        key as keyof FormSchema,
                         studentData[key] as never,
                     );
                 }
@@ -66,7 +68,7 @@ export default function FormComponent({ studentData }: Props) {
     }, [form, studentData]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
-    async function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: FormSchema) {
         setLoading(true);
         await updateStudent({
             id: studentData.id,

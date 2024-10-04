@@ -15,6 +15,10 @@ export default async function Page() {
         redirect("/logout")
     });
 
+    if (!me.student) {
+        throw new Error("Something went wrong")
+    }
+
     const miscData = await grpc.student.listStudentMapping({
         masks: ["countries", "provinces", "districts", "religions"],
     });
@@ -26,7 +30,7 @@ export default async function Page() {
 
     return (
         <FormComponent
-            studentData={me}
+            studentData={me.student}
             countries={countries}
             provinces={provinces}
             districts={districts}

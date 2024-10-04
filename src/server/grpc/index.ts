@@ -42,6 +42,7 @@ function listStudentMapping(req: ListStudentMappingRequest): Promise<ListStudent
 
 function updateStudent(req: EditStudentRequest): Promise<EditStudentResponse> {
   return new Promise((resolve, reject) => {
+    console.log(req)
     studentClient.editStudent(req, r(resolve, reject))
   })
 }

@@ -1,11 +1,11 @@
 "use server";
 
-import { Student, type Student } from "@/types/student";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginStudent as cLoginStudent } from "../controller/auth/login";
 import { updateStudent as cUpdateStudent } from "../controller/auth/student";
+import { Student } from "@/generated/intania/auth/student/v1/student";
 
 export async function loginStudent(
     formData: FormData

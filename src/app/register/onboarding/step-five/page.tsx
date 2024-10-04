@@ -1,15 +1,22 @@
-import { api } from "@/trpc/server";
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
-import type { Student } from "@/types/student";
 import FormComponent from "@/components/register/5-form";
+import { cookies } from "next/headers";
+import { grpc } from "@/server/grpc";
 
 export default async function Page() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+    const jar = cookies();
+    const sessionId = jar.get("sid")?.value;
+    if (!sessionId) return redirect("/logout");
 
-    return <FormComponent studentData={me} />;
+    const me = await grpc.account.me({
+        sessionId,
+    }).catch(_ => {
+        redirect("/logout")
+    });
+
+    if (!me.student) {
+        throw new Error("Something went wrong")
+    }
+
+    return <FormComponent studentData={me.student} />;
 }
