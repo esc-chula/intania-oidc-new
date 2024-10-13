@@ -9,7 +9,7 @@ import {
     getSharedResourcesFromScope,
 } from "@/lib/utils";
 import { cookies } from "next/headers";
-import { grpc } from "@/server/grpc";
+import { me } from "@/server/controller/auth";
 
 export default async function Page({
     searchParams,
@@ -36,30 +36,30 @@ export default async function Page({
         const grantScope: string[] = consentRequest.requested_scope ?? [];
         sharedResources = getSharedResourcesFromScope(grantScope);
         appName = consentRequest.client?.client_name;
-        const jar = cookies();
-        const sessionId = jar.get("sid")?.value;
+        const sessionId = cookies().get("sid")?.value;
         if (!sessionId) return redirect("/logout");
 
-        const me = await grpc.account
-            .me({
-                sessionId,
-            })
-            .catch((_) => {
-                redirect("/logout");
-            });
+        const meResponse = await me(sessionId);
 
-        if (!me.student || !me.account?.publicId) {
+        if (!meResponse.success) {
+            const errors = meResponse.errors;
+            throw new Error(errors.join(", "));
+        }
+
+        const meData = meResponse.data;
+
+        if (!meData.student || !meData.account?.publicId) {
             throw new Error("Something went wrong");
         }
 
-        const student = me.student;
+        const student = meData.student;
 
         studentId = student.studentId;
         if (student.firstNameTh && student.familyNameTh) {
             studentName = `${student.firstNameTh} ${student.familyNameTh}`;
         }
 
-        if (consentRequest.subject !== me.account.publicId) {
+        if (consentRequest.subject !== meData.account.publicId) {
             await hydra
                 .rejectOAuth2ConsentRequest({
                     consentChallenge: challenge,

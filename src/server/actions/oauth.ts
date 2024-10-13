@@ -4,8 +4,8 @@ import { hydra } from "@/server/api/hydra";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { createOAuth2ConsentRequestSession } from "@/lib/utils";
-import { loginStudent as cLoginStudent } from "../controller/auth/login";
-import { grpc } from "../grpc";
+import { loginStudent as cLoginStudent } from "../controller/auth";
+import { me } from "../controller/auth";
 
 export async function handleOAuthLogin(
     username: string,
@@ -60,25 +60,25 @@ export async function handleOAuthAcceptConsent(
     });
     const grantScope: string[] = consentRequest.requested_scope ?? [];
 
-    const jar = cookies();
-    const sessionId = jar.get("sid")?.value;
+    const sessionId = cookies().get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account
-        .me({
-            sessionId,
-        })
-        .catch((_) => {
-            redirect("/logout");
-        });
+    const meResponse = await me(sessionId);
 
-    if (!me.student || !me.account?.publicId) {
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student || !meData.account?.publicId) {
         throw new Error("Something went wrong");
     }
 
-    const student = me.student;
+    const student = meData.student;
 
-    if (consentRequest.subject !== me.account.publicId) {
+    if (consentRequest.subject !== meData.account.publicId) {
         await hydra
             .rejectOAuth2ConsentRequest({
                 consentChallenge: consentChallenge,

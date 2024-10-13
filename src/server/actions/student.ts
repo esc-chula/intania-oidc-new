@@ -3,8 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { loginStudent as cLoginStudent } from "../controller/auth/login";
-import { updateStudent as cUpdateStudent } from "../controller/auth/student";
+import { loginStudent as cLoginStudent, updateStudent as cUpdateStudent } from "../controller/auth";
 import { type Student } from "@/generated/intania/auth/student/v1/student";
 
 export async function loginStudent(formData: FormData): Promise<void> {

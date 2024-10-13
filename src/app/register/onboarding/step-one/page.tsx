@@ -1,30 +1,37 @@
 import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/1-form";
-import { grpc } from "@/server/grpc";
 import { cookies } from "next/headers";
+import { listStudentMapping, me } from "@/server/controller/auth";
 
 export default async function Page() {
-    const jar = cookies();
-    const sessionId = jar.get("sid")?.value;
+    const sessionId = cookies().get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account
-        .me({
-            sessionId,
-        })
-        .catch((_) => {
-            redirect("/logout");
-        });
+    const meResponse = await me(sessionId);
 
-    if (!me.student) {
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student || !meData.account?.publicId) {
         throw new Error("Something went wrong");
     }
 
-    const miscData = await grpc.student.listStudentMapping({
-        masks: ["departments"],
-    });
+    const miscDataResponse = await listStudentMapping(["departments"]);
+
+    if (!miscDataResponse.success) {
+        const errors = miscDataResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const miscData = miscDataResponse.data;
 
     const departments = miscData.departments;
 
-    return <FormComponent studentData={me.student} departments={departments} />;
+    return (
+        <FormComponent studentData={meData.student} departments={departments} />
+    );
 }

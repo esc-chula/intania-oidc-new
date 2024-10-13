@@ -1,35 +1,41 @@
 import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/4-form";
-import { grpc } from "@/server/grpc";
 import { cookies } from "next/headers";
+import { listStudentMapping, me } from "@/server/controller/auth";
 
 export default async function Page() {
-    const jar = cookies();
-    const sessionId = jar.get("sid")?.value;
+    const sessionId = cookies().get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account
-        .me({
-            sessionId,
-        })
-        .catch((_) => {
-            redirect("/logout");
-        });
+    const meResponse = await me(sessionId);
 
-    if (!me.student) {
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student || !meData.account?.publicId) {
         throw new Error("Something went wrong");
     }
 
-    const miscData = await grpc.student.listStudentMapping({
-        masks: ["family_statuses", "family_member_statuses"],
-    });
+    const miscDataResponse = await listStudentMapping([
+        "family_statuses",
+        "family_member_statuses",
+    ]);
+    if (!miscDataResponse.success) {
+        throw new Error("Something went wrong");
+    }
+
+    const miscData = miscDataResponse.data;
 
     const familyStatuses = miscData?.familyStatuses;
     const familyMemberStatuses = miscData?.familyMemberStatuses;
 
     return (
         <FormComponent
-            studentData={me.student}
+            studentData={meData.student}
             familyStatuses={familyStatuses}
             familyMemberStatuses={familyMemberStatuses}
         />

@@ -1,24 +1,24 @@
 import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/3-form";
 import { cookies } from "next/headers";
-import { grpc } from "@/server/grpc";
+import { me } from "@/server/controller/auth";
 
 export default async function Page() {
-    const jar = cookies();
-    const sessionId = jar.get("sid")?.value;
+    const sessionId = cookies().get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account
-        .me({
-            sessionId,
-        })
-        .catch((_) => {
-            redirect("/logout");
-        });
+    const meResponse = await me(sessionId);
 
-    if (!me.student) {
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student) {
         throw new Error("Something went wrong");
     }
 
-    return <FormComponent studentData={me.student} />;
+    return <FormComponent studentData={meData.student} />;
 }

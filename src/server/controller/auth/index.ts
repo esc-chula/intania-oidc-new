@@ -1,5 +1,49 @@
-import type { Student } from "@/generated/intania/auth/student/v1/student";
+import type {
+    StudentLoginResponse,
+    MeResponse,
+} from "@/generated/intania/auth/account/v1/account";
+import type {
+    ListStudentMappingResponse,
+    Student,
+} from "@/generated/intania/auth/student/v1/student";
 import { grpc } from "@/server/grpc";
+
+type Response<T> =
+    | {
+          success: true;
+          data: T;
+      }
+    | {
+          success: false;
+          errors: string[];
+      };
+
+export async function loginStudent(
+    username: string,
+    password: string,
+): Promise<Response<StudentLoginResponse>> {
+    const response = await grpc.account.studentLogin({
+        username,
+        password,
+        verifyWithLdap: true,
+    });
+
+    return {
+        success: true,
+        data: response,
+    };
+}
+
+export async function me(sid: string): Promise<Response<MeResponse>> {
+    const response = await grpc.account.me({
+        sessionId: sid,
+    });
+
+    return {
+        success: true,
+        data: response,
+    };
+}
 
 export async function updateStudent(sid: string, body: Student): Promise<void> {
     const masks = extractField(body);
@@ -13,6 +57,19 @@ export async function updateStudent(sid: string, body: Student): Promise<void> {
         .then(() => {
             return;
         });
+}
+
+export async function listStudentMapping(
+    masks?: string[],
+): Promise<Response<ListStudentMappingResponse>> {
+    const response = await grpc.student.listStudentMapping({
+        masks,
+    });
+
+    return {
+        success: true,
+        data: response,
+    };
 }
 
 // Mapping for available updateable field.
@@ -75,7 +132,7 @@ const studentKeyMap: Record<keyof Student, string | null> = {
     motherStatus: "student.mother_status.id",
     currentAddressNumber: "student.current_address_number",
     hometownAddressNumber: "student.hometown_address_number",
-    cueaDataTransferAgreement: "student.cuea_data_transfer_agreement"
+    cueaDataTransferAgreement: "student.cuea_data_transfer_agreement",
 };
 
 function extractField(student: Student): string[] {

@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { hydra } from "@/server/api/hydra";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import { cookies } from "next/headers";
-import { grpc } from "@/server/grpc";
+import { me } from "@/server/controller/auth";
 
 export default async function Page({
     searchParams,
@@ -37,23 +37,27 @@ export default async function Page({
                 });
         }
 
-        const jar = cookies();
-        const sessionId = jar.get("sid")?.value;
+        const sessionId = cookies().get("sid")?.value;
 
         if (sessionId) {
-            const me = await grpc.account
-                .me({
-                    sessionId,
-                })
-                .catch((_) => {
-                    redirect("/logout");
-                });
+            const meResponse = await me(sessionId);
 
-            if (!me.account) {
+            if (!meResponse.success) {
+                const errors = meResponse.errors;
+                throw new Error(errors.join(", "));
+            }
+
+            const meData = meResponse.data;
+
+            if (
+                !meData.student ||
+                !meData.account?.publicId ||
+                !meData.account
+            ) {
                 throw new Error("Something went wrong");
             }
 
-            const subject = me.account?.publicId;
+            const subject = meData.account?.publicId;
 
             await hydra
                 .acceptOAuth2LoginRequest({

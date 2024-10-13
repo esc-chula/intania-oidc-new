@@ -3,16 +3,25 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { grpc } from "@/server/grpc";
+import { me } from "@/server/controller/auth";
 
 async function Year({ sid }: { sid?: string }) {
     if (!sid) return null;
 
-    const me = await grpc.account.me({
-        sessionId: sid,
-    });
+    const meResponse = await me(sid);
 
-    return <span>ปีการศึกษา 25{me.student?.studentId?.slice(0, 2)}</span>;
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student || !meData.account?.publicId || !meData.account) {
+        throw new Error("Something went wrong");
+    }
+
+    return <span>ปีการศึกษา 25{meData.student?.studentId?.slice(0, 2)}</span>;
 }
 
 export default async function Page() {

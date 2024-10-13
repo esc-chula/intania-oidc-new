@@ -1,38 +1,46 @@
-import type { Country, District, Province, Religion } from "@/types/misc";
 import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/2-form";
-import { grpc } from "@/server/grpc";
 import { cookies } from "next/headers";
+import { listStudentMapping, me } from "@/server/controller/auth";
 
 export default async function Page() {
-    const jar = cookies();
-    const sessionId = jar.get("sid")?.value;
+    const sessionId = cookies().get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account
-        .me({
-            sessionId,
-        })
-        .catch((_) => {
-            redirect("/logout");
-        });
+    const meResponse = await me(sessionId);
 
-    if (!me.student) {
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student) {
         throw new Error("Something went wrong");
     }
 
-    const miscData = await grpc.student.listStudentMapping({
-        masks: ["countries", "provinces", "districts", "religions"],
-    });
+    const miscDataResponse = await listStudentMapping([
+        "countries",
+        "provinces",
+        "districts",
+        "religions",
+    ]);
 
-    const countries = miscData.countries as Country[];
-    const provinces = miscData.provinces as Province[];
-    const districts = miscData.districts as District[];
-    const religions = miscData.religions as Religion[];
+    if (!miscDataResponse.success) {
+        throw new Error("Something went wrong");
+    }
+
+    const miscData = miscDataResponse.data;
+
+    const countries = miscData.countries;
+    const provinces = miscData.provinces;
+    const districts = miscData.districts;
+    const religions = miscData.religions;
 
     return (
         <FormComponent
-            studentData={me.student}
+            studentData={meData.student}
             countries={countries}
             provinces={provinces}
             districts={districts}
