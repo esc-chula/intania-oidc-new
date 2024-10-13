@@ -4,8 +4,8 @@ import OAuthLoginBox from "@/components/oauth2/login-box";
 import { redirect } from "next/navigation";
 import { hydra } from "@/server/api/hydra";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { type Student } from "@/types/student";
-import { api } from "@/trpc/server";
+import { cookies } from "next/headers";
+import { grpc } from "@/server/grpc";
 
 export default async function Page({
     searchParams,
@@ -37,16 +37,27 @@ export default async function Page({
                 });
         }
 
-        const student = (await api.student.me().catch(() => undefined)) as
-            | Student
-            | undefined;
+        const jar = cookies();
+        const sessionId = jar.get("sid")?.value;
 
-        if (student) {
+        if (sessionId) {
+            const me = await grpc.account.me({
+                sessionId,
+            }).catch(_ => {
+                redirect("/logout")
+            });
+
+            if (!me.account) {
+                throw new Error("Something went wrong");
+            }
+            
+            const subject = me.account?.publicId;
+    
             await hydra
                 .acceptOAuth2LoginRequest({
                     loginChallenge: challenge,
                     acceptOAuth2LoginRequest: {
-                        subject: student.id.toString(),
+                        subject,
                     },
                 })
                 .then(({ data }) => {

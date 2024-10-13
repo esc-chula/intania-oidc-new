@@ -17,13 +17,12 @@ fi
 
 source $env_path
 
-
 client_id=$(docker compose -f $docker_compose_path exec hydra \
     hydra create client \
     --endpoint http://127.0.0.1:4445 \
     --grant-type authorization_code \
     --response-type code,id_token \
-    --format "jsonpointer=/client_id" \
+    --format "jsonpointer a=/client_id" \
     --name "Development Client" \
     --secret $client_secret \
     --scope $DEV_OAUTH_CLIENT_REQUESTED_SCOPE \

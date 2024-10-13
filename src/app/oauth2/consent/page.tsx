@@ -3,13 +3,13 @@ import LoginFooter from "@/components/login/login-footer";
 import { redirect } from "next/navigation";
 import { hydra } from "@/server/api/hydra";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { type Student } from "@/types/student";
-import { api } from "@/trpc/server";
 import ConsentBox from "@/components/oauth2/consent-box";
 import {
     createOAuth2ConsentRequestSession,
     getSharedResourcesFromScope,
 } from "@/lib/utils";
+import { cookies } from "next/headers";
+import { grpc } from "@/server/grpc";
 
 export default async function Page({
     searchParams,
@@ -36,14 +36,29 @@ export default async function Page({
         const grantScope: string[] = consentRequest.requested_scope ?? [];
         sharedResources = getSharedResourcesFromScope(grantScope);
         appName = consentRequest.client?.client_name;
+        const jar = cookies();
+        const sessionId = jar.get("sid")?.value;
+        if (!sessionId) return redirect("/logout");
 
-        const student = (await api.student.me()) as Student;
+        const me = await grpc.account.me({
+            sessionId,
+        }).catch(_ => {
+            redirect("/logout")
+        });
+
+        if (!me.student || !me.account?.publicId) {
+            throw new Error("Something went wrong")
+        }
+
+        const student = me.student;
+
         studentId = student.studentId;
+        console.log(student)
         if (student.firstNameTh && student.familyNameTh) {
             studentName = `${student.firstNameTh} ${student.familyNameTh}`;
         }
 
-        if (consentRequest.subject !== student.id.toString()) {
+        if (consentRequest.subject !== me.account.publicId) {
             await hydra
                 .rejectOAuth2ConsentRequest({
                     consentChallenge: challenge,

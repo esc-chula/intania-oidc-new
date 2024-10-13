@@ -1,24 +1,10 @@
 services:
-  db:
-    image: postgres:16-bookworm
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_PASSWORD: "123456"
-      POSTGRES_DB: intania-oidc
-
-  redis:
-    image: redis:7.2-bookworm
-    ports:
-      - 6379:6379
-    command: ["redis-server", "--requirepass", "123456"]
-
   hydra:
     image: oryd/hydra:v2.2.0
     ports:
-      - "4444:4444" # Public port
-      - "4445:4445" # Admin port, don't expose this port in production
-      - "9090:9090" # Port for development oauth client
+    - "4444:4444" # Public port
+    - "4445:4445" # Admin port, don't expose this port in production
+    - "9090:9090" # Port for development oauth client
     command: serve all --dev
     environment:
       DSN: postgres://hydra:secret@hydradb:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
@@ -37,7 +23,7 @@ services:
       DSN: postgres://hydra:secret@hydradb:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
     restart: on-failure
     depends_on:
-      - hydradb
+    - hydradb
 
   hydradb:
     image: postgres:16-bookworm
@@ -45,3 +31,59 @@ services:
       POSTGRES_USER: hydra
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: hydra
+  
+  auth:
+    image: ghcr.io/esc-chula/intania-auth:b0801f1601d51129a974ba2cd52fcbc908f8104a
+    ports:
+    - 3001:3000
+    depends_on:
+      authmigrations:
+        condition: service_completed_successfully
+      authredis:
+        condition: service_started
+    environment:
+      APP_DB_URL: postgres://postgres:123456@authdb:5432/intania-auth
+      APP_PORT: "3000"
+      APP_REDIS_URL: authredis:6379
+      APP_REDIS_PASSWORD: "123456"
+      APP_TOKEN_TTL: "3600"
+      APP_MOCK_LDAP: "1"
+
+  authdb:
+    image: postgres:16-bookworm
+    hostname: authdb
+    environment:
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: intania-auth
+    volumes:
+    - authdb:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 5
+
+  authredis:
+    image: redis:7.2-bookworm
+    hostname: authredis
+    ports:
+    - 6379:6379
+    command: ["redis-server", "--requirepass", "123456"]
+
+  authmigrations:
+    image: ghcr.io/esc-chula/migrators:2c391cfa190345c2476328a40b15aca5ce3deaac
+    restart: on-failure:3
+    depends_on:
+      authdb:
+        condition: service_healthy
+    environment:
+      LIQUIBASE_COMMAND_USERNAME: postgres
+      LIQUIBASE_COMMAND_PASSWORD: "123456"
+      LIQUIBASE_COMMAND_URL: jdbc:postgresql://authdb:5432/intania-auth
+      LIQUIBASE_COMMAND_CHANGELOG_FILE: migrators/auth/master.xml
+    command:
+    - --log-level=info
+    - update
+
+volumes:
+  authdb: {}
