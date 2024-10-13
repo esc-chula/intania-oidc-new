@@ -31,6 +31,8 @@ services:
       POSTGRES_USER: hydra
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: hydra
+    volumes:
+      - hydradb:/var/lib/postgresql
 
   auth:
     image: ghcr.io/esc-chula/intania-auth:b0801f1601d51129a974ba2cd52fcbc908f8104a
@@ -87,3 +89,4 @@ services:
 
 volumes:
   authdb: {}
+  hydradb: {}
