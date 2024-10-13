@@ -41,7 +41,7 @@ import {
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 import { FamilyMemberStatus, FamilyStatus, Student } from "@/generated/intania/auth/student/v1/student";
-import { BindingMapping } from "@/types/helper";
+import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
     fatherName: z.string().max(150),

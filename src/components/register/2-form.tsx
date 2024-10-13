@@ -26,7 +26,7 @@ import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 import { Country, District, Province, Religion, Student } from "@/generated/intania/auth/student/v1/student";
 import { z } from "zod"
-import { BindingMapping } from "@/types/helper";
+import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
     nationalId: z.string().length(13).optional(),
