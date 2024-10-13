@@ -24,7 +24,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
-import { Student } from "@/generated/intania/auth/student/v1/student";
+import type { Student } from "@/generated/intania/auth/student/v1/student";
 import { z } from "zod";
 
 const formSchema = z.object({

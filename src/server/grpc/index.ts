@@ -1,18 +1,18 @@
 import { credentials, type ServiceError } from "@grpc/grpc-js";
 import {
     AccountServiceClient,
-    IntrospectSessionRequest,
-    IntrospectSessionResponse,
-    MeRequest,
-    MeResponse,
-    StudentLoginRequest,
-    StudentLoginResponse,
+    type IntrospectSessionRequest,
+    type IntrospectSessionResponse,
+    type MeRequest,
+    type MeResponse,
+    type StudentLoginRequest,
+    type StudentLoginResponse,
 } from "@/generated/intania/auth/account/v1/account";
 import {
-    EditStudentRequest,
-    EditStudentResponse,
-    ListStudentMappingRequest,
-    ListStudentMappingResponse,
+    type EditStudentRequest,
+    type EditStudentResponse,
+    type ListStudentMappingRequest,
+    type ListStudentMappingResponse,
     StudentServiceClient,
 } from "@/generated/intania/auth/student/v1/student";
 

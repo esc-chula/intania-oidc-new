@@ -22,7 +22,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
     Popover,
     PopoverContent,
@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/command";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
-import {
+import type {
     FamilyMemberStatus,
     FamilyStatus,
     Student,
@@ -91,55 +91,58 @@ export default function FormComponent({
         mode: "onChange",
     });
 
-    const bindingMap: BindingMapping<Student, FormSchema> = {
-        fatherName: {
-            formBinding: {},
-        },
-        fatherBirthYear: {
-            formBinding: {},
-        },
-        fatherStatus: {
-            formBinding: {
-                formKey: "fatherStatusId",
+    const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
+        () => ({
+            fatherName: {
+                formBinding: {},
             },
-            objectKey: ["id"],
-        },
-        motherName: {
-            formBinding: {},
-        },
-        motherBirthYear: {
-            formBinding: {},
-        },
-        motherStatus: {
-            formBinding: {
-                formKey: "motherStatusId",
+            fatherBirthYear: {
+                formBinding: {},
             },
-            objectKey: ["id"],
-        },
-        familyStatus: {
-            formBinding: {
-                formKey: "familyStatusId",
+            fatherStatus: {
+                formBinding: {
+                    formKey: "fatherStatusId",
+                },
+                objectKey: ["id"],
             },
-            objectKey: ["id"],
-        },
-        siblingOrder: {
-            formBinding: {},
-        },
-        siblingTotal: {
-            formBinding: {},
-        },
-        parent: {
-            formBinding: {},
-        },
-        parentPhoneNumber: {
-            formBinding: {},
-        },
-    };
+            motherName: {
+                formBinding: {},
+            },
+            motherBirthYear: {
+                formBinding: {},
+            },
+            motherStatus: {
+                formBinding: {
+                    formKey: "motherStatusId",
+                },
+                objectKey: ["id"],
+            },
+            familyStatus: {
+                formBinding: {
+                    formKey: "familyStatusId",
+                },
+                objectKey: ["id"],
+            },
+            siblingOrder: {
+                formBinding: {},
+            },
+            siblingTotal: {
+                formBinding: {},
+            },
+            parent: {
+                formBinding: {},
+            },
+            parentPhoneNumber: {
+                formBinding: {},
+            },
+        }),
+        [],
+    );
 
     useEffect(() => {
         const keys = Object.keys(studentData) as (keyof Student)[];
         keys.forEach((key) => {
-            var value = studentData[key];
+            let value = studentData[key];
 
             if (value === null || value === undefined) {
                 return;
@@ -151,7 +154,7 @@ export default function FormComponent({
             }
 
             if (typeof value === "object" && !Array.isArray(value)) {
-                const ok = binding.objectKey || [];
+                const ok = binding.objectKey ?? [];
                 value = ok.reduce((acc, cur) => acc[cur as never], value);
             }
 
@@ -160,11 +163,11 @@ export default function FormComponent({
             }
             if (binding.formBinding) {
                 const k =
-                    binding.formBinding.formKey || (key as keyof FormSchema);
+                    binding.formBinding.formKey ?? (key as keyof FormSchema);
                 form.setValue(k, value as never);
             }
         });
-    }, [form, studentData]);
+    }, [form, studentData, bindingMap]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     async function onSubmit(values: FormSchema) {

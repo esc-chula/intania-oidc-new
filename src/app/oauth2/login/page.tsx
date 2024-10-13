@@ -70,7 +70,7 @@ export default async function Page({
         if (isRedirectError(error)) {
             throw error;
         }
-        console.log(error);
+        console.error(error);
         redirect("/");
     }
 

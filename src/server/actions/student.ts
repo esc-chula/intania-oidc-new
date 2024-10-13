@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { loginStudent as cLoginStudent } from "../controller/auth/login";
 import { updateStudent as cUpdateStudent } from "../controller/auth/student";
-import { Student } from "@/generated/intania/auth/student/v1/student";
+import { type Student } from "@/generated/intania/auth/student/v1/student";
 
 export async function loginStudent(formData: FormData): Promise<void> {
     const username = formData.get("username")?.toString();
@@ -33,8 +33,6 @@ export async function loginStudent(formData: FormData): Promise<void> {
         throw new Error("Something went wrong");
     }
 
-    console.log(expiredAt);
-
     const cookieStore = cookies();
     cookieStore.set("sid", sid, {
         expires: expiredAt,
@@ -53,7 +51,7 @@ export async function logoutStudent(): Promise<void> {
 
 export async function updateStudent(student: Student): Promise<void> {
     const cookieStore = cookies();
-    const sid = cookieStore.get("sid")?.value || "";
+    const sid = cookieStore.get("sid")?.value ?? "";
 
     await cUpdateStudent(sid, student);
 

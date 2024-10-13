@@ -20,16 +20,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 import {
-    Country,
-    District,
-    Province,
-    Religion,
-    Student,
+    type Country,
+    type District,
+    type Province,
+    type Religion,
+    type Student,
 } from "@/generated/intania/auth/student/v1/student";
 import { z } from "zod";
 import { type BindingMapping } from "@/types/helper";
@@ -104,186 +104,92 @@ export default function FormComponent({
         form.setValue("hometownAddressLongitude", lng);
     };
 
-    // FORM
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        mode: "onChange",
-    });
-    useEffect(() => {
-        (Object.keys(studentData) as Array<keyof Student>).forEach((key) => {
-            if (key in formSchema.shape && studentData[key] != null) {
-                if (
-                    key === "nationalityId" &&
-                    typeof studentData[key] === "number"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCountry(studentData[key]);
-                } else if (
-                    key === "currentAddressProvinceId" &&
-                    typeof studentData[key] === "number"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCurrentProvince(studentData[key]);
-                } else if (
-                    key === "hometownAddressProvinceId" &&
-                    typeof studentData[key] === "number"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedHomeProvince(studentData[key]);
-                } else if (
-                    key === "currentAddressLatitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCurrentLocationLat(studentData[key]);
-                } else if (
-                    key === "currentAddressLongitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedCurrentLocationLng(studentData[key]);
-                } else if (
-                    key === "hometownAddressLatitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedHomeLocationLat(studentData[key]);
-                } else if (
-                    key === "hometownAddressLongitude" &&
-                    typeof studentData[key] === "string"
-                ) {
-                    form.setValue(key, studentData[key]);
-                    setSelectedHomeLocationLng(studentData[key]);
-                } else if (key in formSchema.shape) {
-                    form.setValue(
-                        key as keyof z.infer<typeof formSchema>,
-                        studentData[key] as never,
-                    );
-                }
-            }
-        });
-        console.log(form);
-    }, [form, studentData]);
-    const router = useRouter();
-    const [loading, setLoading] = useState(false);
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        setLoading(true);
-        console.log("submit laew i");
-        updateStudent({
-            id: studentData.id,
-            nationalId: values.nationalId,
-            lineId: values.lineId,
-            facebook: values.facebook,
-            email: values.email,
-            phoneNumber: values.phoneNumber,
-            nationalityId: values.nationalityId,
-            religionId: values.religionId,
-            currentAddressProvinceId: values.currentAddressProvinceId,
-            currentAddressDistrictId: values.currentAddressDistrictId,
-            currentAddressOther: values.currentAddressOther,
-            currentAddressLatitude: values.currentAddressLatitude,
-            currentAddressLongitude: values.currentAddressLongitude,
-            hometownAddressProvinceId: values.hometownAddressProvinceId,
-            hometownAddressDistrictId: values.hometownAddressDistrictId,
-            hometownAddressOther: values.hometownAddressOther,
-            hometownAddressLatitude: values.hometownAddressLatitude,
-            hometownAddressLongitude: values.hometownAddressLongitude,
-        });
-
-        router.push("/register/onboarding/step-three");
-    }
-
     // HANDLERS
     const [selectedCountry, setSelectedCountry] = useState(0);
     const [selectedCurrentProvince, setSelectedCurrentProvince] = useState(0);
     const [selectedHomeProvince, setSelectedHomeProvince] = useState(0);
-    const handleCurrentLocationSelect = (lat: number, lng: number) => {
-        form.setValue("currentAddressLatitude", lat);
-        form.setValue("currentAddressLongitude", lng);
-    };
-    const handleHomeLocationSelect = (lat: number, lng: number) => {
-        form.setValue("hometownAddressLatitude", lat);
-        form.setValue("hometownAddressLongitude", lng);
-    };
 
-    const bindingMap: BindingMapping<Student, FormSchema> = {
-        currentAddressProvince: {
-            formBinding: {
-                formKey: "currentAddressProvinceId",
+    const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
+        () => ({
+            currentAddressProvince: {
+                formBinding: {
+                    formKey: "currentAddressProvinceId",
+                },
+                stateBinding: setSelectedCurrentProvince,
+                objectKey: ["id"],
             },
-            stateBinding: setSelectedCurrentProvince,
-            objectKey: ["id"],
-        },
-        currentAddressDistrict: {
-            formBinding: {
-                formKey: "currentAddressDistrictId",
+            currentAddressDistrict: {
+                formBinding: {
+                    formKey: "currentAddressDistrictId",
+                },
+                objectKey: ["id"],
             },
-            objectKey: ["id"],
-        },
-        currentAddressOther: {
-            formBinding: {},
-        },
-        currentAddressLatitude: {
-            stateBinding: setSelectedCurrentLocationLat,
-            formBinding: {},
-        },
-        currentAddressLongitude: {
-            stateBinding: setSelectedCurrentLocationLng,
-            formBinding: {},
-        },
-        hometownAddressProvince: {
-            formBinding: {
-                formKey: "hometownAddressProvinceId",
+            currentAddressOther: {
+                formBinding: {},
             },
-            stateBinding: setSelectedHomeProvince,
-            objectKey: ["id"],
-        },
-        hometownAddressDistrict: {
-            formBinding: {
-                formKey: "hometownAddressDistrictId",
+            currentAddressLatitude: {
+                stateBinding: setSelectedCurrentLocationLat,
+                formBinding: {},
             },
-            objectKey: ["id"],
-        },
-        hometownAddressOther: {
-            formBinding: {},
-        },
-        hometownAddressLatitude: {
-            stateBinding: setSelectedHomeLocationLat,
-            formBinding: {},
-        },
-        hometownAddressLongitude: {
-            stateBinding: setSelectedHomeLocationLng,
-            formBinding: {},
-        },
-        nationality: {
-            stateBinding: setSelectedCountry,
-            formBinding: {
-                formKey: "nationalityId",
+            currentAddressLongitude: {
+                stateBinding: setSelectedCurrentLocationLng,
+                formBinding: {},
             },
-            objectKey: ["id"],
-        },
-        nationalId: {
-            formBinding: {},
-        },
-        email: {
-            formBinding: {},
-        },
-        phoneNumber: {
-            formBinding: {},
-        },
-        facebook: {
-            formBinding: {},
-        },
-        lineId: {
-            formBinding: {},
-        },
-        religion: {
-            formBinding: {
-                formKey: "religionId",
+            hometownAddressProvince: {
+                formBinding: {
+                    formKey: "hometownAddressProvinceId",
+                },
+                stateBinding: setSelectedHomeProvince,
+                objectKey: ["id"],
             },
-            objectKey: ["id"],
-        },
-    };
+            hometownAddressDistrict: {
+                formBinding: {
+                    formKey: "hometownAddressDistrictId",
+                },
+                objectKey: ["id"],
+            },
+            hometownAddressOther: {
+                formBinding: {},
+            },
+            hometownAddressLatitude: {
+                stateBinding: setSelectedHomeLocationLat,
+                formBinding: {},
+            },
+            hometownAddressLongitude: {
+                stateBinding: setSelectedHomeLocationLng,
+                formBinding: {},
+            },
+            nationality: {
+                stateBinding: setSelectedCountry,
+                formBinding: {
+                    formKey: "nationalityId",
+                },
+                objectKey: ["id"],
+            },
+            nationalId: {
+                formBinding: {},
+            },
+            email: {
+                formBinding: {},
+            },
+            phoneNumber: {
+                formBinding: {},
+            },
+            facebook: {
+                formBinding: {},
+            },
+            lineId: {
+                formBinding: {},
+            },
+            religion: {
+                formBinding: {
+                    formKey: "religionId",
+                },
+                objectKey: ["id"],
+            },
+        }),
+        [],
+    );
 
     // FORM
     const form = useForm<FormSchema>({
@@ -293,7 +199,7 @@ export default function FormComponent({
     useEffect(() => {
         const keys = Object.keys(studentData) as (keyof Student)[];
         keys.forEach((key) => {
-            var value = studentData[key];
+            let value = studentData[key];
 
             if (value === null || value === undefined) {
                 return;
@@ -305,7 +211,7 @@ export default function FormComponent({
             }
 
             if (typeof value === "object" && !Array.isArray(value)) {
-                const ok = binding.objectKey || [];
+                const ok = binding.objectKey ?? [];
                 value = ok.reduce((acc, cur) => acc[cur as never], value);
             }
 
@@ -314,11 +220,11 @@ export default function FormComponent({
             }
             if (binding.formBinding) {
                 const k =
-                    binding.formBinding.formKey || (key as keyof FormSchema);
+                    binding.formBinding.formKey ?? (key as keyof FormSchema);
                 form.setValue(k, value as never);
             }
         });
-    }, [form, studentData]);
+    }, [form, studentData, bindingMap]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     async function onSubmit(values: FormSchema) {
@@ -426,7 +332,7 @@ export default function FormComponent({
                                                 <SelectItem
                                                     key={index}
                                                     value={
-                                                        nationality.name || ""
+                                                        nationality.name ?? ""
                                                     }
                                                 >
                                                     {nationality.name}
@@ -494,7 +400,7 @@ export default function FormComponent({
                                         {religions.map((religion) => (
                                             <SelectItem
                                                 key={religion.id}
-                                                value={religion.nameTh || ""}
+                                                value={religion.nameTh ?? ""}
                                             >
                                                 {religion.nameTh}
                                             </SelectItem>
@@ -664,7 +570,7 @@ export default function FormComponent({
                                         {provinces.map((province) => (
                                             <SelectItem
                                                 key={province.provinceCode}
-                                                value={province.nameTh || ""}
+                                                value={province.nameTh ?? ""}
                                             >
                                                 {province.nameTh}
                                             </SelectItem>
@@ -726,7 +632,7 @@ export default function FormComponent({
                                                 <SelectItem
                                                     key={district.districtCode}
                                                     value={
-                                                        district.nameTh || ""
+                                                        district.nameTh ?? ""
                                                     }
                                                 >
                                                     {district.nameTh}
@@ -851,7 +757,7 @@ export default function FormComponent({
                                                 <SelectItem
                                                     key={province.provinceCode}
                                                     value={
-                                                        province.nameTh || ""
+                                                        province.nameTh ?? ""
                                                     }
                                                 >
                                                     {province.nameTh}
@@ -917,7 +823,7 @@ export default function FormComponent({
                                                             district.districtCode
                                                         }
                                                         value={
-                                                            district.nameTh ||
+                                                            district.nameTh ??
                                                             ""
                                                         }
                                                     >

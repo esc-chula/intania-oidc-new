@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/1-form";
 import { grpc } from "@/server/grpc";

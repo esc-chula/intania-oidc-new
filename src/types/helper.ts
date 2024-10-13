@@ -7,6 +7,7 @@ type NestedKeys<T> = T extends object
 // Use for mapping between form and entity
 export type BindingMapping<Entity, FormSchema> = Partial<{
     [K in keyof Entity]: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         stateBinding?: (value: any) => void;
         formBinding?: {
             formKey?: keyof FormSchema;

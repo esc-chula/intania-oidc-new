@@ -1,18 +1,16 @@
-import { Student as GrpcStudent } from "@/generated/intania/auth/student/v1/student";
+import type { Student } from "@/generated/intania/auth/student/v1/student";
 import { grpc } from "@/server/grpc";
-import { Student } from "@/types/student";
 
 export async function updateStudent(sid: string, body: Student): Promise<void> {
-    const grpcBody = mapStudentRelationship(body);
     const masks = extractField(body);
 
     return grpc.student
         .updateStudent({
             masks,
             sid: sid,
-            student: grpcBody,
+            student: body,
         })
-        .then((_) => {
+        .then(() => {
             return;
         });
 }
@@ -21,6 +19,11 @@ export async function updateStudent(sid: string, body: Student): Promise<void> {
 const studentKeyMap: Record<keyof Student, string | null> = {
     id: null,
     studentId: null,
+    createdAt: null,
+    updatedAt: null,
+    profilePictureKey: null,
+    emailVerified: null,
+    phoneNumberVerified: null,
     titleTh: "student.title_th",
     titleEn: "student.title_en",
     firstNameTh: "student.first_name_th",
@@ -33,39 +36,47 @@ const studentKeyMap: Record<keyof Student, string | null> = {
     nicknameEn: "student.nickname_en",
     preferredPronoun: "student.preferred_pronoun",
     birthDate: "student.birth_date",
-    departmentId: "student.department.id",
+    department: "student.department.id",
     nationalId: "student.national_id",
     lineId: "student.line_id",
     facebook: "student.facebook",
     email: "student.email",
     phoneNumber: "student.phone_number",
-    nationalityId: "student.nationality.id",
-    religionId: "student.religion.id",
-    currentAddressProvinceId: "student.current_address_province.id",
-    currentAddressDistrictId: "student.current_address_district.id",
+    nationality: "student.nationality.id",
+    religion: "student.religion.id",
+    currentAddressProvince: "student.current_address_province.id",
+    currentAddressDistrict: "student.current_address_district.id",
     currentAddressOther: "student.current_address_other",
     currentAddressLatitude: "student.current_address_latitude",
     currentAddressLongitude: "student.current_address_longitude",
-    hometownAddressProvinceId: "student.hometown_address_province.id",
-    hometownAddressDistrictId: "student.hometown_address_district.id",
+    hometownAddressProvince: "student.hometown_address_province.id",
+    hometownAddressDistrict: "student.hometown_address_district.id",
     hometownAddressOther: "student.hometown_address_other",
     hometownAddressLatitude: "student.hometown_address_latitude",
     hometownAddressLongitude: "student.hometown_address_longitude",
+    bloodType: "student.blood_type",
+    foodLimitations: "student.food_limitations",
+    drugAllergies: "student.drug_allergies",
+    medicalConditions: "student.medical_conditions",
+    medications: "student.medications",
+    shirtSize: "student.shirt_size",
+    instagram: "student.instagram",
+    familyStatus: "student.family_status.id",
+    parent: "student.parent",
+    siblingTotal: "student.sibling_total",
+    siblingOrder: "student.sibling_order",
+    parentPhoneNumber: "student.parent_phone_number",
+    parentAddress: "student.parent_address",
+    fatherName: "student.father_name",
+    fatherBirthYear: "student.father_birth_year",
+    fatherStatus: "student.father_status.id",
+    motherName: "student.mother_name",
+    motherBirthYear: "student.mother_birth_year",
+    motherStatus: "student.mother_status.id",
+    currentAddressNumber: "student.current_address_number",
+    hometownAddressNumber: "student.hometown_address_number",
+    cueaDataTransferAgreement: "student.cuea_data_transfer_agreement"
 };
-
-function mapStudentRelationship(body: Student): GrpcStudent {
-    const ret: GrpcStudent = {
-        ...body,
-    };
-    const departmentId = body.departmentId;
-    if (departmentId) {
-        ret.department = {
-            id: departmentId,
-        };
-    }
-
-    return ret;
-}
 
 function extractField(student: Student): string[] {
     const ret = [];

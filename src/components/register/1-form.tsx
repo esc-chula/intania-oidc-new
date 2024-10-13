@@ -31,12 +31,12 @@ import { CalendarIcon } from "lucide-react";
 import { cn, titleThToEn } from "@/lib/utils";
 import { format } from "date-fns";
 import { th } from "date-fns/locale";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 import {
-    Department,
-    Student,
+    type Department,
+    type Student,
 } from "@/generated/intania/auth/student/v1/student";
 import { z } from "zod";
 import { type BindingMapping } from "@/types/helper";
@@ -89,50 +89,53 @@ export default function FormComponent({ studentData, departments }: Props) {
         }
     }, [form, selectedBirthDate]);
 
-    const bindingMap: BindingMapping<Student, FormSchema> = {
-        titleTh: {
-            formBinding: {},
-        },
-        firstNameTh: {
-            formBinding: {},
-        },
-        familyNameTh: {
-            formBinding: {},
-        },
-        nicknameTh: {
-            formBinding: {},
-        },
-        firstNameEn: {
-            formBinding: {},
-        },
-        familyNameEn: {
-            formBinding: {},
-        },
-        nicknameEn: {
-            formBinding: {},
-        },
-        preferredPronoun: {
-            formBinding: {},
-        },
-        birthDate: {
-            formBinding: {},
-            stateBinding: setSelectedBirthDate,
-        },
-        department: {
-            formBinding: {
-                formKey: "departmentId",
+    const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
+        () => ({
+            titleTh: {
+                formBinding: {},
             },
-            objectKey: ["id"],
-        },
-        studentId: {
-            formBinding: {},
-        },
-    };
+            firstNameTh: {
+                formBinding: {},
+            },
+            familyNameTh: {
+                formBinding: {},
+            },
+            nicknameTh: {
+                formBinding: {},
+            },
+            firstNameEn: {
+                formBinding: {},
+            },
+            familyNameEn: {
+                formBinding: {},
+            },
+            nicknameEn: {
+                formBinding: {},
+            },
+            preferredPronoun: {
+                formBinding: {},
+            },
+            birthDate: {
+                formBinding: {},
+                stateBinding: setSelectedBirthDate,
+            },
+            department: {
+                formBinding: {
+                    formKey: "departmentId",
+                },
+                objectKey: ["id"],
+            },
+            studentId: {
+                formBinding: {},
+            },
+        }),
+        [],
+    );
 
     useEffect(() => {
         const keys = Object.keys(studentData) as (keyof Student)[];
         keys.forEach((key) => {
-            var value = studentData[key];
+            let value = studentData[key];
 
             if (value === null || value === undefined) {
                 return;
@@ -144,7 +147,7 @@ export default function FormComponent({ studentData, departments }: Props) {
             }
 
             if (typeof value === "object" && !Array.isArray(value)) {
-                const ok = binding.objectKey || [];
+                const ok = binding.objectKey ?? [];
                 value = ok.reduce((acc, cur) => acc[cur as never], value);
             }
 
@@ -153,11 +156,11 @@ export default function FormComponent({ studentData, departments }: Props) {
             }
             if (binding.formBinding) {
                 const k =
-                    binding.formBinding.formKey || (key as keyof FormSchema);
+                    binding.formBinding.formKey ?? (key as keyof FormSchema);
                 form.setValue(k, value as never);
             }
         });
-    }, [form, studentData]);
+    }, [form, studentData, bindingMap]);
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     async function onSubmit(values: FormSchema) {
@@ -501,7 +504,7 @@ export default function FormComponent({ studentData, departments }: Props) {
                                         {departments.map((department) => (
                                             <SelectItem
                                                 key={department.id}
-                                                value={department.nameTh || ""}
+                                                value={department.nameTh ?? ""}
                                             >
                                                 {department.nameTh}
                                             </SelectItem>

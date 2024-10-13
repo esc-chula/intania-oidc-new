@@ -2,10 +2,6 @@ import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/4-form";
 import { grpc } from "@/server/grpc";
 import { cookies } from "next/headers";
-import {
-    FamilyMemberStatus,
-    FamilyStatus,
-} from "@/generated/intania/auth/student/v1/student";
 
 export default async function Page() {
     const jar = cookies();
@@ -28,9 +24,8 @@ export default async function Page() {
         masks: ["family_statuses", "family_member_statuses"],
     });
 
-    const familyStatuses = miscData?.familyStatuses as FamilyStatus[];
-    const familyMemberStatuses =
-        miscData?.familyMemberStatuses as FamilyMemberStatus[];
+    const familyStatuses = miscData?.familyStatuses;
+    const familyMemberStatuses = miscData?.familyMemberStatuses;
 
     return (
         <FormComponent

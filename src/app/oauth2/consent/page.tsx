@@ -55,7 +55,6 @@ export default async function Page({
         const student = me.student;
 
         studentId = student.studentId;
-        console.log(student);
         if (student.firstNameTh && student.familyNameTh) {
             studentName = `${student.firstNameTh} ${student.familyNameTh}`;
         }
@@ -99,7 +98,7 @@ export default async function Page({
         if (isRedirectError(error)) {
             throw error;
         }
-        console.log(error);
+        console.error(error);
         redirect("/");
     }
 
