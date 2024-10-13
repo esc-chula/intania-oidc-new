@@ -6,13 +6,15 @@ export async function updateStudent(sid: string, body: Student): Promise<void> {
     const grpcBody = mapStudentRelationship(body);
     const masks = extractField(body);
 
-    return grpc.student.updateStudent({
-        masks,
-        sid: sid,
-        student: grpcBody,
-    }).then(_ => {
-        return
-    });
+    return grpc.student
+        .updateStudent({
+            masks,
+            sid: sid,
+            student: grpcBody,
+        })
+        .then((_) => {
+            return;
+        });
 }
 
 // Mapping for available updateable field.
@@ -48,18 +50,18 @@ const studentKeyMap: Record<keyof Student, string | null> = {
     hometownAddressDistrictId: "student.hometown_address_district.id",
     hometownAddressOther: "student.hometown_address_other",
     hometownAddressLatitude: "student.hometown_address_latitude",
-    hometownAddressLongitude: "student.hometown_address_longitude"
-}
+    hometownAddressLongitude: "student.hometown_address_longitude",
+};
 
 function mapStudentRelationship(body: Student): GrpcStudent {
     const ret: GrpcStudent = {
         ...body,
     };
-    const departmentId = body.departmentId
+    const departmentId = body.departmentId;
     if (departmentId) {
         ret.department = {
-            id: departmentId
-        }
+            id: departmentId,
+        };
     }
 
     return ret;
@@ -72,9 +74,9 @@ function extractField(student: Student): string[] {
     for (const key of keys) {
         const mapped = studentKeyMap[key];
         if (mapped) {
-            ret.push(mapped)
+            ret.push(mapped);
         }
     }
 
-    return ret
+    return ret;
 }

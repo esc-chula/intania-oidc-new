@@ -2,9 +2,9 @@ services:
   hydra:
     image: oryd/hydra:v2.2.0
     ports:
-    - "4444:4444" # Public port
-    - "4445:4445" # Admin port, don't expose this port in production
-    - "9090:9090" # Port for development oauth client
+      - "4444:4444" # Public port
+      - "4445:4445" # Admin port, don't expose this port in production
+      - "9090:9090" # Port for development oauth client
     command: serve all --dev
     environment:
       DSN: postgres://hydra:secret@hydradb:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
@@ -23,7 +23,7 @@ services:
       DSN: postgres://hydra:secret@hydradb:5432/hydra?sslmode=disable&max_conns=20&max_idle_conns=4
     restart: on-failure
     depends_on:
-    - hydradb
+      - hydradb
 
   hydradb:
     image: postgres:16-bookworm
@@ -31,11 +31,11 @@ services:
       POSTGRES_USER: hydra
       POSTGRES_PASSWORD: secret
       POSTGRES_DB: hydra
-  
+
   auth:
     image: ghcr.io/esc-chula/intania-auth:b0801f1601d51129a974ba2cd52fcbc908f8104a
     ports:
-    - 3001:3000
+      - 3001:3000
     depends_on:
       authmigrations:
         condition: service_completed_successfully
@@ -56,7 +56,7 @@ services:
       POSTGRES_PASSWORD: "123456"
       POSTGRES_DB: intania-auth
     volumes:
-    - authdb:/var/lib/postgresql
+      - authdb:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 2s
@@ -67,7 +67,7 @@ services:
     image: redis:7.2-bookworm
     hostname: authredis
     ports:
-    - 6379:6379
+      - 6379:6379
     command: ["redis-server", "--requirepass", "123456"]
 
   authmigrations:
@@ -82,8 +82,8 @@ services:
       LIQUIBASE_COMMAND_URL: jdbc:postgresql://authdb:5432/intania-auth
       LIQUIBASE_COMMAND_CHANGELOG_FILE: migrators/auth/master.xml
     command:
-    - --log-level=info
-    - update
+      - --log-level=info
+      - update
 
 volumes:
   authdb: {}

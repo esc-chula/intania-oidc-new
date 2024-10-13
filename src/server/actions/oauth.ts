@@ -30,7 +30,7 @@ export async function handleOAuthLogin(
     }
 
     const { id: sid, expiresAt } = res.data.session;
-    
+
     const subject = res.data.account?.publicId;
 
     const cookieStore = cookies();
@@ -64,14 +64,16 @@ export async function handleOAuthAcceptConsent(
     const sessionId = jar.get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account.me({
-        sessionId,
-    }).catch(_ => {
-        redirect("/logout")
-    });
+    const me = await grpc.account
+        .me({
+            sessionId,
+        })
+        .catch((_) => {
+            redirect("/logout");
+        });
 
     if (!me.student || !me.account?.publicId) {
-        throw new Error("Something went wrong")
+        throw new Error("Something went wrong");
     }
 
     const student = me.student;

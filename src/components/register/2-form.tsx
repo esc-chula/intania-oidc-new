@@ -24,8 +24,14 @@ import { useEffect, useState } from "react";
 import GoogleMap from "@/components/maps/maps";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
-import { Country, District, Province, Religion, Student } from "@/generated/intania/auth/student/v1/student";
-import { z } from "zod"
+import {
+    Country,
+    District,
+    Province,
+    Religion,
+    Student,
+} from "@/generated/intania/auth/student/v1/student";
+import { z } from "zod";
 import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
@@ -55,7 +61,7 @@ const formSchema = z.object({
     hometownAddressLongitude: z.number().optional(),
 });
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 type Props = {
     studentData: Student;
@@ -212,7 +218,7 @@ export default function FormComponent({
             formBinding: {
                 formKey: "currentAddressDistrictId",
             },
-            objectKey: ["id"]
+            objectKey: ["id"],
         },
         currentAddressOther: {
             formBinding: {},
@@ -236,7 +242,7 @@ export default function FormComponent({
             formBinding: {
                 formKey: "hometownAddressDistrictId",
             },
-            objectKey: ["id"]
+            objectKey: ["id"],
         },
         hometownAddressOther: {
             formBinding: {},
@@ -277,7 +283,7 @@ export default function FormComponent({
             },
             objectKey: ["id"],
         },
-    }
+    };
 
     // FORM
     const form = useForm<FormSchema>({
@@ -285,12 +291,12 @@ export default function FormComponent({
         mode: "onChange",
     });
     useEffect(() => {
-        const keys = Object.keys(studentData) as (keyof Student)[]
+        const keys = Object.keys(studentData) as (keyof Student)[];
         keys.forEach((key) => {
             var value = studentData[key];
 
             if (value === null || value === undefined) {
-                return
+                return;
             }
 
             const binding = bindingMap[key];
@@ -307,7 +313,8 @@ export default function FormComponent({
                 binding.stateBinding(value);
             }
             if (binding.formBinding) {
-                const k = binding.formBinding.formKey || (key as keyof FormSchema);
+                const k =
+                    binding.formBinding.formKey || (key as keyof FormSchema);
                 form.setValue(k, value as never);
             }
         });
@@ -332,17 +339,17 @@ export default function FormComponent({
                 id: values.currentAddressDistrictId,
             },
             ...values,
-        }
+        };
 
         if (values.hometownAddressProvinceId) {
             body.hometownAddressProvince = {
                 id: values.hometownAddressProvinceId,
-            }
+            };
         }
         if (values.hometownAddressDistrictId) {
             body.hometownAddressDistrict = {
                 id: values.hometownAddressDistrictId,
-            }
+            };
         }
 
         await updateStudent(body);
@@ -418,7 +425,9 @@ export default function FormComponent({
                                             .map((nationality, index) => (
                                                 <SelectItem
                                                     key={index}
-                                                    value={nationality.name || ""}
+                                                    value={
+                                                        nationality.name || ""
+                                                    }
                                                 >
                                                     {nationality.name}
                                                 </SelectItem>
@@ -716,7 +725,9 @@ export default function FormComponent({
                                             .map((district) => (
                                                 <SelectItem
                                                     key={district.districtCode}
-                                                    value={district.nameTh || ""}
+                                                    value={
+                                                        district.nameTh || ""
+                                                    }
                                                 >
                                                     {district.nameTh}
                                                 </SelectItem>
@@ -839,7 +850,9 @@ export default function FormComponent({
                                             {provinces.map((province) => (
                                                 <SelectItem
                                                     key={province.provinceCode}
-                                                    value={province.nameTh || ""}
+                                                    value={
+                                                        province.nameTh || ""
+                                                    }
                                                 >
                                                     {province.nameTh}
                                                 </SelectItem>
@@ -903,7 +916,10 @@ export default function FormComponent({
                                                         key={
                                                             district.districtCode
                                                         }
-                                                        value={district.nameTh || ""}
+                                                        value={
+                                                            district.nameTh ||
+                                                            ""
+                                                        }
                                                     >
                                                         {district.nameTh}
                                                     </SelectItem>

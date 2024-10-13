@@ -9,14 +9,16 @@ export default async function Page() {
     const sessionId = jar.get("sid")?.value;
     if (!sessionId) return redirect("/logout");
 
-    const me = await grpc.account.me({
-        sessionId,
-    }).catch(_ => {
-        redirect("/logout")
-    });
+    const me = await grpc.account
+        .me({
+            sessionId,
+        })
+        .catch((_) => {
+            redirect("/logout");
+        });
 
     if (!me.student) {
-        throw new Error("Something went wrong")
+        throw new Error("Something went wrong");
     }
 
     const miscData = await grpc.student.listStudentMapping({

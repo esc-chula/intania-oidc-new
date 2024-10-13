@@ -36,7 +36,7 @@ const formSchema = z.object({
     shirtSize: z.number(),
 });
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 type Props = {
     studentData: Student;

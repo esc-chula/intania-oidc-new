@@ -7,13 +7,11 @@ import { loginStudent as cLoginStudent } from "../controller/auth/login";
 import { updateStudent as cUpdateStudent } from "../controller/auth/student";
 import { Student } from "@/generated/intania/auth/student/v1/student";
 
-export async function loginStudent(
-    formData: FormData
-): Promise<void> {
-    const username = formData.get("username")?.toString()
-    const password = formData.get("password")?.toString()
+export async function loginStudent(formData: FormData): Promise<void> {
+    const username = formData.get("username")?.toString();
+    const password = formData.get("password")?.toString();
     if (!username || !password) {
-        throw new Error("No username or password")
+        throw new Error("No username or password");
     }
     const res = await cLoginStudent(username, password);
 

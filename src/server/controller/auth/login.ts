@@ -1,4 +1,4 @@
-import { grpc } from "@/server/grpc"
+import { grpc } from "@/server/grpc";
 
 export async function loginStudent(username: string, password: string) {
     const response = await grpc.account.studentLogin({

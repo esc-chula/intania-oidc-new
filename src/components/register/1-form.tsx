@@ -34,7 +34,10 @@ import { th } from "date-fns/locale";
 import { useEffect, useState } from "react";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
-import { Department, Student } from "@/generated/intania/auth/student/v1/student";
+import {
+    Department,
+    Student,
+} from "@/generated/intania/auth/student/v1/student";
 import { z } from "zod";
 import { type BindingMapping } from "@/types/helper";
 
@@ -56,7 +59,7 @@ const formSchema = z.object({
     departmentId: z.number(),
 });
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 interface Props {
     studentData: Student;
@@ -88,28 +91,28 @@ export default function FormComponent({ studentData, departments }: Props) {
 
     const bindingMap: BindingMapping<Student, FormSchema> = {
         titleTh: {
-            formBinding: {}
+            formBinding: {},
         },
         firstNameTh: {
-            formBinding: {}
+            formBinding: {},
         },
         familyNameTh: {
-            formBinding: {}
+            formBinding: {},
         },
         nicknameTh: {
-            formBinding: {}
+            formBinding: {},
         },
         firstNameEn: {
-            formBinding: {}
+            formBinding: {},
         },
         familyNameEn: {
-            formBinding: {}
+            formBinding: {},
         },
         nicknameEn: {
-            formBinding: {}
+            formBinding: {},
         },
         preferredPronoun: {
-            formBinding: {}
+            formBinding: {},
         },
         birthDate: {
             formBinding: {},
@@ -119,20 +122,20 @@ export default function FormComponent({ studentData, departments }: Props) {
             formBinding: {
                 formKey: "departmentId",
             },
-            objectKey: ["id"]
+            objectKey: ["id"],
         },
         studentId: {
             formBinding: {},
         },
-    }
+    };
 
     useEffect(() => {
-        const keys = Object.keys(studentData) as (keyof Student)[]
+        const keys = Object.keys(studentData) as (keyof Student)[];
         keys.forEach((key) => {
             var value = studentData[key];
 
             if (value === null || value === undefined) {
-                return
+                return;
             }
 
             const binding = bindingMap[key];
@@ -149,7 +152,8 @@ export default function FormComponent({ studentData, departments }: Props) {
                 binding.stateBinding(value);
             }
             if (binding.formBinding) {
-                const k = binding.formBinding.formKey || (key as keyof FormSchema);
+                const k =
+                    binding.formBinding.formKey || (key as keyof FormSchema);
                 form.setValue(k, value as never);
             }
         });

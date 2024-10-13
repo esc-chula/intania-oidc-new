@@ -41,18 +41,20 @@ export default async function Page({
         const sessionId = jar.get("sid")?.value;
 
         if (sessionId) {
-            const me = await grpc.account.me({
-                sessionId,
-            }).catch(_ => {
-                redirect("/logout")
-            });
+            const me = await grpc.account
+                .me({
+                    sessionId,
+                })
+                .catch((_) => {
+                    redirect("/logout");
+                });
 
             if (!me.account) {
                 throw new Error("Something went wrong");
             }
-            
+
             const subject = me.account?.publicId;
-    
+
             await hydra
                 .acceptOAuth2LoginRequest({
                     loginChallenge: challenge,

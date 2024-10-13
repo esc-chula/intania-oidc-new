@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { grpc } from "@/server/grpc"
+import { grpc } from "@/server/grpc";
 
-async function Year({sid}: {sid?: string}) {
+async function Year({ sid }: { sid?: string }) {
     if (!sid) return null;
 
     const me = await grpc.account.me({

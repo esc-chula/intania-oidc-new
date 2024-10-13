@@ -40,7 +40,11 @@ import {
 } from "@/components/ui/command";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
-import { FamilyMemberStatus, FamilyStatus, Student } from "@/generated/intania/auth/student/v1/student";
+import {
+    FamilyMemberStatus,
+    FamilyStatus,
+    Student,
+} from "@/generated/intania/auth/student/v1/student";
 import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
@@ -62,7 +66,7 @@ const formSchema = z.object({
     siblingOrder: z.number(),
 });
 
-type FormSchema = z.infer<typeof formSchema>
+type FormSchema = z.infer<typeof formSchema>;
 
 type Props = {
     studentData: Student;
@@ -114,7 +118,7 @@ export default function FormComponent({
         },
         familyStatus: {
             formBinding: {
-                formKey: "familyStatusId"
+                formKey: "familyStatusId",
             },
             objectKey: ["id"],
         },
@@ -129,16 +133,16 @@ export default function FormComponent({
         },
         parentPhoneNumber: {
             formBinding: {},
-        }
+        },
     };
 
     useEffect(() => {
-        const keys = Object.keys(studentData) as (keyof Student)[]
+        const keys = Object.keys(studentData) as (keyof Student)[];
         keys.forEach((key) => {
             var value = studentData[key];
 
             if (value === null || value === undefined) {
-                return
+                return;
             }
 
             const binding = bindingMap[key];
@@ -155,7 +159,8 @@ export default function FormComponent({
                 binding.stateBinding(value);
             }
             if (binding.formBinding) {
-                const k = binding.formBinding.formKey || (key as keyof FormSchema);
+                const k =
+                    binding.formBinding.formKey || (key as keyof FormSchema);
                 form.setValue(k, value as never);
             }
         });
@@ -171,17 +176,17 @@ export default function FormComponent({
                 id: values.familyStatusId,
             },
             ...values,
-        }
+        };
 
         if (values.fatherStatusId) {
             body.fatherStatus = {
                 id: values.fatherStatusId,
-            }
+            };
         }
         if (values.motherStatusId) {
             body.motherStatus = {
                 id: values.motherStatusId,
-            }
+            };
         }
 
         await updateStudent(body);

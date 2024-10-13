@@ -40,20 +40,22 @@ export default async function Page({
         const sessionId = jar.get("sid")?.value;
         if (!sessionId) return redirect("/logout");
 
-        const me = await grpc.account.me({
-            sessionId,
-        }).catch(_ => {
-            redirect("/logout")
-        });
+        const me = await grpc.account
+            .me({
+                sessionId,
+            })
+            .catch((_) => {
+                redirect("/logout");
+            });
 
         if (!me.student || !me.account?.publicId) {
-            throw new Error("Something went wrong")
+            throw new Error("Something went wrong");
         }
 
         const student = me.student;
 
         studentId = student.studentId;
-        console.log(student)
+        console.log(student);
         if (student.firstNameTh && student.familyNameTh) {
             studentName = `${student.firstNameTh} ${student.familyNameTh}`;
         }
