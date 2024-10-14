@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import FormComponent from "@/components/register/4-form";
 import { cookies } from "next/headers";
-import { listStudentMapping, me } from "@/server/controller/auth";
+import { me } from "@/server/controller/auth";
+import { getCachedMapping } from "@/server/data/mapper";
 
 export default async function Page() {
     const sessionId = cookies().get("sid")?.value;
@@ -20,18 +21,13 @@ export default async function Page() {
         throw new Error("Something went wrong");
     }
 
-    const miscDataResponse = await listStudentMapping([
-        "family_statuses",
-        "family_member_statuses",
+    const miscData = await getCachedMapping([
+        "familyMemberStatuses",
+        "familyStatuses",
     ]);
-    if (!miscDataResponse.success) {
-        throw new Error("Something went wrong");
-    }
 
-    const miscData = miscDataResponse.data;
-
-    const familyStatuses = miscData?.familyStatuses;
-    const familyMemberStatuses = miscData?.familyMemberStatuses;
+    const familyStatuses = miscData.familyStatuses;
+    const familyMemberStatuses = miscData.familyMemberStatuses;
 
     return (
         <FormComponent

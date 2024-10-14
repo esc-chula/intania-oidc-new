@@ -1,4 +1,6 @@
-import type { Student } from "@/generated/intania/auth/student/v1/student";
+import type {
+    Student,
+} from "@/generated/intania/auth/student/v1/student";
 import { type OAuth2ConsentRequest } from "@ory/hydra-client";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";

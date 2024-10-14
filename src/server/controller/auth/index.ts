@@ -60,7 +60,15 @@ export async function updateStudent(sid: string, body: Student): Promise<void> {
 }
 
 export async function listStudentMapping(
-    masks?: string[],
+    masks?: (
+        | "departments"
+        | "religions"
+        | "family_statuses"
+        | "family_member_statuses"
+        | "countries"
+        | "provinces"
+        | "districts"
+    )[],
 ): Promise<Response<ListStudentMappingResponse>> {
     const response = await grpc.student.listStudentMapping({
         masks,
