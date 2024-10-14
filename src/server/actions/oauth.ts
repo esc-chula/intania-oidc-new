@@ -3,7 +3,7 @@
 import { hydra } from "@/server/api/hydra";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import { createOAuth2ConsentRequestSession } from "@/lib/utils";
+import { createOAuth2ConsentRequestSession } from "@/lib/oauth2";
 import { loginStudent as cLoginStudent } from "../controller/auth";
 import { me } from "../controller/auth";
 
@@ -77,8 +77,9 @@ export async function handleOAuthAcceptConsent(
     }
 
     const student = meData.student;
+    const publicId = meData.account.publicId;
 
-    if (consentRequest.subject !== meData.account.publicId) {
+    if (consentRequest.subject !== publicId) {
         await hydra
             .rejectOAuth2ConsentRequest({
                 consentChallenge: consentChallenge,
@@ -93,9 +94,10 @@ export async function handleOAuthAcceptConsent(
             });
         return;
     }
-    const { id_token } = createOAuth2ConsentRequestSession(
+    const { id_token } = await createOAuth2ConsentRequestSession(
         consentRequest,
         student,
+        publicId,
     );
 
     await hydra

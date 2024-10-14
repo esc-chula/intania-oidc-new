@@ -4,10 +4,8 @@ import { redirect } from "next/navigation";
 import { hydra } from "@/server/api/hydra";
 import { isRedirectError } from "next/dist/client/components/redirect";
 import ConsentBox from "@/components/oauth2/consent-box";
-import {
-    createOAuth2ConsentRequestSession,
-    getSharedResourcesFromScope,
-} from "@/lib/utils";
+import { getSharedResourcesFromScope } from "@/lib/oauth2";
+import { createOAuth2ConsentRequestSession } from "@/lib/oauth2";
 import { cookies } from "next/headers";
 import { me } from "@/server/controller/auth";
 
@@ -53,13 +51,14 @@ export default async function Page({
         }
 
         const student = meData.student;
+        const publicId = meData.account.publicId;
 
         studentId = student.studentId;
         if (student.firstNameTh && student.familyNameTh) {
             studentName = `${student.firstNameTh} ${student.familyNameTh}`;
         }
 
-        if (consentRequest.subject !== meData.account.publicId) {
+        if (consentRequest.subject !== publicId) {
             await hydra
                 .rejectOAuth2ConsentRequest({
                     consentChallenge: challenge,
@@ -75,9 +74,10 @@ export default async function Page({
         }
 
         if (consentRequest.skip ?? consentRequest.client?.skip_consent) {
-            const { id_token } = createOAuth2ConsentRequestSession(
+            const { id_token } = await createOAuth2ConsentRequestSession(
                 consentRequest,
                 student,
+                publicId,
             );
 
             await hydra
