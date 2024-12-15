@@ -1,15 +1,24 @@
-import { api } from "@/trpc/server";
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
-import type { Student } from "@/types/student";
 import FormComponent from "@/components/register/5-form";
+import { cookies } from "next/headers";
+import { me } from "@/server/controller/auth";
 
 export default async function Page() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+    const sessionId = cookies().get("sid")?.value;
+    if (!sessionId) return redirect("/logout");
 
-    return <FormComponent studentData={me} />;
+    const meResponse = await me(sessionId);
+
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student) {
+        throw new Error("Something went wrong");
+    }
+
+    return <FormComponent studentData={meData.student} />;
 }

@@ -1,16 +1,21 @@
 "use server";
 
-import { api } from "@/trpc/server";
-import { type Student } from "@/types/student";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import {
+    loginStudent as cLoginStudent,
+    updateStudent as cUpdateStudent,
+} from "../controller/auth";
+import { type Student } from "@/generated/intania/auth/student/v1/student";
 
-export async function loginStudent(
-    username: string,
-    password: string,
-): Promise<void> {
-    const res = await api.student.login({ username, password });
+export async function loginStudent(formData: FormData): Promise<void> {
+    const username = formData.get("username")?.toString();
+    const password = formData.get("password")?.toString();
+    if (!username || !password) {
+        throw new Error("No username or password");
+    }
+    const res = await cLoginStudent(username, password);
 
     if (!res.success) {
         if (res.errors.length > 0) {
@@ -23,7 +28,12 @@ export async function loginStudent(
         throw new Error("Invalid username or password");
     }
 
-    const { sid, expiredAt } = res.data;
+    const sid = res.data.session?.id;
+    const expiredAt = res.data.session?.expiresAt;
+
+    if (!sid) {
+        throw new Error("Something went wrong");
+    }
 
     const cookieStore = cookies();
     cookieStore.set("sid", sid, {
@@ -42,9 +52,10 @@ export async function logoutStudent(): Promise<void> {
 }
 
 export async function updateStudent(student: Student): Promise<void> {
-    await api.student.update({
-        ...student,
-    });
+    const cookieStore = cookies();
+    const sid = cookieStore.get("sid")?.value ?? "";
+
+    await cUpdateStudent(sid, student);
 
     revalidatePath("/register/onboarding");
 }

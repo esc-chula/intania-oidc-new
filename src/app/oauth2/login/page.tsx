@@ -4,8 +4,8 @@ import OAuthLoginBox from "@/components/oauth2/login-box";
 import { redirect } from "next/navigation";
 import { hydra } from "@/server/api/hydra";
 import { isRedirectError } from "next/dist/client/components/redirect";
-import { type Student } from "@/types/student";
-import { api } from "@/trpc/server";
+import { cookies } from "next/headers";
+import { me } from "@/server/controller/auth";
 
 export default async function Page({
     searchParams,
@@ -37,16 +37,33 @@ export default async function Page({
                 });
         }
 
-        const student = (await api.student.me().catch(() => undefined)) as
-            | Student
-            | undefined;
+        const sessionId = cookies().get("sid")?.value;
 
-        if (student) {
+        if (sessionId) {
+            const meResponse = await me(sessionId);
+
+            if (!meResponse.success) {
+                const errors = meResponse.errors;
+                throw new Error(errors.join(", "));
+            }
+
+            const meData = meResponse.data;
+
+            if (
+                !meData.student ||
+                !meData.account?.publicId ||
+                !meData.account
+            ) {
+                throw new Error("Something went wrong");
+            }
+
+            const subject = meData.account?.publicId;
+
             await hydra
                 .acceptOAuth2LoginRequest({
                     loginChallenge: challenge,
                     acceptOAuth2LoginRequest: {
-                        subject: student.id.toString(),
+                        subject,
                     },
                 })
                 .then(({ data }) => {
@@ -57,7 +74,7 @@ export default async function Page({
         if (isRedirectError(error)) {
             throw error;
         }
-        console.log(error);
+        console.error(error);
         redirect("/");
     }
 

@@ -33,19 +33,6 @@ export default function LoginBox() {
 
     const [error, setError] = useState<string | null>(null);
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        try {
-            await loginStudent(values.username, values.password);
-            setError(null);
-        } catch (error) {
-            if (error instanceof Error) {
-                setError(error.message);
-            } else {
-                setError("An unknown error occurred");
-            }
-        }
-    }
-
     return (
         <div className="relative flex size-full flex-col gap-16 rounded-2xl p-12 md:aspect-[614/764] md:bg-card md:shadow-md lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
             <div className="flex w-full flex-col justify-between text-center md:text-start">
@@ -67,7 +54,7 @@ export default function LoginBox() {
             </div>
             <Form {...form}>
                 <form
-                    onSubmit={form.handleSubmit(onSubmit)}
+                    action={loginStudent}
                     className="flex w-full flex-col items-center gap-5 lg:place-self-center"
                 >
                     <FormField

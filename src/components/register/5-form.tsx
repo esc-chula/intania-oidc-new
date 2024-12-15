@@ -15,10 +15,10 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
-import type { Student } from "@/types/student";
 import { useStudentForm } from "@/contexts/form-context";
 import Pdpa from "./pdpa";
 import { updateStudent } from "@/server/actions/student";
+import type { Student } from "@/generated/intania/auth/student/v1/student";
 
 const formSchema = z.object({
     pdpa: z.boolean(),

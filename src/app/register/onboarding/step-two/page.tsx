@@ -1,27 +1,41 @@
-import { api } from "@/trpc/server";
-import type { Country, District, Province, Religion } from "@/types/misc";
-import { TRPCError } from "@trpc/server";
 import { redirect } from "next/navigation";
-import type { Student } from "@/types/student";
 import FormComponent from "@/components/register/2-form";
+import { cookies } from "next/headers";
+import { me } from "@/server/controller/auth";
+import { getCachedMapping } from "@/server/data/mapper";
 
 export default async function Page() {
-    const me = (await api.student.me().catch((e) => {
-        if (e instanceof TRPCError && e.code == "UNAUTHORIZED") {
-            redirect("/logout");
-        }
-    })) as Student;
+    const sessionId = cookies().get("sid")?.value;
+    if (!sessionId) return redirect("/logout");
 
-    const miscData = await api.student.getMiscInfo();
+    const meResponse = await me(sessionId);
 
-    const countries = miscData?.countries as Country[];
-    const provinces = miscData?.thaiProvinces as Province[];
-    const districts = miscData?.thaiDistricts as District[];
-    const religions = miscData?.religions as Religion[];
+    if (!meResponse.success) {
+        const errors = meResponse.errors;
+        throw new Error(errors.join(", "));
+    }
+
+    const meData = meResponse.data;
+
+    if (!meData.student) {
+        throw new Error("Something went wrong");
+    }
+
+    const miscData = await getCachedMapping([
+        "countries",
+        "provinces",
+        "districts",
+        "religions",
+    ]);
+
+    const countries = miscData.countries;
+    const provinces = miscData.provinces;
+    const districts = miscData.districts;
+    const religions = miscData.religions;
 
     return (
         <FormComponent
-            studentData={me}
+            studentData={meData.student}
             countries={countries}
             provinces={provinces}
             districts={districts}
