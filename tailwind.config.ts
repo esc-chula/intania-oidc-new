@@ -88,6 +88,9 @@ const config = {
                 "background-gradient-prop":
                     "radial-gradient(50% 50% at 50% 50%, #982C32 0%, rgba(255, 255, 255, 0) 100%)",
             },
+            boxShadow: {
+                "2xl": "0 4px 40px 0px rgba(0, 0, 0, 0.05)",
+            },
         },
     },
     plugins: [require("tailwindcss-animate")],
