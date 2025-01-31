@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -177,355 +178,375 @@ export default function FormComponent({ studentData, departments }: Props) {
     }
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
-            >
-                <FormField
-                    control={form.control}
-                    name="studentId"
-                    render={({ field }) => (
-                        <FormItem className="!pt-0">
-                            <FormLabel>รหัสนิสิต</FormLabel>
-                            <FormControl>
-                                <Input
-                                    placeholder="6x3xxxxx21"
-                                    {...field}
-                                    disabled
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="titleTh"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>คำนำหน้าชื่อ</FormLabel>
-                            <Select
-                                onValueChange={(value) => {
-                                    if (!value) {
-                                        return;
-                                    }
-                                    form.setValue("titleTh", value);
-                                }}
-                                value={field.value}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="เลือกคำนำหน้าชื่อ" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    <SelectItem value="นาย">นาย</SelectItem>
-                                    <SelectItem value="นาง">นาง</SelectItem>
-                                    <SelectItem value="นางสาว">
-                                        นางสาว
-                                    </SelectItem>
-                                    <SelectItem value="เด็กชาย">
-                                        เด็กชาย
-                                    </SelectItem>
-                                    <SelectItem value="เด็กหญิง">
-                                        เด็กหญิง
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                            <FormDescription>
-                                ตามบัตรประจำตัวประชาชน
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <section className="flex flex-col gap-2">
+        <Card className="p-6 md:p-8">
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
+                >
                     <FormField
                         control={form.control}
-                        name="firstNameTh"
+                        name="studentId"
+                        render={({ field }) => (
+                            <FormItem className="!pt-0">
+                                <FormLabel>รหัสนิสิต</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        placeholder="6x3xxxxx21"
+                                        {...field}
+                                        disabled
+                                    />
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="titleTh"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>ชื่อ (TH)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกชื่อภาษาไทย"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="middleNameTh"
-                        render={({ field }) => (
-                            <FormItem className={cn(!field.value && "hidden")}>
-                                <FormLabel>ชื่อกลาง (TH)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกชื่อกลางภาษาไทย"
-                                        type={field.value ? "text" : "hidden"}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="familyNameTh"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>นามสกุล (TH)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกนามสกุลภาษาไทย"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="nicknameTh"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ชื่อเล่น (TH)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกชื่อเล่นภาษาไทย"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </section>
-                <section className="flex flex-col gap-2">
-                    <FormField
-                        control={form.control}
-                        name="firstNameEn"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ชื่อ (EN)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกชื่อภาษาอังกฤษ"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="middleNameEn"
-                        render={({ field }) => (
-                            <FormItem className={cn(!field.value && "hidden")}>
-                                <FormLabel>ชื่อกลาง (EN)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกชื่อกลางภาษาอังกฤษ"
-                                        type={field.value ? "text" : "hidden"}
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="familyNameEn"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>นามสกุล (EN)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกนามสกุลภาษาอังกฤษ"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="nicknameEn"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ชื่อเล่น (EN)</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกชื่อเล่นภาษาอังกฤษ"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </section>
-                <section className="flex flex-col gap-2">
-                    <FormField
-                        control={form.control}
-                        name="preferredPronoun"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>สรรพนามที่ประสงค์ใช้</FormLabel>
+                                <FormLabel>คำนำหน้าชื่อ</FormLabel>
                                 <Select
-                                    value={field.value}
                                     onValueChange={(value) => {
                                         if (!value) {
                                             return;
                                         }
-                                        form.setValue(
-                                            "preferredPronoun",
-                                            value,
-                                        );
+                                        form.setValue("titleTh", value);
                                     }}
+                                    value={field.value}
                                 >
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="เลือกสรรพนาม" />
+                                            <SelectValue placeholder="เลือกคำนำหน้าชื่อ" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="he/him/his">
-                                            he/him/his
+                                        <SelectItem value="นาย">นาย</SelectItem>
+                                        <SelectItem value="นาง">นาง</SelectItem>
+                                        <SelectItem value="นางสาว">
+                                            นางสาว
                                         </SelectItem>
-                                        <SelectItem value="she/her/hers">
-                                            she/her/hers
+                                        <SelectItem value="เด็กชาย">
+                                            เด็กชาย
                                         </SelectItem>
-                                        <SelectItem value="they/them/their">
-                                            they/them/their
-                                        </SelectItem>
-                                        {/* TODO: Input */}
-                                        <SelectItem value="other">
-                                            อื่น ๆ
+                                        <SelectItem value="เด็กหญิง">
+                                            เด็กหญิง
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </section>
-                <section className="flex flex-col gap-2">
-                    <FormField
-                        control={form.control}
-                        name="birthDate"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-col">
-                                <FormLabel>วันเกิด</FormLabel>
-                                <Popover>
-                                    <PopoverTrigger asChild>
-                                        <FormControl>
-                                            <Button
-                                                className={cn(
-                                                    "text-left font-normal",
-                                                    !field.value &&
-                                                        "text-muted-foreground",
-                                                )}
-                                                variant="outline"
-                                            >
-                                                {field.value ? (
-                                                    format(
-                                                        field.value,
-                                                        "dd/MM/yyyy",
-                                                    )
-                                                ) : (
-                                                    <span>เลือกวันเกิด</span>
-                                                )}
-                                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                                            </Button>
-                                        </FormControl>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                        align="start"
-                                        className="w-auto p-2"
-                                    >
-                                        <CalendarComponent
-                                            initialFocus
-                                            mode="single"
-                                            selected={selectedBirthDate}
-                                            onDayClick={setSelectedBirthDate}
-                                            translate="th"
-                                            locale={th}
-                                        />
-                                    </PopoverContent>
-                                </Popover>
                                 <FormDescription>
-                                    ปีคริสต์ศักราช
+                                    ตามบัตรประจำตัวประชาชน
                                 </FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                </section>
-                <FormField
-                    control={form.control}
-                    name="departmentId"
-                    render={({ field }) => {
-                        return (
-                            <FormItem>
-                                <FormLabel>ภาควิชา</FormLabel>
-                                <Select
-                                    value={
-                                        departments.find(
-                                            (department) =>
-                                                department.id === field.value,
-                                        )?.nameTh
-                                    }
-                                    onValueChange={(value) => {
-                                        const selectedDepartment =
+                    <section className="flex flex-col gap-2">
+                        <FormField
+                            control={form.control}
+                            name="firstNameTh"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>ชื่อ (TH)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกชื่อภาษาไทย"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="middleNameTh"
+                            render={({ field }) => (
+                                <FormItem
+                                    className={cn(!field.value && "hidden")}
+                                >
+                                    <FormLabel>ชื่อกลาง (TH)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกชื่อกลางภาษาไทย"
+                                            type={
+                                                field.value ? "text" : "hidden"
+                                            }
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="familyNameTh"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>นามสกุล (TH)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกนามสกุลภาษาไทย"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="nicknameTh"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>ชื่อเล่น (TH)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกชื่อเล่นภาษาไทย"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </section>
+                    <section className="flex flex-col gap-2">
+                        <FormField
+                            control={form.control}
+                            name="firstNameEn"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>ชื่อ (EN)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกชื่อภาษาอังกฤษ"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="middleNameEn"
+                            render={({ field }) => (
+                                <FormItem
+                                    className={cn(!field.value && "hidden")}
+                                >
+                                    <FormLabel>ชื่อกลาง (EN)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกชื่อกลางภาษาอังกฤษ"
+                                            type={
+                                                field.value ? "text" : "hidden"
+                                            }
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="familyNameEn"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>นามสกุล (EN)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกนามสกุลภาษาอังกฤษ"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="nicknameEn"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>ชื่อเล่น (EN)</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกชื่อเล่นภาษาอังกฤษ"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </section>
+                    <section className="flex flex-col gap-2">
+                        <FormField
+                            control={form.control}
+                            name="preferredPronoun"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>สรรพนามที่ประสงค์ใช้</FormLabel>
+                                    <Select
+                                        value={field.value}
+                                        onValueChange={(value) => {
+                                            if (!value) {
+                                                return;
+                                            }
+                                            form.setValue(
+                                                "preferredPronoun",
+                                                value,
+                                            );
+                                        }}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="เลือกสรรพนาม" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="he/him/his">
+                                                he/him/his
+                                            </SelectItem>
+                                            <SelectItem value="she/her/hers">
+                                                she/her/hers
+                                            </SelectItem>
+                                            <SelectItem value="they/them/their">
+                                                they/them/their
+                                            </SelectItem>
+                                            {/* TODO: Input */}
+                                            <SelectItem value="other">
+                                                อื่น ๆ
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </section>
+                    <section className="flex flex-col gap-2">
+                        <FormField
+                            control={form.control}
+                            name="birthDate"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-col">
+                                    <FormLabel>วันเกิด</FormLabel>
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <FormControl>
+                                                <Button
+                                                    className={cn(
+                                                        "text-left font-normal",
+                                                        !field.value &&
+                                                            "text-muted-foreground",
+                                                    )}
+                                                    variant="outline"
+                                                >
+                                                    {field.value ? (
+                                                        format(
+                                                            field.value,
+                                                            "dd/MM/yyyy",
+                                                        )
+                                                    ) : (
+                                                        <span>
+                                                            เลือกวันเกิด
+                                                        </span>
+                                                    )}
+                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                </Button>
+                                            </FormControl>
+                                        </PopoverTrigger>
+                                        <PopoverContent
+                                            align="start"
+                                            className="w-auto p-2"
+                                        >
+                                            <CalendarComponent
+                                                initialFocus
+                                                mode="single"
+                                                selected={selectedBirthDate}
+                                                onDayClick={
+                                                    setSelectedBirthDate
+                                                }
+                                                translate="th"
+                                                locale={th}
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    <FormDescription>
+                                        ปีคริสต์ศักราช
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </section>
+                    <FormField
+                        control={form.control}
+                        name="departmentId"
+                        render={({ field }) => {
+                            return (
+                                <FormItem>
+                                    <FormLabel>ภาควิชา</FormLabel>
+                                    <Select
+                                        value={
                                             departments.find(
                                                 (department) =>
-                                                    department.nameTh === value,
+                                                    department.id ===
+                                                    field.value,
+                                            )?.nameTh
+                                        }
+                                        onValueChange={(value) => {
+                                            const selectedDepartment =
+                                                departments.find(
+                                                    (department) =>
+                                                        department.nameTh ===
+                                                        value,
+                                                );
+                                            if (!selectedDepartment) return;
+                                            field.onChange(
+                                                selectedDepartment.id,
                                             );
-                                        if (!selectedDepartment) return;
-                                        field.onChange(selectedDepartment.id);
-                                    }}
-                                >
-                                    <FormControl>
-                                        <SelectTrigger>
-                                            <SelectValue placeholder="เลือกภาควิชา" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {departments.map((department) => (
-                                            <SelectItem
-                                                key={department.id}
-                                                value={department.nameTh ?? ""}
-                                            >
-                                                {department.nameTh}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        );
-                    }}
-                />
+                                        }}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="เลือกภาควิชา" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {departments.map((department) => (
+                                                <SelectItem
+                                                    key={department.id}
+                                                    value={
+                                                        department.nameTh ?? ""
+                                                    }
+                                                >
+                                                    {department.nameTh}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            );
+                        }}
+                    />
 
-                <Button
-                    type="submit"
-                    className="self-end"
-                    size="lg"
-                    disabled={loading}
-                >
-                    ถัดไป
-                </Button>
-            </form>
-        </Form>
+                    <Button
+                        type="submit"
+                        className="self-end"
+                        size="lg"
+                        disabled={loading}
+                    >
+                        ถัดไป
+                    </Button>
+                </form>
+            </Form>
+        </Card>
     );
 }

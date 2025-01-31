@@ -92,7 +92,10 @@ export default function OAuthLoginBox() {
                                     รหัสนิสิต
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="" {...field} />
+                                    <Input
+                                        placeholder="กรอกรหัสนิสิต"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage className="text-xs" />
                             </FormItem>
@@ -108,7 +111,7 @@ export default function OAuthLoginBox() {
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder=""
+                                        placeholder="กรอกรหัสผ่าน"
                                         {...field}
                                         type="password"
                                     />

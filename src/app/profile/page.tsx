@@ -22,9 +22,8 @@ export default async function Page() {
 
     return (
         <div className="flex size-full flex-col items-center">
-            <div className="relative flex size-full min-h-dvh flex-col gap-16 p-12">
+            <div className="relative flex size-full min-h-dvh flex-col gap-8 p-6 sm:p-8 md:p-12">
                 <Header studentData={meData.student} />
-                <div></div>
             </div>
         </div>
     );

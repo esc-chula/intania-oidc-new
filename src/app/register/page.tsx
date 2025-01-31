@@ -30,24 +30,24 @@ export default async function Page() {
 
     return (
         <div className="flex size-full flex-col items-center">
-            <div className="relative flex size-full min-h-dvh flex-col justify-between gap-16 rounded-2xl p-12">
+            <div className="relative flex size-full min-h-dvh flex-col justify-between gap-16 rounded-2xl p-6 sm:p-8 md:p-12">
                 <div className="flex w-full flex-col items-center gap-10 text-center">
                     <ESCLogoWithoutText className="h-14 w-fit fill-primary md:h-16" />
                     <div className="flex flex-col gap-2">
-                        <h2 className="text-2xl font-semibold md:text-3xl">
+                        <h2 className="text-xl font-semibold sm:text-2xl md:text-3xl">
                             เข้าสู่ระบบ
                         </h2>
-                        <h1 className="text-5xl font-bold text-primary md:text-6xl">
+                        <h1 className="text-4xl font-bold text-primary sm:text-5xl md:text-6xl">
                             ลงทะเบียนนิสิตใหม่
                         </h1>
-                        <p className="flex flex-wrap items-center justify-center gap-2 text-center font-medium md:text-xl">
+                        <p className="flex flex-wrap items-center justify-center gap-2 text-center text-sm font-medium sm:text-base md:text-xl">
                             แบบฟอร์มลงทะเบียนนิสิตใหม่
                             {sid && <Year sid={sid} />}
                         </p>
                     </div>
                 </div>
                 <div>
-                    <Card>
+                    <Card className="mx-auto max-w-screen-sm">
                         <CardContent className="pt-6 text-center text-muted-foreground">
                             ข้อมูลที่กรอกนับจากนี้จะถูกนำไปใช้ตลอดการมีสถานะเป็นนิสิตคณะวิศวะฯจุฬาฯ
                             โปรดตรวจสอบและยืนยัน

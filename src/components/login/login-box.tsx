@@ -54,7 +54,11 @@ export default function LoginBox() {
             </div>
             <Form {...form}>
                 <form
-                    action={loginStudent}
+                    action={(formData) =>
+                        loginStudent(formData).catch((err: Error) => {
+                            setError(err.message);
+                        })
+                    }
                     className="flex w-full flex-col items-center gap-5 lg:place-self-center"
                 >
                     <FormField
@@ -66,7 +70,10 @@ export default function LoginBox() {
                                     รหัสนิสิต
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="" {...field} />
+                                    <Input
+                                        placeholder="กรอกรหัสนิสิต"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage className="text-xs" />
                             </FormItem>
@@ -82,7 +89,7 @@ export default function LoginBox() {
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder=""
+                                        placeholder="กรอกรหัสผ่าน"
                                         {...field}
                                         type="password"
                                     />

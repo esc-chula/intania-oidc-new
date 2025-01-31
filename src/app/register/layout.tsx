@@ -5,5 +5,5 @@ export const metadata = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-    return <section className="mx-auto max-w-screen-sm">{children}</section>;
+    return children;
 }

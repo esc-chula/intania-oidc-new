@@ -1,5 +1,6 @@
 "use client";
 
+import { Card } from "@/components/ui/card";
 import {
     Form,
     FormControl,
@@ -90,162 +91,172 @@ export default function FormComponent({ studentData }: Props) {
     ];
 
     return (
-        <Form {...form}>
-            <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
-            >
-                <FormField
-                    control={form.control}
-                    name="shirtSize"
-                    render={({ field }) => (
-                        <FormItem className="!pt-0">
-                            <FormLabel>ไซส์เสื้อ</FormLabel>
-                            <Select
-                                value={
-                                    field.value ? field.value.toString() : ""
-                                }
-                                onValueChange={(value) => {
-                                    if (!value) return;
-                                    field.onChange(parseInt(value));
-                                }}
-                            >
-                                <FormControl>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="เลือกไซส์เสื้อ" />
-                                    </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                    {shirtSizes.map((size) => (
-                                        <SelectItem
-                                            key={size.value}
-                                            value={size.value.toString()}
-                                        >
-                                            {size.label}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <section className="flex flex-col gap-2">
+        <Card className="p-6 md:p-8">
+            <Form {...form}>
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="flex flex-col divide-y divide-muted-foreground [&>div]:py-12 [&>section]:py-12"
+                >
                     <FormField
                         control={form.control}
-                        name="bloodType"
+                        name="shirtSize"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>กลุ่มเลือด</FormLabel>
+                            <FormItem className="!pt-0">
+                                <FormLabel>ไซส์เสื้อ</FormLabel>
                                 <Select
-                                    value={field.value}
+                                    value={
+                                        field.value
+                                            ? field.value.toString()
+                                            : ""
+                                    }
                                     onValueChange={(value) => {
                                         if (!value) return;
-                                        field.onChange(value);
+                                        field.onChange(parseInt(value));
                                     }}
                                 >
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="เลือกกลุ่มเลือด" />
+                                            <SelectValue placeholder="เลือกไซส์เสื้อ" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="A">A</SelectItem>
-                                        <SelectItem value="B">B</SelectItem>
-                                        <SelectItem value="O">O</SelectItem>
-                                        <SelectItem value="AB">AB</SelectItem>
+                                        {shirtSizes.map((size) => (
+                                            <SelectItem
+                                                key={size.value}
+                                                value={size.value.toString()}
+                                            >
+                                                {size.label}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <FormField
-                        control={form.control}
-                        name="foodLimitations"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>อาหารที่แพ้</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกอาหารที่แพ้"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย ,
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="drugAllergies"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ยาที่แพ้</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกยาที่แพ้"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย ,
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="medicalConditions"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>โรคประจำตัว</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกโรคประจำตัว"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย ,
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                    <FormField
-                        control={form.control}
-                        name="medications"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>ยาประจำตัว</FormLabel>
-                                <FormControl>
-                                    <Input
-                                        placeholder="กรอกยาประจำตัว"
-                                        {...field}
-                                    />
-                                </FormControl>
-                                <FormDescription>
-                                    หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย ,
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-                </section>
-                <Button
-                    type="submit"
-                    className="self-end"
-                    size="lg"
-                    disabled={loading}
-                >
-                    ถัดไป
-                </Button>
-            </form>
-        </Form>
+                    <section className="flex flex-col gap-2">
+                        <FormField
+                            control={form.control}
+                            name="bloodType"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>กลุ่มเลือด</FormLabel>
+                                    <Select
+                                        value={field.value}
+                                        onValueChange={(value) => {
+                                            if (!value) return;
+                                            field.onChange(value);
+                                        }}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger>
+                                                <SelectValue placeholder="เลือกกลุ่มเลือด" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="A">A</SelectItem>
+                                            <SelectItem value="B">B</SelectItem>
+                                            <SelectItem value="O">O</SelectItem>
+                                            <SelectItem value="AB">
+                                                AB
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="foodLimitations"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>อาหารที่แพ้</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกอาหารที่แพ้"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย
+                                        ,
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="drugAllergies"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>ยาที่แพ้</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกยาที่แพ้"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย
+                                        ,
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="medicalConditions"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>โรคประจำตัว</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกโรคประจำตัว"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย
+                                        ,
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="medications"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>ยาประจำตัว</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกยาประจำตัว"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        หากมีหลายรายการ กรุณาคั่นด้วยเครื่องหมาย
+                                        ,
+                                    </FormDescription>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </section>
+                    <Button
+                        type="submit"
+                        className="self-end"
+                        size="lg"
+                        disabled={loading}
+                    >
+                        ถัดไป
+                    </Button>
+                </form>
+            </Form>
+        </Card>
     );
 }
