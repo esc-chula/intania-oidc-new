@@ -4,7 +4,7 @@ import Background from "@/components/common/background";
 import ProfileContextProvider from "@/contexts/profile-context";
 
 export const metadata: Metadata = {
-    title: "Profile",
+    title: "โปรไฟล์ - Intania Accounts",
 };
 
 const Layout: React.FC<Readonly<{ children: React.ReactNode }>> = ({
