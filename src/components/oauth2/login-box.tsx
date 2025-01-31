@@ -60,7 +60,7 @@ export default function OAuthLoginBox() {
     }
 
     return (
-        <div className="relative flex size-full flex-col gap-16 rounded-2xl p-12 md:aspect-[614/764] md:bg-card md:shadow-md lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
+        <div className="relative flex size-full flex-col gap-16 rounded-2xl border-[#F5F5F5] p-12 md:aspect-[614/764] md:border-2 md:bg-card md:shadow-2xl lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
             <div className="flex w-full flex-col justify-between text-center md:text-start">
                 <div className="flex flex-col items-center gap-10 md:items-start">
                     <ESCLogoWithoutText className="h-14 w-fit fill-primary md:h-16" />
