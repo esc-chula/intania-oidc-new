@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ studentData }) => {
                             >
                                 แก้ไขข้อมูล
                             </Button> */}
-                            <Link href="/register/onboarding/step-one">
+                            <Link href="/register/onboarding/1">
                                 <Button variant="secondary">แก้ไขข้อมูล</Button>
                             </Link>
                             <Link href="/logout">

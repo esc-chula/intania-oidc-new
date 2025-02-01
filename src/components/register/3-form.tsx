@@ -43,7 +43,7 @@ type Props = {
     studentData: Student;
 };
 
-export default function FormComponent({ studentData }: Props) {
+export default function FormComponent3({ studentData }: Props) {
     // STEP
     const { setStep } = useStudentForm();
     useEffect(() => {
@@ -76,7 +76,7 @@ export default function FormComponent({ studentData }: Props) {
             ...values,
         });
 
-        router.push("/register/onboarding/step-four");
+        router.push("/register/onboarding/4");
     }
 
     // HANDLERS

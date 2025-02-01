@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import FormComponent from "@/components/register/2-form";
+import FormComponent2 from "@/components/register/2-form";
 import { cookies } from "next/headers";
 import { me } from "@/server/controller/auth";
 import { getCachedMapping } from "@/server/data/mapper";
@@ -34,7 +34,7 @@ export default async function Page() {
     const religions = miscData.religions;
 
     return (
-        <FormComponent
+        <FormComponent2
             studentData={meData.student}
             countries={countries}
             provinces={provinces}

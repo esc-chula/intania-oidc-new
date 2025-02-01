@@ -60,11 +60,7 @@ export default async function Page() {
                                 asChild
                             >
                                 <Link
-                                    href={
-                                        sid
-                                            ? "/register/onboarding/step-one"
-                                            : "/"
-                                    }
+                                    href={sid ? "/register/onboarding/1" : "/"}
                                 >
                                     เริ่มต้น
                                 </Link>

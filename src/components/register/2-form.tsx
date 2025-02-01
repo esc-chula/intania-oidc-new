@@ -71,7 +71,7 @@ type Props = {
     religions: Religion[];
 };
 
-export default function FormComponent({
+export default function FormComponent2({
     studentData,
     countries,
     provinces,
@@ -266,7 +266,7 @@ export default function FormComponent({
 
         await updateStudent(body);
 
-        router.push("/register/onboarding/step-three");
+        router.push("/register/onboarding/3");
     }
 
     return (

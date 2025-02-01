@@ -75,7 +75,7 @@ type Props = {
     familyMemberStatuses: FamilyMemberStatus[];
 };
 
-export default function FormComponent({
+export default function FormComponent4({
     studentData,
     familyStatuses,
     familyMemberStatuses,
@@ -195,7 +195,7 @@ export default function FormComponent({
 
         await updateStudent(body);
 
-        router.push("/register/onboarding/step-five");
+        router.push("/register/onboarding/5");
     }
 
     return (

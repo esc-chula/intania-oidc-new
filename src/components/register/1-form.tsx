@@ -65,7 +65,7 @@ interface Props {
     departments: Department[];
 }
 
-export default function FormComponent({ studentData, departments }: Props) {
+export default function FormComponent1({ studentData, departments }: Props) {
     // STEP
     const { setStep } = useStudentForm();
     useEffect(() => {
@@ -178,7 +178,7 @@ export default function FormComponent({ studentData, departments }: Props) {
             },
             ...values,
         });
-        router.push("/register/onboarding/step-two");
+        router.push("/register/onboarding/2");
     }
 
     return (
