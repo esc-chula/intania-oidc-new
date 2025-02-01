@@ -22,7 +22,9 @@ import { updateStudent } from "@/server/actions/student";
 import type { Student } from "@/generated/intania/auth/student/v1/student";
 
 const formSchema = z.object({
-    pdpa: z.boolean(),
+    pdpa: z.boolean().refine((value) => value, {
+        message: "กรุณายอมรับนโยบายการจัดการข้อมูลส่วนบุคคล",
+    }),
     cueaDataTransferAgreement: z.boolean().optional(),
 });
 

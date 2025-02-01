@@ -102,7 +102,10 @@ export default function FormComponent({ studentData }: Props) {
                         name="shirtSize"
                         render={({ field }) => (
                             <FormItem className="!pt-0">
-                                <FormLabel>ไซส์เสื้อ</FormLabel>
+                                <FormLabel>
+                                    ไซส์เสื้อ
+                                    <span className="text-red-500">*</span>
+                                </FormLabel>
                                 <Select
                                     value={
                                         field.value
@@ -140,7 +143,10 @@ export default function FormComponent({ studentData }: Props) {
                             name="bloodType"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>กลุ่มเลือด</FormLabel>
+                                    <FormLabel>
+                                        กลุ่มเลือด
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={field.value}
                                         onValueChange={(value) => {

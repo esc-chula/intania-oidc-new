@@ -60,7 +60,7 @@ const formSchema = z.object({
     familyStatusId: z.number(),
 
     parent: z.enum(["Father", "Mother", "Other"]),
-    parentPhoneNumber: z.string().regex(/^\d{3}-\d{3}-\d{4}$/),
+    parentPhoneNumber: z.string().regex(/^\d{2,3}-\d{3,4}-\d{3,4}$/),
     parentAddress: z.string().max(400).optional(),
 
     siblingTotal: z.number(),
@@ -211,7 +211,10 @@ export default function FormComponent({
                             name="fatherName"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ชื่อจริง-นามสกุล บิดา</FormLabel>
+                                    <FormLabel>
+                                        ชื่อจริง-นามสกุล บิดา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกชื่อจริง-นามสกุล บิดา"
@@ -227,7 +230,10 @@ export default function FormComponent({
                             name="fatherBirthYear"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col pt-2">
-                                    <FormLabel>ปีเกิดบิดา</FormLabel>
+                                    <FormLabel>
+                                        ปีเกิดบิดา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -301,7 +307,10 @@ export default function FormComponent({
                             name="fatherStatusId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>สถานะบิดา</FormLabel>
+                                    <FormLabel>
+                                        สถานะบิดา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             field.value
@@ -346,6 +355,7 @@ export default function FormComponent({
                                 <FormItem>
                                     <FormLabel>
                                         ชื่อจริง-นามสกุล มารดา
+                                        <span className="text-red-500">*</span>
                                     </FormLabel>
                                     <FormControl>
                                         <Input
@@ -362,7 +372,10 @@ export default function FormComponent({
                             name="motherBirthYear"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col pt-2">
-                                    <FormLabel>ปีเกิดมารดา</FormLabel>
+                                    <FormLabel>
+                                        ปีเกิดมารดา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -436,7 +449,10 @@ export default function FormComponent({
                             name="motherStatusId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>สถานะมารดา</FormLabel>
+                                    <FormLabel>
+                                        สถานะมารดา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             field.value
@@ -479,7 +495,10 @@ export default function FormComponent({
                             name="familyStatusId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>สถานะครอบครัว</FormLabel>
+                                    <FormLabel>
+                                        สถานะครอบครัว
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             field.value
@@ -519,7 +538,12 @@ export default function FormComponent({
                             render={({ field }) => {
                                 return (
                                     <FormItem>
-                                        <FormLabel>จำนวนพี่น้อง</FormLabel>
+                                        <FormLabel>
+                                            จำนวนพี่น้อง
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="กรอกจำนวนพี่น้อง"
@@ -554,7 +578,10 @@ export default function FormComponent({
                             name="siblingOrder"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ลำดับพี่น้อง</FormLabel>
+                                    <FormLabel>
+                                        ลำดับพี่น้อง
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกลำดับพี่น้อง"
@@ -584,12 +611,18 @@ export default function FormComponent({
                         />
                     </section>
                     <section className="flex flex-col gap-2">
+                        <h3 className="font-bold text-neutral-700">
+                            ข้อมูลติดต่อฉุกเฉิน
+                        </h3>
                         <FormField
                             control={form.control}
                             name="parent"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ผู้ปกครอง</FormLabel>
+                                    <FormLabel>
+                                        ผู้ปกครอง
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             field.value
@@ -634,6 +667,7 @@ export default function FormComponent({
                                 <FormItem>
                                     <FormLabel>
                                         เบอร์โทรศัพท์ผู้ปกครอง
+                                        <span className="text-red-500">*</span>
                                     </FormLabel>
                                     <FormControl>
                                         <Input

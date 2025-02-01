@@ -46,15 +46,13 @@ const formSchema = z.object({
     studentId: z.string().max(32),
     titleTh: z.string().max(30),
     firstNameTh: z.string().min(1).max(90),
-    // TODO
     middleNameTh: z.string().max(90).optional(),
     familyNameTh: z.string().min(1).max(90),
-    nicknameTh: z.string().max(50),
+    nicknameTh: z.string().max(50).optional(),
     firstNameEn: z.string().min(1).max(90),
-    // TODO
     middleNameEn: z.string().max(90).optional(),
     familyNameEn: z.string().min(1).max(90),
-    nicknameEn: z.string().min(1).max(50),
+    nicknameEn: z.string().max(50).optional(),
     preferredPronoun: z.string().max(50),
     birthDate: z.date(),
     departmentId: z.number(),
@@ -98,6 +96,9 @@ export default function FormComponent({ studentData, departments }: Props) {
             firstNameTh: {
                 formBinding: {},
             },
+            middleNameTh: {
+                formBinding: {},
+            },
             familyNameTh: {
                 formBinding: {},
             },
@@ -105,6 +106,9 @@ export default function FormComponent({ studentData, departments }: Props) {
                 formBinding: {},
             },
             firstNameEn: {
+                formBinding: {},
+            },
+            middleNameEn: {
                 formBinding: {},
             },
             familyNameEn: {
@@ -189,7 +193,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                         name="studentId"
                         render={({ field }) => (
                             <FormItem className="!pt-0">
-                                <FormLabel>รหัสนิสิต</FormLabel>
+                                <FormLabel>
+                                    รหัสนิสิต
+                                    <span className="text-red-500">*</span>
+                                </FormLabel>
                                 <FormControl>
                                     <Input
                                         placeholder="6x3xxxxx21"
@@ -206,7 +213,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                         name="titleTh"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>คำนำหน้าชื่อ</FormLabel>
+                                <FormLabel>
+                                    คำนำหน้าชื่อ
+                                    <span className="text-red-500">*</span>
+                                </FormLabel>
                                 <Select
                                     onValueChange={(value) => {
                                         if (!value) {
@@ -248,7 +258,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                             name="firstNameTh"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ชื่อ (TH)</FormLabel>
+                                    <FormLabel>
+                                        ชื่อ (TH)
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกชื่อภาษาไทย"
@@ -263,16 +276,11 @@ export default function FormComponent({ studentData, departments }: Props) {
                             control={form.control}
                             name="middleNameTh"
                             render={({ field }) => (
-                                <FormItem
-                                    className={cn(!field.value && "hidden")}
-                                >
+                                <FormItem>
                                     <FormLabel>ชื่อกลาง (TH)</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกชื่อกลางภาษาไทย"
-                                            type={
-                                                field.value ? "text" : "hidden"
-                                            }
                                             {...field}
                                         />
                                     </FormControl>
@@ -285,7 +293,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                             name="familyNameTh"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>นามสกุล (TH)</FormLabel>
+                                    <FormLabel>
+                                        นามสกุล (TH)
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกนามสกุลภาษาไทย"
@@ -319,7 +330,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                             name="firstNameEn"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ชื่อ (EN)</FormLabel>
+                                    <FormLabel>
+                                        ชื่อ (EN)
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกชื่อภาษาอังกฤษ"
@@ -334,16 +348,11 @@ export default function FormComponent({ studentData, departments }: Props) {
                             control={form.control}
                             name="middleNameEn"
                             render={({ field }) => (
-                                <FormItem
-                                    className={cn(!field.value && "hidden")}
-                                >
+                                <FormItem>
                                     <FormLabel>ชื่อกลาง (EN)</FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกชื่อกลางภาษาอังกฤษ"
-                                            type={
-                                                field.value ? "text" : "hidden"
-                                            }
                                             {...field}
                                         />
                                     </FormControl>
@@ -356,7 +365,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                             name="familyNameEn"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>นามสกุล (EN)</FormLabel>
+                                    <FormLabel>
+                                        นามสกุล (EN)
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกนามสกุลภาษาอังกฤษ"
@@ -390,7 +402,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                             name="preferredPronoun"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>สรรพนามที่ประสงค์ใช้</FormLabel>
+                                    <FormLabel>
+                                        สรรพนามที่ประสงค์ใช้
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={field.value}
                                         onValueChange={(value) => {
@@ -435,7 +450,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                             name="birthDate"
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>วันเกิด</FormLabel>
+                                    <FormLabel>
+                                        วันเกิด
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -491,7 +509,10 @@ export default function FormComponent({ studentData, departments }: Props) {
                         render={({ field }) => {
                             return (
                                 <FormItem>
-                                    <FormLabel>ภาควิชา</FormLabel>
+                                    <FormLabel>
+                                        ภาควิชา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             departments.find(

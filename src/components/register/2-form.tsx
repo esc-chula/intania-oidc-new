@@ -37,30 +37,28 @@ import { z } from "zod";
 import { type BindingMapping } from "@/types/helper";
 
 const formSchema = z.object({
-    nationalId: z.string().length(13).optional(),
-    lineId: z.string().max(30).optional(),
-    facebook: z.string().max(60).optional(),
+    nationalityId: z.number(),
+    nationalId: z.string().length(13),
+    religionId: z.number(),
     email: z.string().email().max(60),
     phoneNumber: z
         .string()
-        .regex(/^\d{3}-\d{3}-\d{4}$/)
+        .regex(/^\d{2,3}-\d{3,4}-\d{3,4}$/)
         .max(16),
-    nationalityId: z.number(),
-    religionId: z.number(),
-    // TODO: add this
-    // currentAddressNumber: z.string().max(60).optional(),
-    currentAddressProvinceId: z.number(),
-    currentAddressDistrictId: z.number(),
-    currentAddressOther: z.string().max(400),
+    lineId: z.string().max(30).optional(),
+    facebook: z.string().max(60).optional(),
     currentAddressLatitude: z.number(),
     currentAddressLongitude: z.number(),
-    // TODO: add this
-    // hometownAddressNumber: z.string().max(60).optional(),
+    currentAddressProvinceId: z.number(),
+    currentAddressDistrictId: z.number(),
+    currentAddressNumber: z.string().min(1).max(60),
+    currentAddressOther: z.string().min(1).max(400),
+    hometownAddressLongitude: z.number().optional(),
+    hometownAddressLatitude: z.number().optional(),
     hometownAddressProvinceId: z.number().optional(),
     hometownAddressDistrictId: z.number().optional(),
+    hometownAddressNumber: z.string().max(60).optional(),
     hometownAddressOther: z.string().max(400).optional(),
-    hometownAddressLatitude: z.number().optional(),
-    hometownAddressLongitude: z.number().optional(),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -113,6 +111,42 @@ export default function FormComponent({
 
     const bindingMap: BindingMapping<Student, FormSchema> = useMemo(
         () => ({
+            nationality: {
+                stateBinding: setSelectedCountry,
+                formBinding: {
+                    formKey: "nationalityId",
+                },
+                objectKey: ["id"],
+            },
+            nationalId: {
+                formBinding: {},
+            },
+            religion: {
+                formBinding: {
+                    formKey: "religionId",
+                },
+                objectKey: ["id"],
+            },
+            email: {
+                formBinding: {},
+            },
+            phoneNumber: {
+                formBinding: {},
+            },
+            facebook: {
+                formBinding: {},
+            },
+            lineId: {
+                formBinding: {},
+            },
+            currentAddressLatitude: {
+                stateBinding: setSelectedCurrentLocationLat,
+                formBinding: {},
+            },
+            currentAddressLongitude: {
+                stateBinding: setSelectedCurrentLocationLng,
+                formBinding: {},
+            },
             currentAddressProvince: {
                 formBinding: {
                     formKey: "currentAddressProvinceId",
@@ -126,15 +160,18 @@ export default function FormComponent({
                 },
                 objectKey: ["id"],
             },
+            currentAddressNumber: {
+                formBinding: {},
+            },
             currentAddressOther: {
                 formBinding: {},
             },
-            currentAddressLatitude: {
-                stateBinding: setSelectedCurrentLocationLat,
+            hometownAddressLatitude: {
+                stateBinding: setSelectedHomeLocationLat,
                 formBinding: {},
             },
-            currentAddressLongitude: {
-                stateBinding: setSelectedCurrentLocationLng,
+            hometownAddressLongitude: {
+                stateBinding: setSelectedHomeLocationLng,
                 formBinding: {},
             },
             hometownAddressProvince: {
@@ -150,44 +187,11 @@ export default function FormComponent({
                 },
                 objectKey: ["id"],
             },
+            hometownAddressNumber: {
+                formBinding: {},
+            },
             hometownAddressOther: {
                 formBinding: {},
-            },
-            hometownAddressLatitude: {
-                stateBinding: setSelectedHomeLocationLat,
-                formBinding: {},
-            },
-            hometownAddressLongitude: {
-                stateBinding: setSelectedHomeLocationLng,
-                formBinding: {},
-            },
-            nationality: {
-                stateBinding: setSelectedCountry,
-                formBinding: {
-                    formKey: "nationalityId",
-                },
-                objectKey: ["id"],
-            },
-            nationalId: {
-                formBinding: {},
-            },
-            email: {
-                formBinding: {},
-            },
-            phoneNumber: {
-                formBinding: {},
-            },
-            facebook: {
-                formBinding: {},
-            },
-            lineId: {
-                formBinding: {},
-            },
-            religion: {
-                formBinding: {
-                    formKey: "religionId",
-                },
-                objectKey: ["id"],
             },
         }),
         [],
@@ -278,7 +282,10 @@ export default function FormComponent({
                             name="nationalityId"
                             render={({ field }) => (
                                 <FormItem className="!pt-0">
-                                    <FormLabel>เชื้อชาติ</FormLabel>
+                                    <FormLabel>
+                                        เชื้อชาติ
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             countries.find(
@@ -358,7 +365,12 @@ export default function FormComponent({
                                 name="nationalId"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>รหัสบัตรประชาชน</FormLabel>
+                                        <FormLabel>
+                                            รหัสบัตรประชาชน
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="กรอกรหัสบัตรประชาชน"
@@ -379,7 +391,10 @@ export default function FormComponent({
                             name="religionId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ศาสนา</FormLabel>
+                                    <FormLabel>
+                                        ศาสนา
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             religions.find(
@@ -432,7 +447,10 @@ export default function FormComponent({
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>อีเมลส่วนตัว</FormLabel>
+                                    <FormLabel>
+                                        อีเมลส่วนตัว
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกอีเมลส่วนตัว"
@@ -448,7 +466,10 @@ export default function FormComponent({
                             name="phoneNumber"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>เบอร์โทรศัพท์ส่วนตัว</FormLabel>
+                                    <FormLabel>
+                                        เบอร์โทรศัพท์ส่วนตัว
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกเบอร์โทรศัพท์ส่วนตัว"
@@ -547,6 +568,7 @@ export default function FormComponent({
                                 <FormItem className="!pt-0">
                                     <FormLabel>
                                         จังหวัดที่อยู่ปัจจุบัน
+                                        <span className="text-red-500">*</span>
                                     </FormLabel>
                                     <Select
                                         value={
@@ -606,7 +628,10 @@ export default function FormComponent({
                             name="currentAddressDistrictId"
                             render={({ field }) => (
                                 <FormItem className="!pt-0">
-                                    <FormLabel>เขตที่อยู่ปัจจุบัน</FormLabel>
+                                    <FormLabel>
+                                        เขตที่อยู่ปัจจุบัน
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <Select
                                         value={
                                             field.value
@@ -671,10 +696,33 @@ export default function FormComponent({
 
                         <FormField
                             control={form.control}
+                            name="currentAddressNumber"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>
+                                        เลขที่
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            placeholder="กรอกเลขที่"
+                                            {...field}
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
                             name="currentAddressOther"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ที่อยู่ปัจจุบัน</FormLabel>
+                                    <FormLabel>
+                                        ที่อยู่ปัจจุบัน
+                                        <span className="text-red-500">*</span>
+                                    </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="กรอกที่อยู่ปัจจุบัน"
@@ -861,6 +909,23 @@ export default function FormComponent({
                                                     ))}
                                             </SelectContent>
                                         </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="hometownAddressNumber"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>เลขที่</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                placeholder="กรอกเลขที่"
+                                                {...field}
+                                            />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
