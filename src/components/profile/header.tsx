@@ -16,21 +16,27 @@ const Header: React.FC<HeaderProps> = ({ studentData }) => {
 
     return (
         <Card className="p-6">
-            <CardContent className="flex size-full items-end justify-between p-0">
-                <div className="flex h-full items-center gap-4">
+            <CardContent className="flex size-full flex-col items-center justify-between gap-5 p-0 sm:flex-row sm:items-end">
+                <div className="flex h-full w-full items-center gap-4">
                     <div className="aspect-square rounded-full bg-neutral-50 p-5 text-neutral-400">
                         <User size={40} />
                     </div>
                     <div className="flex flex-col gap-1">
                         <h3 className="text-2xl font-semibold text-neutral-800">
-                            {studentData.firstNameTh} {studentData.familyNameTh}
+                            {studentData.firstNameTh
+                                ? `${studentData.firstNameTh} ${
+                                      studentData.middleNameTh ?? ""
+                                  } ${studentData.familyNameTh}`
+                                : `${studentData.firstNameEn} ${
+                                      studentData.middleNameEn ?? ""
+                                  } ${studentData.familyNameEn}`}
                         </h3>
                         <h4 className="font-semibold text-primary">
                             {studentData.studentId}
                         </h4>
                     </div>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex w-full items-center justify-end gap-4 sm:w-auto">
                     {isEditing ? (
                         <>
                             <Button
@@ -49,6 +55,9 @@ const Header: React.FC<HeaderProps> = ({ studentData }) => {
                             >
                                 แก้ไขข้อมูล
                             </Button> */}
+                            <Link href="/register/onboarding/1">
+                                <Button variant="secondary">แก้ไขข้อมูล</Button>
+                            </Link>
                             <Link href="/logout">
                                 <Button
                                     variant="default"

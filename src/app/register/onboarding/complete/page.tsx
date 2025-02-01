@@ -8,8 +8,8 @@ export default async function Page() {
             <Image src="/success.svg" alt="success" width={200} height={200} />
             <h1 className="text-3xl font-bold">ลงทะเบียนสำเร็จ</h1>
             <p>ข้อมูลของการลงทะเบียนนิสิตใหม่ได้ถูกบันทึกแล้ว</p>
-            <Link href="https://or67.intania.org">
-                <Button>or67.intania.org</Button>
+            <Link href="/profile">
+                <Button>โปรไฟล์</Button>
             </Link>
         </div>
     );

@@ -1,5 +1,4 @@
 import type { Config } from "tailwindcss";
-import defaultTheme from "tailwindcss/defaultTheme";
 
 const config = {
     darkMode: ["class"],
@@ -19,9 +18,6 @@ const config = {
             },
         },
         extend: {
-            fontFamily: {
-                sans: ["var(--font-anuphan)", ...defaultTheme.fontFamily.sans],
-            },
             colors: {
                 border: "hsl(var(--border) / <alpha-value>)",
                 input: "hsl(var(--input) / <alpha-value>)",
@@ -81,12 +77,6 @@ const config = {
             animation: {
                 "accordion-down": "accordion-down 0.2s ease-out",
                 "accordion-up": "accordion-up 0.2s ease-out",
-            },
-            backgroundImage: {
-                "background-gradient":
-                    "linear-gradient(119.65deg, #FFFFFF 0%, #D2D2D2 108.38%)",
-                "background-gradient-prop":
-                    "radial-gradient(50% 50% at 50% 50%, #982C32 0%, rgba(255, 255, 255, 0) 100%)",
             },
             boxShadow: {
                 "2xl": "0 4px 40px 0px rgba(0, 0, 0, 0.05)",

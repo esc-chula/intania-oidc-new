@@ -1,4 +1,3 @@
-import ESCLogoBackground from "@/components/esc/esc-logo-background";
 import LoginFooter from "@/components/login/login-footer";
 import { redirect } from "next/navigation";
 import { hydra } from "@/server/api/hydra";
@@ -103,19 +102,16 @@ export default async function Page({
     }
 
     return (
-        <>
-            <div className="flex size-full flex-col items-center">
-                <div className="absolute top-1/2 flex size-full max-w-3xl -translate-y-1/2 flex-col items-center justify-between md:h-auto md:justify-center md:px-32 lg:max-w-6xl">
-                    <ConsentBox
-                        appName={appName}
-                        sharedResources={sharedResources}
-                        studentId={studentId}
-                        studentName={studentName}
-                    />
-                    <LoginFooter />
-                </div>
+        <div className="flex size-full flex-col items-center">
+            <div className="absolute top-1/2 flex size-full max-w-3xl -translate-y-1/2 flex-col items-center justify-between md:h-auto md:justify-center md:px-32 lg:max-w-6xl">
+                <ConsentBox
+                    appName={appName}
+                    sharedResources={sharedResources}
+                    studentId={studentId}
+                    studentName={studentName}
+                />
+                <LoginFooter />
             </div>
-            <ESCLogoBackground />
-        </>
+        </div>
     );
 }

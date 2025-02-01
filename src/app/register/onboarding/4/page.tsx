@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import FormComponent from "@/components/register/1-form";
+import FormComponent4 from "@/components/register/4-form";
 import { cookies } from "next/headers";
 import { me } from "@/server/controller/auth";
 import { getCachedMapping } from "@/server/data/mapper";
@@ -21,11 +21,19 @@ export default async function Page() {
         throw new Error("Something went wrong");
     }
 
-    const miscData = await getCachedMapping(["departments"]);
+    const miscData = await getCachedMapping([
+        "familyMemberStatuses",
+        "familyStatuses",
+    ]);
 
-    const departments = miscData.departments;
+    const familyStatuses = miscData.familyStatuses;
+    const familyMemberStatuses = miscData.familyMemberStatuses;
 
     return (
-        <FormComponent studentData={meData.student} departments={departments} />
+        <FormComponent4
+            studentData={meData.student}
+            familyStatuses={familyStatuses}
+            familyMemberStatuses={familyMemberStatuses}
+        />
     );
 }

@@ -1,4 +1,3 @@
-import ESCLogoBackground from "@/components/esc/esc-logo-background";
 import LoginFooter from "@/components/login/login-footer";
 import OAuthLoginBox from "@/components/oauth2/login-box";
 import { redirect } from "next/navigation";
@@ -79,14 +78,11 @@ export default async function Page({
     }
 
     return (
-        <>
-            <div className="flex size-full flex-col items-center">
-                <div className="absolute top-1/2 flex size-full max-w-3xl -translate-y-1/2 flex-col items-center justify-between md:h-auto md:justify-center md:px-32 lg:max-w-6xl">
-                    <OAuthLoginBox />
-                    <LoginFooter />
-                </div>
+        <div className="flex size-full flex-col items-center">
+            <div className="absolute top-1/2 flex size-full max-w-3xl -translate-y-1/2 flex-col items-center justify-between md:h-auto md:justify-center md:px-32 lg:max-w-6xl">
+                <OAuthLoginBox />
+                <LoginFooter />
             </div>
-            <ESCLogoBackground />
-        </>
+        </div>
     );
 }
