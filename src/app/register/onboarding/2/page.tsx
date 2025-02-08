@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import FormComponent from "@/components/register/4-form";
+import FormComponent2 from "@/components/register/2-form";
 import { cookies } from "next/headers";
 import { me } from "@/server/controller/auth";
 import { getCachedMapping } from "@/server/data/mapper";
@@ -17,23 +17,29 @@ export default async function Page() {
 
     const meData = meResponse.data;
 
-    if (!meData.student || !meData.account?.publicId) {
+    if (!meData.student) {
         throw new Error("Something went wrong");
     }
 
     const miscData = await getCachedMapping([
-        "familyMemberStatuses",
-        "familyStatuses",
+        "countries",
+        "provinces",
+        "districts",
+        "religions",
     ]);
 
-    const familyStatuses = miscData.familyStatuses;
-    const familyMemberStatuses = miscData.familyMemberStatuses;
+    const countries = miscData.countries;
+    const provinces = miscData.provinces;
+    const districts = miscData.districts;
+    const religions = miscData.religions;
 
     return (
-        <FormComponent
+        <FormComponent2
             studentData={meData.student}
-            familyStatuses={familyStatuses}
-            familyMemberStatuses={familyMemberStatuses}
+            countries={countries}
+            provinces={provinces}
+            districts={districts}
+            religions={religions}
         />
     );
 }

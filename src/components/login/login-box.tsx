@@ -34,7 +34,7 @@ export default function LoginBox() {
     const [error, setError] = useState<string | null>(null);
 
     return (
-        <div className="relative flex size-full flex-col gap-16 rounded-2xl p-12 md:aspect-[614/764] md:bg-card md:shadow-md lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
+        <div className="relative flex size-full flex-col gap-16 rounded-2xl border-[#F5F5F5] p-12 md:aspect-[614/764] md:border-2 md:bg-card md:shadow-2xl lg:aspect-[1024/460] lg:grid-cols-2 lg:flex-row lg:p-14">
             <div className="flex w-full flex-col justify-between text-center md:text-start">
                 <div className="flex flex-col items-center gap-10 md:items-start">
                     <ESCLogoWithoutText className="h-14 w-fit fill-primary md:h-16" />
@@ -54,7 +54,11 @@ export default function LoginBox() {
             </div>
             <Form {...form}>
                 <form
-                    action={loginStudent}
+                    action={(formData) =>
+                        loginStudent(formData).catch((err: Error) => {
+                            setError(err.message);
+                        })
+                    }
                     className="flex w-full flex-col items-center gap-5 lg:place-self-center"
                 >
                     <FormField
@@ -66,7 +70,10 @@ export default function LoginBox() {
                                     รหัสนิสิต
                                 </FormLabel>
                                 <FormControl>
-                                    <Input placeholder="" {...field} />
+                                    <Input
+                                        placeholder="กรอกรหัสนิสิต"
+                                        {...field}
+                                    />
                                 </FormControl>
                                 <FormMessage className="text-xs" />
                             </FormItem>
@@ -82,7 +89,7 @@ export default function LoginBox() {
                                 </FormLabel>
                                 <FormControl>
                                     <Input
-                                        placeholder=""
+                                        placeholder="กรอกรหัสผ่าน"
                                         {...field}
                                         type="password"
                                     />

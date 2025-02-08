@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import FormComponent from "@/components/register/5-form";
+import FormComponent3 from "@/components/register/3-form";
 import { cookies } from "next/headers";
 import { me } from "@/server/controller/auth";
 
@@ -20,5 +20,5 @@ export default async function Page() {
         throw new Error("Something went wrong");
     }
 
-    return <FormComponent studentData={meData.student} />;
+    return <FormComponent3 studentData={meData.student} />;
 }

@@ -13,7 +13,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
 
     return (
-        <article className="flex size-full flex-col gap-24 px-6 py-7">
+        <article className="flex size-full flex-col gap-16 px-6 py-7 md:gap-24">
             <StudentFormContextProvider>
                 <Header />
                 <Transition>{children}</Transition>

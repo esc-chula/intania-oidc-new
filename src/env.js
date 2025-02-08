@@ -10,6 +10,7 @@ export const env = createEnv({
         NODE_ENV: z
             .enum(["development", "test", "production"])
             .default("development"),
+        HYDRA_ADMIN_URL: z.string(),
         ALLOW_REDIRECT_URLS: z.string(),
     },
 
@@ -19,7 +20,7 @@ export const env = createEnv({
      * `NEXT_PUBLIC_`.
      */
     client: {
-        // NEXT_PUBLIC_CLIENTVAR: z.string(),
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string(),
     },
 
     /**
@@ -28,8 +29,10 @@ export const env = createEnv({
      */
     runtimeEnv: {
         NODE_ENV: process.env.NODE_ENV || "development",
+        HYDRA_ADMIN_URL: process.env.HYDRA_ADMIN_URL,
         ALLOW_REDIRECT_URLS: process.env.ALLOW_REDIRECT_URLS,
-        // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
+        NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:
+            process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     },
     /**
      * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
