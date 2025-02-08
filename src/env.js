@@ -12,6 +12,7 @@ export const env = createEnv({
             .default("development"),
         HYDRA_ADMIN_URL: z.string(),
         ALLOW_REDIRECT_URLS: z.string(),
+        GRPC_ADDRESS: z.string(),
     },
 
     /**
@@ -33,6 +34,7 @@ export const env = createEnv({
         ALLOW_REDIRECT_URLS: process.env.ALLOW_REDIRECT_URLS,
         NEXT_PUBLIC_GOOGLE_MAPS_API_KEY:
             process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+        GRPC_ADDRESS: process.env.GRPC_ADDRESS,
     },
     /**
      * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
