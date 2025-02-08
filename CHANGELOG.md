@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0-prerelease.4](https://github.com/esc-chula/intania-oidc-new/compare/v0.2.0-prerelease.3..v0.2.0-prerelease.4) - 2025-02-08
+
+### <!-- 1 -->🐛 Bug Fixes
+
+- Format - ([a61c34c](https://github.com/esc-chula/intania-oidc-new/commit/a61c34c4108c14f8394e09dc0a3860a800e1282f))
+
 ## [0.2.0-prerelease.3](https://github.com/esc-chula/intania-oidc-new/compare/v0.2.0-prerelease.2..v0.2.0-prerelease.3) - 2025-02-08
 
 ### Refactor
