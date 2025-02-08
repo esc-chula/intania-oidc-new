@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0-prerelease.2](https://github.com/esc-chula/intania-oidc-new/compare/v0.2.0-prerelease.1..v0.2.0-prerelease.2) - 2025-02-08
+
+### <!-- 1 -->🐛 Bug Fixes
+
+- Configurable grpc address - ([7546089](https://github.com/esc-chula/intania-oidc-new/commit/754608951adb3e6ca5ff06ffdfd183f8dec6c8b2))
+
 ## [0.2.0-prerelease.1](https://github.com/esc-chula/intania-oidc-new/compare/v0.1.3..v0.2.0-prerelease.1) - 2025-02-08
 
 ### <!-- 0 -->⛰️  Features
