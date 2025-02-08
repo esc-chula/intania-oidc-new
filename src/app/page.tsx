@@ -1,8 +1,8 @@
 import LoginBox from "@/components/login/login-box";
 import LoginFooter from "@/components/login/login-footer";
+import { env } from "next-runtime-env";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { env } from "@/env";
 
 export default async function Page({
     searchParams,
@@ -34,7 +34,7 @@ export default async function Page({
 function validateRedirectUrl(redirectUrl: string | null): boolean {
     if (!redirectUrl) return false;
 
-    const allowedUrls = env.ALLOW_REDIRECT_URLS?.split(",") ?? [];
+    const allowedUrls = env('ALLOW_REDIRECT_URLS')?.split(",") ?? [];
     try {
         const url = new URL(redirectUrl);
 

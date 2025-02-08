@@ -15,9 +15,9 @@ import {
     type ListStudentMappingResponse,
     StudentServiceClient,
 } from "@/generated/intania/auth/student/v1/student";
-import { env } from "@/env";
+import { env } from "next-runtime-env";
 
-const addr = env.GRPC_ADDRESS;
+const addr = env("GRPC_ADDRESS") ?? "127.0.0.1:3001";
 
 const accountClient = new AccountServiceClient(
     addr,
