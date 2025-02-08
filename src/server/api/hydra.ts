@@ -3,6 +3,6 @@ import { env } from "next-runtime-env";
 
 export const hydra = new OAuth2Api(
     new Configuration({
-        basePath: env('HYDRA_ADMIN_URL'),
+        basePath: env("HYDRA_ADMIN_URL"),
     }),
 );

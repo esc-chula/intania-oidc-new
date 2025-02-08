@@ -48,7 +48,7 @@ export default function GoogleMaps({
 
     const { isLoaded } = useJsApiLoader({
         id: "google-map-script",
-        googleMapsApiKey: env('NEXT_PUBLIC_GOOGLE_MAPS_API_KEY') ?? "",
+        googleMapsApiKey: env("NEXT_PUBLIC_GOOGLE_MAPS_API_KEY") ?? "",
     });
 
     const handleMapClick = (event: google.maps.MapMouseEvent) => {

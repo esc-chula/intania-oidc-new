@@ -34,7 +34,7 @@ export default async function Page({
 function validateRedirectUrl(redirectUrl: string | null): boolean {
     if (!redirectUrl) return false;
 
-    const allowedUrls = env('ALLOW_REDIRECT_URLS')?.split(",") ?? [];
+    const allowedUrls = env("ALLOW_REDIRECT_URLS")?.split(",") ?? [];
     try {
         const url = new URL(redirectUrl);
 
