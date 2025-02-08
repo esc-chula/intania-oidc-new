@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.2.0-prerelease.3](https://github.com/esc-chula/intania-oidc-new/compare/v0.2.0-prerelease.2..v0.2.0-prerelease.3) - 2025-02-08
+
+### Refactor
+
+- Migrate from t3-oss/env - ([f676a35](https://github.com/esc-chula/intania-oidc-new/commit/f676a35d57bd559a86076241e68d588012820026))
+
 ## [0.2.0-prerelease.2](https://github.com/esc-chula/intania-oidc-new/compare/v0.2.0-prerelease.1..v0.2.0-prerelease.2) - 2025-02-08
 
 ### <!-- 1 -->🐛 Bug Fixes
