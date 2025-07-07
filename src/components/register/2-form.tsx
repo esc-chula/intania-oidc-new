@@ -50,7 +50,9 @@ const formSchema = z.object({
     currentAddressLatitude: z.number().optional(),
     currentAddressLongitude: z.number().optional(),
     currentAddressProvinceId: z.number(),
-    currentAddressDistrictId: z.number().min(1, { message: "กรุณาเลือกเขต/อำเภอ" }),
+    currentAddressDistrictId: z
+        .number()
+        .min(1, { message: "กรุณาเลือกเขต/อำเภอ" }),
     currentAddressNumber: z.string().min(1).max(60),
     currentAddressOther: z.string().min(1).max(400),
     hometownAddressLongitude: z.number().optional(),
@@ -274,7 +276,9 @@ export default function FormComponent2({
         const bkk = provinces.find((p) => p.nameTh === "กรุงเทพมหานคร");
         const others = provinces
             .filter((p) => p.nameTh !== "กรุงเทพมหานคร")
-            .sort((a, b) => (a.nameTh ?? "").localeCompare(b.nameTh ?? "", "th"));
+            .sort((a, b) =>
+                (a.nameTh ?? "").localeCompare(b.nameTh ?? "", "th"),
+            );
         return bkk ? [bkk, ...others] : others;
     }, [provinces]);
 
@@ -568,16 +572,26 @@ export default function FormComponent2({
                                                 : undefined
                                         }
                                         onValueChange={(value) => {
-                                            const selectedProvinceString = sortedProvinces.find(
-                                                (province) => province.nameTh === value,
-                                            );
+                                            const selectedProvinceString =
+                                                sortedProvinces.find(
+                                                    (province) =>
+                                                        province.nameTh ===
+                                                        value,
+                                                );
                                             if (!selectedProvinceString) {
                                                 return;
                                             }
-                                            field.onChange(selectedProvinceString.id);
-                                            setSelectedCurrentProvince(selectedProvinceString.id);
+                                            field.onChange(
+                                                selectedProvinceString.id,
+                                            );
+                                            setSelectedCurrentProvince(
+                                                selectedProvinceString.id,
+                                            );
                                             // Reset district when province changes
-                                            form.setValue("currentAddressDistrictId", 0); // ใช้ 0 แทน undefined
+                                            form.setValue(
+                                                "currentAddressDistrictId",
+                                                0,
+                                            ); // ใช้ 0 แทน undefined
                                         }}
                                     >
                                         <FormControl>
@@ -589,7 +603,9 @@ export default function FormComponent2({
                                             {sortedProvinces.map((province) => (
                                                 <SelectItem
                                                     key={province.provinceCode}
-                                                    value={province.nameTh ?? ""}
+                                                    value={
+                                                        province.nameTh ?? ""
+                                                    }
                                                 >
                                                     {province.nameTh}
                                                 </SelectItem>
@@ -715,7 +731,6 @@ export default function FormComponent2({
 
                     {selectedCountry === 221 ? ( // Thailand
                         <section className="flex flex-col gap-2">
-
                             <FormField
                                 control={form.control}
                                 name="hometownAddressLatitude"
@@ -782,19 +797,21 @@ export default function FormComponent2({
                                             </FormControl>
                                             <SelectContent>
                                                 {/* Map through provinces data */}
-                                                {sortedProvinces.map((province) => (
-                                                    <SelectItem
-                                                        key={
-                                                            province.provinceCode
-                                                        }
-                                                        value={
-                                                            province.nameTh ??
-                                                            ""
-                                                        }
-                                                    >
-                                                        {province.nameTh}
-                                                    </SelectItem>
-                                                ))}
+                                                {sortedProvinces.map(
+                                                    (province) => (
+                                                        <SelectItem
+                                                            key={
+                                                                province.provinceCode
+                                                            }
+                                                            value={
+                                                                province.nameTh ??
+                                                                ""
+                                                            }
+                                                        >
+                                                            {province.nameTh}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -893,7 +910,9 @@ export default function FormComponent2({
                                 name="hometownAddressOther"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>ที่อยู่ตามบัตรประชาชน</FormLabel>
+                                        <FormLabel>
+                                            ที่อยู่ตามบัตรประชาชน
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
                                                 placeholder="กรอกที่อยู่ตามบัตรประชาชน (หมู่บ้าน/ซอย/ถนน/ตำบล)"
