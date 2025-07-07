@@ -755,7 +755,7 @@ export default function FormComponent2({
                                     }
                                     width="100%"
                                     height="100%"
-                                    placeholder="ระบุตำแหน่งที่อยู่ภูมิลำเนา"
+                                    placeholder="ระบุตำแหน่งที่อยู่ตามบัตรประชาชน"
                                 />
                             </div>
 
@@ -786,7 +786,7 @@ export default function FormComponent2({
                                 render={({ field }) => (
                                     <FormItem className="!pt-0">
                                         <FormLabel>
-                                            จังหวัดที่อยู่ภูมิลำเนา
+                                            จังหวัดที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน
                                         </FormLabel>
                                         <Select
                                             value={
@@ -820,7 +820,7 @@ export default function FormComponent2({
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="เลือกจังหวัดที่อยู่ภูมิลำเนา" />
+                                                    <SelectValue placeholder="เลือกจังหวัดที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -851,7 +851,7 @@ export default function FormComponent2({
                                 render={({ field }) => (
                                     <FormItem className="!pt-0">
                                         <FormLabel>
-                                            เขตที่อยู่ภูมิลำเนา
+                                            เขตที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน
                                         </FormLabel>
                                         <Select
                                             value={
@@ -877,7 +877,7 @@ export default function FormComponent2({
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="เลือกเขตที่อยู่ภูมิลำเนา" />
+                                                    <SelectValue placeholder="เลือกเขตที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -936,10 +936,10 @@ export default function FormComponent2({
                                 name="hometownAddressOther"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>ที่อยู่ภูมิลำเนา</FormLabel>
+                                        <FormLabel>ที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="กรอกที่อยู่ภูมิลำเนา"
+                                                placeholder="กรอกที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -954,10 +954,10 @@ export default function FormComponent2({
                             name="hometownAddressOther"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ที่อยู่ภูมิลำเนา</FormLabel>
+                                    <FormLabel>ที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="กรอกที่อยู่ภูมิลำเนา"
+                                            placeholder="กรอกที่อยู่ระบุตำแหน่งที่อยู่ตามบัตรประชาชน"
                                             {...field}
                                         />
                                     </FormControl>
