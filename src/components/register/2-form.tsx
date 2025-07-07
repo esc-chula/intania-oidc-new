@@ -23,7 +23,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useEffect, useMemo, useState } from "react";
-import GoogleMap from "@/components/maps/maps";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
 import {
@@ -86,26 +85,6 @@ export default function FormComponent2({
         setStep(2);
     }, [setStep]);
 
-    // MAP
-    const [selectedCurrentLocationLat, setSelectedCurrentLocationLat] =
-        useState<string | null>(null);
-    const [selectedCurrentLocationLng, setSelectedCurrentLocationLng] =
-        useState<string | null>(null);
-    const [selectedHomeLocationLat, setSelectedHomeLocationLat] = useState<
-        string | null
-    >(null);
-    const [selectedHomeLocationLng, setSelectedHomeLocationLng] = useState<
-        string | null
-    >(null);
-    const handleCurrentLocationSelect = (lat: number, lng: number) => {
-        form.setValue("currentAddressLatitude", lat);
-        form.setValue("currentAddressLongitude", lng);
-    };
-    const handleHomeLocationSelect = (lat: number, lng: number) => {
-        form.setValue("hometownAddressLatitude", lat);
-        form.setValue("hometownAddressLongitude", lng);
-    };
-
     // HANDLERS
     const [selectedCountry, setSelectedCountry] = useState(0);
     const [selectedCurrentProvince, setSelectedCurrentProvince] = useState(0);
@@ -142,11 +121,9 @@ export default function FormComponent2({
                 formBinding: {},
             },
             currentAddressLatitude: {
-                stateBinding: setSelectedCurrentLocationLat,
                 formBinding: {},
             },
             currentAddressLongitude: {
-                stateBinding: setSelectedCurrentLocationLng,
                 formBinding: {},
             },
             currentAddressProvince: {
@@ -169,11 +146,9 @@ export default function FormComponent2({
                 formBinding: {},
             },
             hometownAddressLatitude: {
-                stateBinding: setSelectedHomeLocationLat,
                 formBinding: {},
             },
             hometownAddressLongitude: {
-                stateBinding: setSelectedHomeLocationLng,
                 formBinding: {},
             },
             hometownAddressProvince: {

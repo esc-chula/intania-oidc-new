@@ -31,7 +31,6 @@ import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
 import { cn, titleThToEn } from "@/lib/utils";
 import { format } from "date-fns";
-import { th } from "date-fns/locale";
 import { useEffect, useMemo, useState } from "react";
 import { updateStudent } from "@/server/actions/student";
 import { useStudentForm } from "@/contexts/form-context";
