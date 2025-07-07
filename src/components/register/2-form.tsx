@@ -50,7 +50,7 @@ const formSchema = z.object({
     currentAddressLatitude: z.number(),
     currentAddressLongitude: z.number(),
     currentAddressProvinceId: z.number(),
-    currentAddressDistrictId: z.number(),
+    currentAddressDistrictId: z.number().min(1, { message: "กรุณาเลือกเขต/อำเภอ" }),
     currentAddressNumber: z.string().min(1).max(60),
     currentAddressOther: z.string().min(1).max(400),
     hometownAddressLongitude: z.number().optional(),
@@ -590,23 +590,16 @@ export default function FormComponent2({
                                                 : undefined
                                         }
                                         onValueChange={(value) => {
-                                            const selectedProvinceString =
-                                                provinces.find(
-                                                    (province) =>
-                                                        province.nameTh ===
-                                                        value,
-                                                );
-
+                                            const selectedProvinceString = sortedProvinces.find(
+                                                (province) => province.nameTh === value,
+                                            );
                                             if (!selectedProvinceString) {
                                                 return;
                                             }
-
-                                            field.onChange(
-                                                selectedProvinceString.id,
-                                            );
-                                            setSelectedCurrentProvince(
-                                                selectedProvinceString.id,
-                                            );
+                                            field.onChange(selectedProvinceString.id);
+                                            setSelectedCurrentProvince(selectedProvinceString.id);
+                                            // Reset district when province changes
+                                            form.setValue("currentAddressDistrictId", 0); // ใช้ 0 แทน undefined
                                         }}
                                     >
                                         <FormControl>
