@@ -47,8 +47,8 @@ const formSchema = z.object({
         .max(16),
     lineId: z.string().max(30).optional(),
     facebook: z.string().max(60).optional(),
-    currentAddressLatitude: z.number(),
-    currentAddressLongitude: z.number(),
+    currentAddressLatitude: z.number().optional(),
+    currentAddressLongitude: z.number().optional(),
     currentAddressProvinceId: z.number(),
     currentAddressDistrictId: z.number().min(1, { message: "กรุณาเลือกเขต/อำเภอ" }),
     currentAddressNumber: z.string().min(1).max(60),
@@ -527,28 +527,6 @@ export default function FormComponent2({
                     </section>
 
                     <section className="flex flex-col gap-2">
-                        <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
-                            <GoogleMap
-                                onLocationSelect={handleCurrentLocationSelect}
-                                selectedLocation={
-                                    selectedCurrentLocationLat &&
-                                    selectedCurrentLocationLng
-                                        ? {
-                                              lat: parseFloat(
-                                                  selectedCurrentLocationLat,
-                                              ),
-                                              lng: parseFloat(
-                                                  selectedCurrentLocationLng,
-                                              ),
-                                          }
-                                        : undefined
-                                }
-                                width="100%"
-                                height="100%"
-                                placeholder="ระบุตำแหน่งที่อยู่ปัจจุบัน"
-                            />
-                        </div>
-
                         <FormField
                             control={form.control}
                             name="currentAddressLatitude"
@@ -737,27 +715,6 @@ export default function FormComponent2({
 
                     {selectedCountry === 221 ? ( // Thailand
                         <section className="flex flex-col gap-2">
-                            <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
-                                <GoogleMap
-                                    onLocationSelect={handleHomeLocationSelect}
-                                    selectedLocation={
-                                        selectedHomeLocationLat &&
-                                        selectedHomeLocationLng
-                                            ? {
-                                                  lat: parseFloat(
-                                                      selectedHomeLocationLat,
-                                                  ),
-                                                  lng: parseFloat(
-                                                      selectedHomeLocationLng,
-                                                  ),
-                                              }
-                                            : undefined
-                                    }
-                                    width="100%"
-                                    height="100%"
-                                    placeholder="ระบุตำแหน่งที่อยู่ตามบัตรประชาชน"
-                                />
-                            </div>
 
                             <FormField
                                 control={form.control}
