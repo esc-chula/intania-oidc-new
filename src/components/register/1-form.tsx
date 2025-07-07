@@ -491,7 +491,6 @@ export default function FormComponent1({ studentData, departments }: Props) {
                                                     setSelectedBirthDate
                                                 }
                                                 translate="th"
-                                                locale={th}
                                             />
                                         </PopoverContent>
                                     </Popover>

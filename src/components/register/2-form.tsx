@@ -47,10 +47,12 @@ const formSchema = z.object({
         .max(16),
     lineId: z.string().max(30).optional(),
     facebook: z.string().max(60).optional(),
-    currentAddressLatitude: z.number(),
-    currentAddressLongitude: z.number(),
+    currentAddressLatitude: z.number().optional(),
+    currentAddressLongitude: z.number().optional(),
     currentAddressProvinceId: z.number(),
-    currentAddressDistrictId: z.number(),
+    currentAddressDistrictId: z
+        .number()
+        .min(1, { message: "กรุณาเลือกเขต/อำเภอ" }),
     currentAddressNumber: z.string().min(1).max(60),
     currentAddressOther: z.string().min(1).max(400),
     hometownAddressLongitude: z.number().optional(),
@@ -268,6 +270,17 @@ export default function FormComponent2({
 
         router.push("/register/onboarding/3");
     }
+
+    const sortedProvinces = useMemo(() => {
+        if (!provinces) return [];
+        const bkk = provinces.find((p) => p.nameTh === "กรุงเทพมหานคร");
+        const others = provinces
+            .filter((p) => p.nameTh !== "กรุงเทพมหานคร")
+            .sort((a, b) =>
+                (a.nameTh ?? "").localeCompare(b.nameTh ?? "", "th"),
+            );
+        return bkk ? [bkk, ...others] : others;
+    }, [provinces]);
 
     return (
         <Card className="p-6 md:p-8">
@@ -518,28 +531,6 @@ export default function FormComponent2({
                     </section>
 
                     <section className="flex flex-col gap-2">
-                        <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
-                            <GoogleMap
-                                onLocationSelect={handleCurrentLocationSelect}
-                                selectedLocation={
-                                    selectedCurrentLocationLat &&
-                                    selectedCurrentLocationLng
-                                        ? {
-                                              lat: parseFloat(
-                                                  selectedCurrentLocationLat,
-                                              ),
-                                              lng: parseFloat(
-                                                  selectedCurrentLocationLng,
-                                              ),
-                                          }
-                                        : undefined
-                                }
-                                width="100%"
-                                height="100%"
-                                placeholder="ระบุตำแหน่งที่อยู่ปัจจุบัน"
-                            />
-                        </div>
-
                         <FormField
                             control={form.control}
                             name="currentAddressLatitude"
@@ -582,22 +573,25 @@ export default function FormComponent2({
                                         }
                                         onValueChange={(value) => {
                                             const selectedProvinceString =
-                                                provinces.find(
+                                                sortedProvinces.find(
                                                     (province) =>
                                                         province.nameTh ===
                                                         value,
                                                 );
-
                                             if (!selectedProvinceString) {
                                                 return;
                                             }
-
                                             field.onChange(
                                                 selectedProvinceString.id,
                                             );
                                             setSelectedCurrentProvince(
                                                 selectedProvinceString.id,
                                             );
+                                            // Reset district when province changes
+                                            form.setValue(
+                                                "currentAddressDistrictId",
+                                                0,
+                                            ); // ใช้ 0 แทน undefined
                                         }}
                                     >
                                         <FormControl>
@@ -606,7 +600,7 @@ export default function FormComponent2({
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {provinces.map((province) => (
+                                            {sortedProvinces.map((province) => (
                                                 <SelectItem
                                                     key={province.provinceCode}
                                                     value={
@@ -629,7 +623,7 @@ export default function FormComponent2({
                             render={({ field }) => (
                                 <FormItem className="!pt-0">
                                     <FormLabel>
-                                        เขตที่อยู่ปัจจุบัน
+                                        อำเภอ/เขตที่อยู่ปัจจุบัน
                                         <span className="text-red-500">*</span>
                                     </FormLabel>
                                     <Select
@@ -725,7 +719,7 @@ export default function FormComponent2({
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="กรอกที่อยู่ปัจจุบัน"
+                                            placeholder="กรอกที่อยู่ปัจจุบัน (หมู่บ้าน/ซอย/ถนน/ตำบล)"
                                             {...field}
                                         />
                                     </FormControl>
@@ -737,28 +731,6 @@ export default function FormComponent2({
 
                     {selectedCountry === 221 ? ( // Thailand
                         <section className="flex flex-col gap-2">
-                            <div className="h-60 overflow-hidden rounded-lg border-[6px] border-white">
-                                <GoogleMap
-                                    onLocationSelect={handleHomeLocationSelect}
-                                    selectedLocation={
-                                        selectedHomeLocationLat &&
-                                        selectedHomeLocationLng
-                                            ? {
-                                                  lat: parseFloat(
-                                                      selectedHomeLocationLat,
-                                                  ),
-                                                  lng: parseFloat(
-                                                      selectedHomeLocationLng,
-                                                  ),
-                                              }
-                                            : undefined
-                                    }
-                                    width="100%"
-                                    height="100%"
-                                    placeholder="ระบุตำแหน่งที่อยู่ภูมิลำเนา"
-                                />
-                            </div>
-
                             <FormField
                                 control={form.control}
                                 name="hometownAddressLatitude"
@@ -786,7 +758,7 @@ export default function FormComponent2({
                                 render={({ field }) => (
                                     <FormItem className="!pt-0">
                                         <FormLabel>
-                                            จังหวัดที่อยู่ภูมิลำเนา
+                                            จังหวัดที่อยู่ตามบัตรประชาชน
                                         </FormLabel>
                                         <Select
                                             value={
@@ -820,24 +792,26 @@ export default function FormComponent2({
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="เลือกจังหวัดที่อยู่ภูมิลำเนา" />
+                                                    <SelectValue placeholder="เลือกจังหวัดที่อยู่ตามบัตรประชาชน" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {/* Map through provinces data */}
-                                                {provinces.map((province) => (
-                                                    <SelectItem
-                                                        key={
-                                                            province.provinceCode
-                                                        }
-                                                        value={
-                                                            province.nameTh ??
-                                                            ""
-                                                        }
-                                                    >
-                                                        {province.nameTh}
-                                                    </SelectItem>
-                                                ))}
+                                                {sortedProvinces.map(
+                                                    (province) => (
+                                                        <SelectItem
+                                                            key={
+                                                                province.provinceCode
+                                                            }
+                                                            value={
+                                                                province.nameTh ??
+                                                                ""
+                                                            }
+                                                        >
+                                                            {province.nameTh}
+                                                        </SelectItem>
+                                                    ),
+                                                )}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -851,7 +825,7 @@ export default function FormComponent2({
                                 render={({ field }) => (
                                     <FormItem className="!pt-0">
                                         <FormLabel>
-                                            เขตที่อยู่ภูมิลำเนา
+                                            เขตที่อยู่ตามบัตรประชาชน
                                         </FormLabel>
                                         <Select
                                             value={
@@ -877,7 +851,7 @@ export default function FormComponent2({
                                         >
                                             <FormControl>
                                                 <SelectTrigger>
-                                                    <SelectValue placeholder="เลือกเขตที่อยู่ภูมิลำเนา" />
+                                                    <SelectValue placeholder="เลือกเขตที่อยู่ตามบัตรประชาชน" />
                                                 </SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
@@ -936,10 +910,12 @@ export default function FormComponent2({
                                 name="hometownAddressOther"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>ที่อยู่ภูมิลำเนา</FormLabel>
+                                        <FormLabel>
+                                            ที่อยู่ตามบัตรประชาชน
+                                        </FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="กรอกที่อยู่ภูมิลำเนา"
+                                                placeholder="กรอกที่อยู่ตามบัตรประชาชน (หมู่บ้าน/ซอย/ถนน/ตำบล)"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -954,10 +930,10 @@ export default function FormComponent2({
                             name="hometownAddressOther"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>ที่อยู่ภูมิลำเนา</FormLabel>
+                                    <FormLabel>ที่อยู่ตามบัตรประชาชน</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="กรอกที่อยู่ภูมิลำเนา"
+                                            placeholder="กรอกที่อยู่ตามบัตรประชาชน"
                                             {...field}
                                         />
                                     </FormControl>
