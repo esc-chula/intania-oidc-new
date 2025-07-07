@@ -86,8 +86,11 @@ export default function FormComponent3({ studentData }: Props) {
         { label: 'M (38")', value: 38 },
         { label: 'L (40")', value: 40 },
         { label: 'XL (42")', value: 42 },
-        { label: 'XXL (44")', value: 44 },
-        { label: 'XXXL (46")', value: 46 },
+        { label: '2XL (44")', value: 44 },
+        { label: '3XL (46")', value: 46 },
+        { label: '4XL (48")', value: 48 },
+        { label: '5XL (50")', value: 50 },
+        { label: '6XL (52")', value: 52 },
     ];
 
     return (
